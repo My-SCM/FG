@@ -182,41 +182,43 @@
                     <li>
                         <button id="nav-btn-stock" onclick="handleTabClick('stock')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-accentCyan/20 to-transparent text-accentCyan font-semibold border border-accentCyan/30 shadow-glow-cyan transition-all text-left">
                             <i class="ph-bold ph-squares-four text-xl"></i>
-                            <span>Stock Overview</span>
+                            <span class="flex-1">Stock Overview</span>
                         </button>
                     </li>
                     <li>
                         <button id="nav-btn-detail" onclick="handleTabClick('detail')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-database text-xl group-hover:text-accentPurple transition-colors"></i>
-                            <span>Detail Stok Master</span>
+                            <span class="flex-1">Detail Stok Master</span>
                         </button>
                     </li>
                     <li>
                         <button id="nav-btn-summary-only" onclick="handleTabClick('summary-only')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-table text-xl group-hover:text-accentCyan transition-colors"></i>
-                            <span>Ringkasan Stok Overview</span>
+                            <span class="flex-1">Ringkasan Stok Overview</span>
                         </button>
                     </li>
-                    <!-- Laporan Eksekutif Menu -->
+                    <!-- Laporan Eksekutif Menu (Private) -->
                     <li>
                         <button id="nav-btn-exec-report" onclick="handleTabClick('exec-report')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-file-pdf text-xl group-hover:text-statusSuccess transition-colors"></i>
                             <span class="flex-1">Laporan Eksekutif</span>
-                            <span class="bg-statusSuccess/20 text-statusSuccess text-[9px] px-1.5 py-0.5 rounded uppercase font-bold">New</span>
+                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Akses Privat"></i>
                         </button>
                     </li>
-                    <!-- Offtake Menu -->
+                    <!-- Offtake Menu (Private) -->
                     <li>
                         <button id="nav-btn-offtake" onclick="handleTabClick('offtake')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-truck text-xl group-hover:text-accentCyan transition-colors"></i>
-                            <span>Offtake</span>
+                            <span class="flex-1">Offtake</span>
+                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Akses Privat"></i>
                         </button>
                     </li>
-                    <!-- Pallet Menu -->
+                    <!-- Pallet Menu (Private) -->
                     <li>
                         <button id="nav-btn-pallet" onclick="handleTabClick('pallet')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-stack text-xl group-hover:text-accentCyan transition-colors"></i>
-                            <span>Pallet</span>
+                            <span class="flex-1">Pallet</span>
+                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Akses Privat"></i>
                         </button>
                     </li>
                 </ul>
@@ -737,8 +739,8 @@
         let isAuthenticated = false;
         let pendingTargetTab = null;
 
-        const SEC_U = 'YWRtaW4='; 
-        const SEC_P = 'YWRtaW4xMjM=';
+        const SEC_U = 'YWRtaW4='; // admin
+        const SEC_P = 'bWl0cmErMDA='; // mitra+00
 
         const fmtNum = (num) => new Intl.NumberFormat('id-ID').format(Math.round(num || 0));
         const fmtDec = (num) => new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(num || 0);
@@ -1064,8 +1066,12 @@
         }
 
         function handleTabClick(tabName) {
-            const privateTabs = ['offtake', 'pallet'];
-            if (privateTabs.includes(tabName)) { if (isAuthenticated) switchMainTab(tabName); else { pendingTargetTab = tabName; openAuthModal(); } } else switchMainTab(tabName);
+            // MENAMBAHKAN 'exec-report' KE DALAM ARRAY PRIVATE TABS
+            const privateTabs = ['exec-report', 'offtake', 'pallet']; 
+            if (privateTabs.includes(tabName)) { 
+                if (isAuthenticated) switchMainTab(tabName); 
+                else { pendingTargetTab = tabName; openAuthModal(); } 
+            } else switchMainTab(tabName);
         }
 
         function switchMainTab(tabName) {
@@ -1113,8 +1119,24 @@
                 if (pendingTargetTab) switchMainTab(pendingTargetTab);
             } else { document.getElementById('authErrorMsg').classList.remove('hidden'); document.getElementById('authErrorText').innerText = 'Username atau Password salah!'; }
         }
-        function logoutSession() { isAuthenticated = false; updateAuthUI(); showToast('Sesi Terkunci', 'Anda telah kembali ke mode Publik.', 'info'); if (['offtake', 'pallet'].includes(activeMainTab)) switchMainTab('stock'); }
-        function updateAuthUI() { const statusLabel = document.getElementById('sessionStatusLabel'); if (statusLabel) statusLabel.innerHTML = isAuthenticated ? '<span class="w-1.5 h-1.5 rounded-full bg-statusSuccess"></span> Akses Privat (Aktif)' : '<span class="w-1.5 h-1.5 rounded-full bg-statusWarning"></span> Publik Mode'; }
+        function logoutSession() { 
+            isAuthenticated = false; 
+            updateAuthUI(); 
+            showToast('Sesi Terkunci', 'Anda telah kembali ke mode Publik.', 'info'); 
+            // Tambahkan exec-report ke daftar tab yang harus ditendang keluar saat logout
+            if (['exec-report', 'offtake', 'pallet'].includes(activeMainTab)) switchMainTab('stock'); 
+        }
+        
+        function updateAuthUI() { 
+            const statusLabel = document.getElementById('sessionStatusLabel'); 
+            if (statusLabel) statusLabel.innerHTML = isAuthenticated ? '<span class="w-1.5 h-1.5 rounded-full bg-statusSuccess"></span> Akses Privat (Aktif)' : '<span class="w-1.5 h-1.5 rounded-full bg-statusWarning"></span> Publik Mode'; 
+            
+            // Ubah gaya ikon gembok pada menu sidebar (Terbuka Hijau / Terkunci Kuning)
+            const lockIcons = document.querySelectorAll('.private-lock-icon');
+            lockIcons.forEach(icon => {
+                icon.className = isAuthenticated ? 'ph-bold ph-lock-key-open text-statusSuccess private-lock-icon' : 'ph-bold ph-lock-key text-statusWarning private-lock-icon';
+            });
+        }
 
         function exportExecutiveReport() {
             showToast('Preparing Report...', 'Generating Executive Excel Format...', 'info');
