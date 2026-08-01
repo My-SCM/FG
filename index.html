@@ -56,7 +56,6 @@
     </script>
 
     <style>
-        /* Custom Scrollbars */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #070B14; }
         ::-webkit-scrollbar-thumb { background: #1C2B4A; border-radius: 10px; }
@@ -69,7 +68,6 @@
             overflow-x: hidden;
         }
 
-        /* Glassmorphism Classes */
         .glass-panel {
             background: rgba(17, 28, 51, 0.65);
             backdrop-filter: blur(20px);
@@ -85,7 +83,6 @@
             border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
-        /* Glowing Gradient Cards */
         .neon-card {
             position: relative;
             background: #111C33;
@@ -110,7 +107,6 @@
         .purple-top::before { background: linear-gradient(180deg, #6D5DF6 0%, rgba(109,93,246,0.02) 60%); }
         .green-top::before { background: linear-gradient(180deg, #00D084 0%, rgba(0,208,132,0.02) 60%); }
 
-        /* Smooth Table Hover & Group Styling */
         .table-row-hover:hover {
             background: rgba(0, 229, 255, 0.04) !important;
         }
@@ -125,7 +121,6 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 208, 132, 0); }
         }
 
-        /* Spinner Loader */
         .loader-ring {
             display: inline-block;
             width: 44px;
@@ -137,7 +132,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Custom Toast */
         .toast-box {
             position: fixed;
             bottom: 24px;
@@ -155,7 +149,6 @@
         }
         .toast-box.show { transform: translateY(0); opacity: 1; }
         
-        /* Hide arrows on number input */
         input[type="number"]::-webkit-inner-spin-button, 
         input[type="number"]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
@@ -615,6 +608,21 @@
                                     </table>
                                 </div>
                             </div>
+                            <!-- Small note added below the table -->
+                            <div class="mt-4 p-4 bg-bgCard border border-borderMain rounded-xl text-textSecondary text-[11px] space-y-2">
+                                <p class="flex items-start gap-2">
+                                    <i class="ph-bold ph-info text-accentCyan mt-0.5"></i>
+                                    <span><strong>Catatan:</strong> Pastikan seluruh data stok masuk (In) dan keluar (Out) telah diverifikasi sebelum melakukan unduhan file eksekutif.</span>
+                                </p>
+                                <p class="flex items-start gap-2">
+                                    <i class="ph-bold ph-truck text-statusDanger mt-0.5"></i>
+                                    <span><strong>Stock Out:</strong> mencakup seluruh pergerakan stok keluar dari Warehouse Finished Goods, tidak terbatas pada pengiriman ke pelanggan, tetapi juga meliputi pengiriman sampel, produk rusak (damaged goods), pemakaian internal, serta pengeluaran stok lainnya.</span>
+                                </p>
+                                <p class="flex items-start gap-2">
+                                    <i class="ph-bold ph-package text-statusSuccess mt-0.5"></i>
+                                    <span><strong>Stock In:</strong> merupakan stok hasil output produksi yang diterima di Warehouse Finished Goods, termasuk produk retur yang telah dinyatakan layak (Good Condition) berdasarkan hasil inspeksi dan persetujuan dari Quality Control (QC).</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -707,7 +715,6 @@
         const GID_MASTER = '1732584925';
         const SHEET_NAME_UPDATE = 'DATA'; 
         
-        // Removed SUMMARY sheet URLs completely since we now map data from MASTERDATA
         const URL_MASTER_GVIZ = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=MASTERDATA`;
         const URL_MASTER_EXPORT = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID_MASTER}`;
         
@@ -809,7 +816,6 @@
                 Papa.parse(url, { download: true, header: false, skipEmptyLines: true, complete: (results) => callbackSuccess(results.data), error: (err) => callbackError(err) });
             };
             
-            // Only fetch MASTER and UPDATE sheets
             parseCSV(URL_MASTER_GVIZ, () => {
                 parseCSV(URL_MASTER_EXPORT, () => { masterParsed = true; checkComplete(); }, (rows) => { processMasterRows(rows); masterParsed = true; checkComplete(); });
             }, (rows) => { processMasterRows(rows); masterParsed = true; checkComplete(); });
@@ -858,11 +864,8 @@
             }
         }
 
-        // CORE LOGIC CHANGE: Generate Master Table AND Summary Tables entirely from MASTERDATA sheet
         function processMasterRows(matrix) {
             if (!matrix || matrix.length === 0) return;
-            
-            // --- Part 1: Logic to Extract Headers & Rows for "Detail Master Data" view ---
             const headerKeywords = ['item', 'sku', 'code', 'desc', 'nama', 'barang', 'zak', 'qty', 'uom', 'satuan', 'weight', 'berat', 'segment', 'no', 'material', 'stok', 'type', 'tipe', 'jenis'];
             let bestHeaderIdx = -1, maxScore = -1;
             for (let i = 0; i < Math.min(matrix.length, 15); i++) {
@@ -887,31 +890,17 @@
             });
             masterDataRaw.headers = cleanedHeaders; masterDataRaw.rows = validRows; renderDetailTable();
 
-            // --- Part 2: NEW Logic to Build summaryData for Reports & Overviews from columns E, F, H ---
             const groupedAggregator = {};
-            
-            // Loop explicitly over matrix rows starting after the detected header index
             for (let i = bestHeaderIdx + 1; i < matrix.length; i++) {
                 const r = matrix[i];
                 if (!r || r.length === 0) continue;
-
-                // Explicit Column Mapping as requested:
-                // Column E = index 4 (Weight)
-                // Column F = index 5 (SKU)
-                // Column H = index 7 (Qty ZAK)
-                
                 let weightRaw = r[4]; 
                 let skuRaw = r[5];
                 let qtyZakRaw = r[7];
-
                 let sku = skuRaw ? skuRaw.toString().trim() : '';
-                if (!sku) continue; // skip row if SKU is completely empty
-
+                if (!sku) continue;
                 let weight = cleanNum(weightRaw);
                 let qtyZak = cleanNum(qtyZakRaw);
-
-                // Attempt to auto-detect 'Segment' (RETAIL, PROJECT, GENERAL) by scanning the whole row 
-                // to maintain grouping consistency in UI. Default to 'GENERAL' if none found.
                 let segment = 'GENERAL';
                 for(let c = 0; c < r.length; c++) {
                     if (r[c] && typeof r[c] === 'string') {
@@ -922,37 +911,19 @@
                         }
                     }
                 }
-
                 let key = `${segment}_${sku}`;
-
                 if (!groupedAggregator[key]) {
-                    groupedAggregator[key] = {
-                        segment: segment,
-                        sku: sku,
-                        weight: weight,
-                        qtyZak: 0,
-                        qtyTon: 0
-                    };
+                    groupedAggregator[key] = { segment: segment, sku: sku, weight: weight, qtyZak: 0, qtyTon: 0 };
                 }
-
-                // Sum up Qty Zak in case there are multiple lines of the same SKU
                 groupedAggregator[key].qtyZak += qtyZak;
-                // Capture weight if the first line had 0
-                if (groupedAggregator[key].weight === 0 && weight > 0) {
-                    groupedAggregator[key].weight = weight;
-                }
+                if (groupedAggregator[key].weight === 0 && weight > 0) groupedAggregator[key].weight = weight;
             }
-
-            // Convert grouped object to array and calculate Qty TON
             summaryData = [];
             for (let key in groupedAggregator) {
                 let item = groupedAggregator[key];
-                // Formular requested: Qty ton kalikan Qty zak dengan Weight di bagi 1000
                 item.qtyTon = (item.qtyZak * item.weight) / 1000;
                 summaryData.push(item);
             }
-
-            // Fallback safety
             if(summaryData.length === 0) summaryData = FALLBACK_SUMMARY_DATA;
         }
 
@@ -972,10 +943,7 @@
             let totalWeight = 0, totalZakSummary = 0, totalTon = 0;
             const uniqueSKUs = new Set();
             summaryData.forEach(item => { totalWeight += item.weight; totalZakSummary += item.qtyZak; totalTon += item.qtyTon; if(item.sku && item.sku !== '-') uniqueSKUs.add(item.sku); });
-            
-            // Re-use totalZakSummary as masterZakSum now that they share the exact same data source
             let masterZakSum = totalZakSummary; 
-            
             const WAREHOUSE_CAPACITY_TON = 2737, spacePct = WAREHOUSE_CAPACITY_TON > 0 ? (totalTon / WAREHOUSE_CAPACITY_TON) * 100 : 0, remainingTon = Math.max(0, WAREHOUSE_CAPACITY_TON - totalTon);
             if(document.getElementById('kpiSpacePercent')) document.getElementById('kpiSpacePercent').innerText = `${fmtDec(spacePct)}%`;
             if(document.getElementById('kpiSpaceCurrent')) document.getElementById('kpiSpaceCurrent').innerText = `${fmtDec(totalTon)} Ton`;
@@ -1026,14 +994,11 @@
         function renderExecReportPreview() {
             const tbody = document.getElementById('execReportTableBody'); if(!tbody) return;
             generateExecReportData();
-            
-            // Changed: Only group by segment using custom order, DO NOT sort SKUs alphabetically
             const grouped = {};
             execReportData.forEach(item => {
                 if (!grouped[item.segment]) grouped[item.segment] = [];
                 grouped[item.segment].push(item);
             });
-            
             const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'];
             const segments = Object.keys(grouped).sort((a, b) => {
                 let idxA = customOrder.indexOf(a.toUpperCase());
@@ -1042,13 +1007,8 @@
                 if (idxB === -1) idxB = 999;
                 return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b);
             });
-
             const sortedData = [];
-            segments.forEach(seg => {
-                // We directly spread the grouped segment to maintain the original order from master data
-                sortedData.push(...grouped[seg]);
-            });
-
+            segments.forEach(seg => { sortedData.push(...grouped[seg]); });
             if(sortedData.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-textSecondary">Data Kosong</td></tr>`; return; }
             let html = '', currentSegment = '';
             sortedData.forEach(item => {
@@ -1169,6 +1129,7 @@
             const styleSegmentRow = { font: { name: "Arial", sz: 10, bold: true, color: { rgb: "000000" } }, fill: { fgColor: { rgb: "DCE6F1" } }, alignment: { horizontal: "left", vertical: "center" }, border: borderAll };
             const styleDataLeft = { font: { name: "Arial", sz: 10 }, alignment: { horizontal: "left", vertical: "center" }, border: borderAll }, styleDataRight = { font: { name: "Arial", sz: 10 }, alignment: { horizontal: "right", vertical: "center" }, border: borderAll }, styleDataRightBold = { font: { name: "Arial", sz: 10, bold: true }, alignment: { horizontal: "right", vertical: "center" }, border: borderAll };
             const styleGrandTotal = { font: { name: "Arial", sz: 11, bold: true }, fill: { fgColor: { rgb: "C5D9F1" } }, alignment: { horizontal: "right", vertical: "center" }, border: { ...borderAll, top: { style: "double", color: { rgb: "000000" } } } };
+            const styleNotesTitle = { font: { name: "Arial", sz: 8, italic: true, bold: true } }, styleNotes = { font: { name: "Arial", sz: 8, italic: true }, alignment: { horizontal: "left", vertical: "top", wrapText: true } };
 
             function setCell(r, c, val, style, t, z) { ws[XLSX.utils.encode_cell({ r, c })] = { v: val, t: t || (typeof val === 'number' ? 'n' : 's'), s: style, ...(z && {z}) }; }
 
@@ -1193,10 +1154,7 @@
                 setCell(currentRow, 0, seg, styleSegmentRow); for(let c=1; c<7; c++) setCell(currentRow, c, "", styleSegmentRow);
                 ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:6} }); currentRow++;
                 
-                // Changed: Removed the explicit .sort((a,b) => a.sku.localeCompare(b.sku)) 
-                // to maintain the original fetched order from Master Data
                 const items = grouped[seg]; 
-                
                 let subZak = 0, subTon = 0, subIn = 0, subOut = 0;
                 items.forEach(item => {
                     const inVal = item.stokIn !== '' ? parseInt(item.stokIn) : "", outVal = item.stokOut !== '' ? parseInt(item.stokOut) : "";
@@ -1215,7 +1173,24 @@
             setCell(currentRow, 0, "GRAND TOTAL", styleGrandTotal); for(let c=1; c<3; c++) setCell(currentRow, c, "", styleGrandTotal);
             setCell(currentRow, 3, gTotalIn || "", styleGrandTotal, gTotalIn ? 'n' : 's', '#,##0'); setCell(currentRow, 4, gTotalOut || "", styleGrandTotal, gTotalOut ? 'n' : 's', '#,##0');
             setCell(currentRow, 5, gTotalZak, styleGrandTotal, 'n', '#,##0'); setCell(currentRow, 6, gTotalTon, styleGrandTotal, 'n', '#,##0.0');
-            ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:2} }); ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow, c: 6 } }); ws['!cols'] = [ { wch: 15 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 15 } ];
+            ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:2} });
+
+            currentRow += 2;
+            setCell(currentRow, 0, "Catatan:", styleNotesTitle);
+            currentRow++;
+            setCell(currentRow, 0, "1. Stock Out: mencakup seluruh pergerakan stok keluar dari Warehouse Finished Goods, tidak terbatas pada pengiriman ke pelanggan, tetapi juga meliputi pengiriman sampel, produk rusak (damaged goods), pemakaian internal, serta pengeluaran stok lainnya.", styleNotes);
+            ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:6} });
+            currentRow++;
+            setCell(currentRow, 0, "2. Stock In: merupakan stok hasil output produksi yang diterima di Warehouse Finished Goods, termasuk produk retur yang telah dinyatakan layak (Good Condition) berdasarkan hasil inspeksi dan persetujuan dari Quality Control (QC).", styleNotes);
+            ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:6} });
+
+            ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow, c: 6 } }); 
+            ws['!cols'] = [ { wch: 15 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 15 } ];
+            ws['!rows'] = []; ws['!rows'][currentRow] = { hpx: 45 }; ws['!rows'][currentRow-1] = { hpx: 45 };
+            
+            // HIDE GRIDLINES
+            ws['!views'] = [{ showGridLines: false }];
+
             XLSX.utils.book_append_sheet(wb, ws, "Executive Report");
             XLSX.writeFile(wb, `Executive_Stock_Report_${dateSelected.replace(/-/g, '')}_${fileTimeLabel}.xlsx`);
             setTimeout(() => showToast('Export Success', 'Executive format downloaded.', 'success'), 500);
@@ -1247,6 +1222,10 @@
                 ws['!cols'] = [{ wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 18 }, { wch: 18 }];
             }
             ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow, c: Math.max(0, maxCols - 1) } });
+            
+            // HIDE GRIDLINES
+            ws['!views'] = [{ showGridLines: false }];
+
             XLSX.utils.book_append_sheet(wb, ws, isDetailTab ? "Master Data" : "Stock");
             XLSX.writeFile(wb, `LMS_Report_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`);
         }
