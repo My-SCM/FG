@@ -439,6 +439,36 @@
                         <p class="text-[9px] text-textSecondary mt-2">Source: G-Sheets (Cloud Sync)</p>
                     </div>
                 </div>
+
+                <!-- MERGED KPI: Pallet Overview (Retail & Project) -->
+                <div class="neon-card purple-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Pallet Management</p>
+                            <h3 class="text-lg font-black text-white font-mono">Overview</h3>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-[9px] bg-accentPurple/20 text-accentPurple px-2 py-0.5 rounded font-bold">1368 PalPos</span>
+                                <span class="text-[9px] bg-accentCyan/20 text-accentCyan px-2 py-0.5 rounded font-bold">3 Staging</span>
+                            </div>
+                        </div>
+                        <div class="p-2.5 bg-accentPurple/10 border border-accentPurple/20 rounded-xl text-accentPurple">
+                            <i class="ph-fill ph-stack text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 border-t border-borderMain/50 pt-3">
+                        <div class="flex-1">
+                            <p class="text-[9px] text-textSecondary uppercase">Retail (Silog)</p>
+                            <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletRetail">0</h4>
+                            <p class="text-[9px] text-textSecondary" id="kpiTonRetail">0 Ton</p>
+                        </div>
+                        <div class="w-px bg-borderMain/50"></div>
+                        <div class="flex-1">
+                            <p class="text-[9px] text-textSecondary uppercase">Project</p>
+                            <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletProject">0</h4>
+                            <p class="text-[9px] text-textSecondary" id="kpiTonProject">0 Ton</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- MAIN TAB CONTENT AREA -->
@@ -492,36 +522,6 @@
                                 <i class="ph-fill ph-chart-bar text-accentCyan text-lg"></i> Top SKU Distribution (TON)
                             </h3>
                             <div class="flex-1 overflow-y-auto space-y-3.5 pr-2" id="topSkuRankingContainer">
-                            </div>
-                        </div>
-
-                        <!-- Pallet Management (Moved) -->
-                        <div class="neon-card purple-top p-5 flex flex-col justify-between glass-panel">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Pallet Management</p>
-                                    <h3 class="text-lg font-black text-white font-mono">Overview</h3>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <span class="text-[9px] bg-accentPurple/20 text-accentPurple px-2 py-0.5 rounded font-bold">1368 PalPos</span>
-                                        <span class="text-[9px] bg-accentCyan/20 text-accentCyan px-2 py-0.5 rounded font-bold">3 Staging</span>
-                                    </div>
-                                </div>
-                                <div class="p-2.5 bg-accentPurple/10 border border-accentPurple/20 rounded-xl text-accentPurple">
-                                    <i class="ph-fill ph-stack text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="flex gap-4 border-t border-borderMain/50 pt-3">
-                                <div class="flex-1">
-                                    <p class="text-[9px] text-textSecondary uppercase">Retail (Silog)</p>
-                                    <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletRetail">0</h4>
-                                    <p class="text-[9px] text-textSecondary" id="kpiTonRetail">0 Ton</p>
-                                </div>
-                                <div class="w-px bg-borderMain/50"></div>
-                                <div class="flex-1">
-                                    <p class="text-[9px] text-textSecondary uppercase">Project</p>
-                                    <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletProject">0</h4>
-                                    <p class="text-[9px] text-textSecondary" id="kpiTonProject">0 Ton</p>
-                                </div>
                             </div>
                         </div>
                     </div>
