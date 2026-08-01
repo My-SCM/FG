@@ -473,7 +473,7 @@
                                 <thead class="sticky top-0 bg-[#14213d] z-10 border-b border-borderMain">
                                     <tr class="text-[11px] font-bold text-textSecondary uppercase tracking-wider">
                                         <th class="px-6 py-4">Segment / Details</th>
-                                        <th class="px-6 py-4">SKU Code</th>
+                                        <th class="px-6 py-4">SKU</th>
                                         <th class="px-6 py-4 text-right">Weight (KG)</th>
                                         <th class="px-6 py-4 text-right">Quantity (ZAK)</th>
                                         <th class="px-6 py-4 text-right">Quantity (TON)</th>
@@ -548,7 +548,7 @@
                             <thead class="sticky top-0 bg-[#14213d] z-10 border-b border-borderMain">
                                 <tr class="text-[11px] font-bold text-textSecondary uppercase tracking-wider">
                                     <th class="px-6 py-4">Segment / Details</th>
-                                    <th class="px-6 py-4">SKU Code</th>
+                                    <th class="px-6 py-4">SKU</th>
                                     <th class="px-6 py-4 text-right">Weight (KG)</th>
                                     <th class="px-6 py-4 text-right">Quantity (ZAK)</th>
                                     <th class="px-6 py-4 text-right">Quantity (TON)</th>
@@ -1107,7 +1107,7 @@
             
             if(!ws['!merges']) ws['!merges'] = [];
             ws['!merges'].push({ s: {r:0, c:0}, e: {r:0, c:6} }, { s: {r:1, c:0}, e: {r:1, c:6} }, { s: {r:2, c:0}, e: {r:2, c:6} });
-            ["Segment", "SKU Code", "Weight (KG)", "Stock In", "Stock Out", "Qty (ZAK)", "Qty (TON)"].forEach((h, i) => setCell(4, i, h, styleHeader));
+            ["Segment", "SKU", "Weight (KG)", "Stock In", "Stock Out", "Qty (ZAK)", "Qty (TON)"].forEach((h, i) => setCell(4, i, h, styleHeader));
 
             let currentRow = 5;
             const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], grouped = {};
@@ -1166,7 +1166,7 @@
                 });
                 ws['!cols'] = headers.map(h => ({ wch: Math.max(14, (h||'').length + 4) }));
             } else {
-                const headers = ["Segment", "SKU Code", "Weight (KG)", "Quantity (ZAK)", "Quantity (TON)"];
+                const headers = ["Segment", "SKU", "Weight (KG)", "Quantity (ZAK)", "Quantity (TON)"];
                 maxCols = headers.length; headers.forEach((h, i) => setCell(5, i, h, styleHeader));
                 summaryData.forEach(item => { setCell(currentRow, 0, item.segment, styleDataLeft); setCell(currentRow, 1, item.sku, styleDataLeft); setCell(currentRow, 2, item.weight, styleDataRight, 'n', '#,##0'); setCell(currentRow, 3, item.qtyZak, styleDataRight, 'n', '#,##0'); setCell(currentRow, 4, item.qtyTon, styleDataRight, 'n', '0.0'); currentRow++; });
                 ws['!cols'] = [{ wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 18 }, { wch: 18 }];
