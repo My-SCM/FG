@@ -154,6 +154,16 @@
             z-index: 999;
         }
         .toast-box.show { transform: translateY(0); opacity: 1; }
+        
+        /* Hide arrows on number input */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 <body class="flex h-screen w-full overflow-hidden bg-bgPrimary">
@@ -218,24 +228,6 @@
                     </li>
                 </ul>
             </div>
-
-            <div>
-                <p class="text-[10px] font-bold text-textSecondary/50 uppercase tracking-widest mb-3 px-3">System Admin</p>
-                <ul class="space-y-1.5">
-                    <li>
-                        <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all group">
-                            <i class="ph-bold ph-hard-drives text-xl group-hover:text-accentCyan transition-colors"></i>
-                            <span>Data Sources</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all group">
-                            <i class="ph-bold ph-gear-six text-xl group-hover:text-accentCyan transition-colors"></i>
-                            <span>System Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </nav>
 
         <!-- System Status Box -->
@@ -265,25 +257,16 @@
             <div class="relative w-96">
                 <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-textSecondary text-lg"></i>
                 <input type="text" id="globalSearchInput" oninput="handleSearch(this.value)" placeholder="Cari SKU, Segment, atau Keyword..." class="w-full bg-bgCard/80 border border-borderMain text-white rounded-xl pl-11 pr-12 py-2.5 focus:outline-none focus:border-accentCyan focus:ring-1 focus:ring-accentCyan transition-all text-sm placeholder:text-textSecondary/50">
-                <div class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-textSecondary border border-borderMain px-1.5 py-0.5 rounded bg-bgPrimary">
-                    Ctrl K
-                </div>
             </div>
 
             <!-- Top Right Action Controls -->
             <div class="flex items-center gap-5">
                 <div class="flex items-center gap-2 text-xs text-textSecondary bg-bgCard border border-borderMain px-3 py-2 rounded-xl">
-                    <i class="ph-bold ph-arrows-clockwise text-accentCyan animate-spin" style="animation-duration: 4s;"></i>
-                    <span id="syncTimestamp">Auto-Sync: --:-- WIB</span>
+                    <i class="ph-bold ph-clock-counter-clockwise text-accentCyan"></i>
+                    <span id="syncTimestamp">Data Time: --:-- WIB</span>
                 </div>
 
                 <div class="h-6 w-px bg-borderMain"></div>
-
-                <!-- Notifications -->
-                <button class="relative p-2.5 bg-bgCard hover:bg-white/10 rounded-xl border border-borderMain text-textSecondary hover:text-white transition-all">
-                    <i class="ph-bold ph-bell text-lg"></i>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-statusDanger rounded-full"></span>
-                </button>
 
                 <!-- User Profile -->
                 <div class="relative group">
@@ -299,8 +282,6 @@
                         </div>
                         <i class="ph-bold ph-caret-down text-textSecondary text-xs"></i>
                     </div>
-
-                    <!-- Dropdown Menu for Logout / Lock -->
                     <div id="userDropdownMenu" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 bg-bgCard border border-borderMain rounded-xl shadow-glass p-2 z-50">
                         <div onclick="logoutSession()" class="flex items-center gap-2 px-3 py-2 text-xs text-statusDanger hover:bg-statusDanger/10 rounded-lg cursor-pointer transition-colors">
                             <i class="ph-bold ph-sign-out text-base"></i>
@@ -318,7 +299,7 @@
             <div id="loadingOverlay" class="absolute inset-0 bg-bgPrimary/90 backdrop-blur-md z-50 flex flex-col items-center justify-center transition-all duration-500">
                 <div class="loader-ring mb-4"></div>
                 <h3 class="text-lg font-bold text-white tracking-wide">Menghubungkan ke Google Sheets...</h3>
-                <p class="text-xs text-textSecondary mt-1">Mengambil data dari Sheet Summary & MasterData</p>
+                <p class="text-xs text-textSecondary mt-1">Mengambil data Master, Summary, & Jam Terakhir</p>
             </div>
 
             <!-- PAGE TITLE BAR -->
@@ -338,7 +319,7 @@
 
                 <!-- General Filters & Export (Hidden on Exec Report View) -->
                 <div class="flex flex-wrap items-center gap-3" id="generalActionControls">
-                    <div class="flex items-center bg-bgCard border border-borderMain rounded-xl px-3.5 py-2 text-xs">
+                    <div class="flex items-center bg-bgCard border border-borderMain rounded-xl px-3.5 py-2 text-xs" title="Hari ini">
                         <i class="ph-bold ph-calendar-blank text-accentCyan mr-2"></i>
                         <span id="currentDateDisplay" class="text-white font-medium">-- --- ----</span>
                     </div>
@@ -374,12 +355,10 @@
                             <i class="ph-bold ph-check-circle"></i> Optimal
                         </div>
                     </div>
-
                     <!-- Visual Progress Bar -->
                     <div class="w-full bg-bgPrimary/80 h-2 rounded-full overflow-hidden border border-borderMain/60 my-2">
                         <div id="kpiSpaceProgressBar" class="h-full bg-gradient-to-r from-accentCyan to-accentPurple rounded-full transition-all duration-700" style="width: 0%"></div>
                     </div>
-
                     <!-- Clean Metric Breakdown -->
                     <div class="grid grid-cols-3 gap-1 pt-2 border-t border-borderMain/50 text-[10px]">
                         <div>
@@ -387,7 +366,7 @@
                             <span class="font-bold text-white font-mono" id="kpiSpaceCurrent">0 Ton</span>
                         </div>
                         <div class="text-center">
-                            <span class="text-textSecondary/70 block">Sisa Ruang</span>
+                            <span class="text-textSecondary/70 block">Sisa</span>
                             <span class="font-bold text-accentCyan font-mono" id="kpiSpaceRemaining">0 Ton</span>
                         </div>
                         <div class="text-right">
@@ -397,7 +376,7 @@
                     </div>
                 </div>
 
-                <!-- KPI 2: Quantity (ZAK / UOM Breakdown) -->
+                <!-- KPI 2: Quantity ZAK -->
                 <div class="neon-card purple-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
                     <div class="flex justify-between items-start">
                         <div>
@@ -410,7 +389,6 @@
                             <i class="ph-fill ph-package text-xl"></i>
                         </div>
                     </div>
-                    <!-- Dynamic UOM Breakdown Container -->
                     <div class="mt-2 pt-2 border-t border-borderMain/50 flex flex-wrap gap-1.5 items-center text-[10px]" id="kpiUomBreakdown">
                         <span class="text-textSecondary/60 italic">Memuat UOM...</span>
                     </div>
@@ -420,7 +398,7 @@
                 <div class="neon-card cyan-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Quantity (TON)</p>
+                            <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Qty (TON)</p>
                             <h3 class="text-2xl font-black text-white font-mono flex items-baseline gap-1" id="kpiTon">
                                 0 <span class="text-xs font-normal text-textSecondary">Ton</span>
                             </h3>
@@ -433,7 +411,6 @@
                         <span class="text-statusSuccess font-bold flex items-center gap-1 bg-statusSuccess/10 px-2 py-0.5 rounded-lg border border-statusSuccess/20">
                             <i class="ph-bold ph-trend-up"></i> All Segments Sum
                         </span>
-                        <span class="text-[10px] text-textSecondary">Accurate Total</span>
                     </div>
                 </div>
 
@@ -455,14 +432,19 @@
                     </div>
                 </div>
 
-                <!-- KPI 5: Sync Status -->
-                <div class="glass-panel p-5 rounded-2xl flex flex-col justify-center min-h-[150px] border-l-4 border-l-statusWarning">
-                    <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1 flex items-center justify-between">
-                        Last Update <i class="ph-fill ph-clock text-statusWarning"></i>
-                    </p>
-                    <h3 class="text-xl font-black text-white" id="kpiTimeDisplay">-- --- ----</h3>
-                    <p class="text-xs font-mono text-accentCyan mt-0.5" id="kpiClockDisplay">--:--:-- WIB</p>
-                    <p class="text-[10px] text-textSecondary mt-2">Cloud Node: Connected</p>
+                <!-- KPI 5: DATA LAST UPDATE FROM SHEET -->
+                <div class="glass-panel p-5 rounded-2xl flex flex-col justify-center min-h-[150px] border-l-4 border-l-statusWarning relative overflow-hidden">
+                    <div class="absolute right-[-20px] top-[-20px] opacity-10">
+                        <i class="ph-fill ph-clock text-9xl text-statusWarning"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1 flex items-center gap-2">
+                            Update Data Terakhir <i class="ph-bold ph-info text-statusWarning" title="Diambil otomatis dari Sheet Data Update Terakhir"></i>
+                        </p>
+                        <h3 class="text-xl font-black text-white" id="kpiTimeDisplay">-- --- ----</h3>
+                        <p class="text-xs font-mono text-statusWarning font-bold mt-0.5" id="kpiClockDisplay">--:-- WIB</p>
+                        <p class="text-[9px] text-textSecondary mt-2">Source: G-Sheets (Cloud Sync)</p>
+                    </div>
                 </div>
             </div>
 
@@ -471,14 +453,13 @@
                 
                 <!-- TAB 1: STOCK MONITORING VIEW -->
                 <div id="view-stock" class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                    <!-- Table Section (2 Cols) -->
                     <div class="xl:col-span-2 glass-panel rounded-2xl flex flex-col overflow-hidden h-[620px] border border-borderMain">
                         <div class="p-5 border-b border-borderMain bg-bgCard/90 flex justify-between items-center">
                             <div class="flex items-center gap-3">
                                 <i class="ph-fill ph-table text-2xl text-accentCyan"></i>
                                 <div>
                                     <h3 class="font-bold text-white text-base">Finished Goods Stock Summary Report</h3>
-                                    <p class="text-xs text-textSecondary" id="tableSubtitle">Per Tanggal: -- --- ----</p>
+                                    <p class="text-xs text-statusWarning font-mono" id="tableSubtitle">Update Terakhir: -- --- ----</p>
                                 </div>
                             </div>
                             <div class="flex gap-2">
@@ -487,8 +468,6 @@
                                 </button>
                             </div>
                         </div>
-
-                        <!-- Scrollable Table -->
                         <div class="flex-1 overflow-auto">
                             <table class="w-full text-left border-collapse whitespace-nowrap text-sm">
                                 <thead class="sticky top-0 bg-[#14213d] z-10 border-b border-borderMain">
@@ -501,15 +480,12 @@
                                     </tr>
                                 </thead>
                                 <tbody id="summaryTableBody" class="divide-y divide-borderMain/40 font-sans">
-                                    <!-- Dynamic rows loaded via JS -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Right Analytics Sidebar (1 Col) -->
                     <div class="xl:col-span-1 flex flex-col gap-6">
-                        <!-- Donut Chart -->
                         <div class="glass-panel rounded-2xl p-5 border border-borderMain h-[400px] flex flex-col">
                             <h3 class="font-bold text-white text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
                                 <i class="ph-fill ph-chart-donut text-accentPurple text-lg"></i> Segment Stock Share
@@ -518,13 +494,11 @@
                                 <canvas id="stockDonutChart"></canvas>
                             </div>
                         </div>
-                        <!-- Top SKU Bar Ranking -->
                         <div class="glass-panel rounded-2xl p-5 border border-borderMain flex-1 flex flex-col">
                             <h3 class="font-bold text-white text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
                                 <i class="ph-fill ph-chart-bar text-accentCyan text-lg"></i> Top SKU Distribution (TON)
                             </h3>
                             <div class="flex-1 overflow-y-auto space-y-3.5 pr-2" id="topSkuRankingContainer">
-                                <!-- Top SKU list injected here -->
                             </div>
                         </div>
                     </div>
@@ -545,11 +519,9 @@
                         <table class="w-full text-left border-collapse whitespace-nowrap text-sm">
                             <thead class="sticky top-0 bg-[#14213d] z-10 border-b border-borderMain">
                                 <tr id="detailTableHeader" class="text-[11px] font-bold text-textSecondary uppercase tracking-wider">
-                                    <!-- Dynamic headers -->
                                 </tr>
                             </thead>
                             <tbody id="detailTableBody" class="divide-y divide-borderMain/40 font-mono text-xs">
-                                <!-- Dynamic detail rows -->
                             </tbody>
                         </table>
                     </div>
@@ -562,7 +534,7 @@
                             <i class="ph-fill ph-table text-2xl text-accentCyan"></i>
                             <div>
                                 <h3 class="font-bold text-white text-base">Finished Goods Stock Summary (Clean View)</h3>
-                                <p class="text-xs text-textSecondary" id="tableSubtitleOnly">Per Tanggal: -- --- ----</p>
+                                <p class="text-xs text-statusWarning font-mono" id="tableSubtitleOnly">Update Terakhir: -- --- ----</p>
                             </div>
                         </div>
                         <div class="flex gap-2">
@@ -571,7 +543,6 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Scrollable Table -->
                     <div class="flex-1 overflow-auto">
                         <table class="w-full text-left border-collapse whitespace-nowrap text-sm">
                             <thead class="sticky top-0 bg-[#14213d] z-10 border-b border-borderMain">
@@ -584,7 +555,6 @@
                                 </tr>
                             </thead>
                             <tbody id="summaryTableBodyOnly" class="divide-y divide-borderMain/40 font-sans">
-                                <!-- Dynamic rows loaded via JS -->
                             </tbody>
                         </table>
                     </div>
@@ -592,7 +562,6 @@
 
                 <!-- TAB 4: LAPORAN EKSEKUTIF -->
                 <div id="view-exec-report" class="hidden glass-panel rounded-2xl border border-borderMain overflow-hidden flex flex-col h-[650px]">
-                    <!-- Filters & Controls for Report -->
                     <div class="p-5 border-b border-borderMain bg-bgCard/90 flex flex-wrap justify-between items-end gap-4">
                         <div class="flex-1 min-w-[300px]">
                             <h3 class="font-bold text-white text-base flex items-center gap-2 mb-1">
@@ -600,40 +569,33 @@
                             </h3>
                             <p class="text-xs text-textSecondary">Format laporan eksekutif pergerakan stok untuk kebutuhan cetak dan analisa.</p>
                         </div>
-                        
                         <div class="flex items-end gap-3 bg-bgPrimary/50 p-3 rounded-xl border border-borderMain w-full lg:w-auto">
-                            <!-- Date Picker -->
                             <div>
                                 <label class="block text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Tanggal</label>
                                 <input type="date" id="execDateFilter" onchange="renderExecReportPreview()" class="bg-bgCard border border-borderMain text-white rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-statusSuccess transition-all cursor-pointer w-full">
                             </div>
-                            
-                            <!-- Time Range Select -->
                             <div>
                                 <label class="block text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Rentang Jam</label>
                                 <select id="execTimeFilter" class="bg-bgCard border border-borderMain text-white rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-statusSuccess transition-all cursor-pointer w-full" onchange="renderExecReportPreview()">
+                                    <option value="dynamic_update" selected>00:00 - Update Terakhir</option>
                                     <option value="00:00-08:00">00:00 - 08:00 WIB (Shift 1)</option>
                                     <option value="08:00-16:00">08:00 - 16:00 WIB (Shift 2)</option>
                                     <option value="16:00-24:00">16:00 - 24:00 WIB (Shift 3)</option>
-                                    <option value="00:00-24:00" selected>00:00 - 24:00 WIB (Full Day)</option>
+                                    <option value="00:00-24:00">00:00 - 24:00 WIB (Full Day)</option>
                                 </select>
                             </div>
-
-                            <!-- Download Button -->
                             <button onclick="exportExecutiveReport()" class="bg-gradient-to-r from-statusSuccess to-emerald-600 hover:from-emerald-500 hover:to-statusSuccess text-bgPrimary font-bold px-5 py-2 rounded-lg shadow-glow-green transition-all flex items-center gap-2 text-xs transform hover:scale-105 active:scale-95 h-[34px] whitespace-nowrap">
                                 <i class="ph-bold ph-download-simple text-base"></i>
                                 Unduh Format Eksekutif
                             </button>
                         </div>
                     </div>
-
-                    <!-- Preview Table -->
                     <div class="flex-1 overflow-auto bg-bgPrimary/30">
                         <div class="p-4">
                             <div class="bg-bgCard border border-borderMain rounded-xl overflow-hidden shadow-lg">
                                 <div class="bg-[#14213d] px-4 py-2 border-b border-borderMain flex justify-between items-center">
                                     <span class="text-xs font-bold text-textSecondary uppercase">Preview Format Tabel</span>
-                                    <span class="text-[10px] bg-statusSuccess/20 text-statusSuccess px-2 py-0.5 rounded border border-statusSuccess/30">*Kolom Stok In & Stok Out dikosongkan</span>
+                                    <span class="text-[10px] bg-accentCyan/20 text-accentCyan px-2 py-0.5 rounded border border-accentCyan/30"><i class="ph-bold ph-pencil-simple mr-1"></i>Input manual In & Out sebelum di-export</span>
                                 </div>
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left border-collapse whitespace-nowrap text-sm">
@@ -649,7 +611,6 @@
                                             </tr>
                                         </thead>
                                         <tbody id="execReportTableBody" class="divide-y divide-borderMain/40 font-mono text-xs">
-                                            <!-- Preview data rendered here -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -658,7 +619,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 5: OFFTAKE -->
+                <!-- TABS: OFFTAKE & PALLET (UNDER CONSTRUCTION) -->
                 <div id="view-offtake" class="hidden glass-panel rounded-2xl p-16 text-center border border-borderMain flex flex-col items-center justify-center h-[650px]">
                     <div class="p-6 bg-gradient-to-br from-accentPurple/20 to-accentCyan/20 border border-accentPurple/30 rounded-full shadow-glow-purple mb-6">
                         <i class="ph-fill ph-cone text-6xl text-accentPurple animate-pulse"></i>
@@ -666,8 +627,6 @@
                     <h3 class="text-2xl font-extrabold text-white mb-3">This website is under construction</h3>
                     <p class="text-sm text-textSecondary max-w-md">Modul Offtake Outbound sedang dalam tahap pengembangan dan sinkronisasi server.</p>
                 </div>
-
-                <!-- TAB 6: PALLET -->
                 <div id="view-pallet" class="hidden glass-panel rounded-2xl p-16 text-center border border-borderMain flex flex-col items-center justify-center h-[650px]">
                     <div class="p-6 bg-gradient-to-br from-accentCyan/20 to-accentPurple/20 border border-accentCyan/30 rounded-full shadow-glow-cyan mb-6">
                         <i class="ph-fill ph-cone text-6xl text-accentCyan animate-pulse"></i>
@@ -693,7 +652,6 @@
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-textSecondary hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors">
                 <i class="ph-bold ph-x text-xl"></i>
             </button>
-
             <div class="flex items-center gap-3 mb-5">
                 <div class="p-3 bg-accentPurple/20 border border-accentPurple/30 rounded-xl text-accentPurple shadow-glow-purple">
                     <i class="ph-fill ph-lock-key text-2xl"></i>
@@ -703,7 +661,6 @@
                     <p class="text-xs text-textSecondary">Membutuhkan otorisasi untuk membuka modul ini</p>
                 </div>
             </div>
-
             <form onsubmit="submitAuthForm(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-textSecondary mb-1.5">Username</label>
@@ -712,7 +669,6 @@
                         <input type="text" id="authUsername" required placeholder="Masukkan Username..." class="w-full bg-bgPrimary border border-borderMain text-white rounded-xl pl-10 pr-4 py-2.5 text-xs focus:outline-none focus:border-accentCyan transition-all">
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-textSecondary mb-1.5">Password</label>
                     <div class="relative">
@@ -720,16 +676,12 @@
                         <input type="password" id="authPassword" required placeholder="Masukkan Password..." class="w-full bg-bgPrimary border border-borderMain text-white rounded-xl pl-10 pr-4 py-2.5 text-xs focus:outline-none focus:border-accentCyan transition-all">
                     </div>
                 </div>
-
                 <div id="authErrorMsg" class="hidden p-3 bg-statusDanger/10 border border-statusDanger/30 rounded-xl text-statusDanger text-xs flex items-center gap-2">
                     <i class="ph-fill ph-warning-circle text-base"></i>
                     <span id="authErrorText">Username atau Password salah!</span>
                 </div>
-
                 <div class="flex gap-3 pt-2">
-                    <button type="button" onclick="closeAuthModal()" class="flex-1 py-2.5 bg-bgPrimary hover:bg-white/5 border border-borderMain rounded-xl text-textSecondary text-xs font-semibold transition-all">
-                        Batal
-                    </button>
+                    <button type="button" onclick="closeAuthModal()" class="flex-1 py-2.5 bg-bgPrimary hover:bg-white/5 border border-borderMain rounded-xl text-textSecondary text-xs font-semibold transition-all">Batal</button>
                     <button type="submit" class="flex-1 py-2.5 bg-gradient-to-r from-accentCyan to-accentPurple text-bgPrimary font-extrabold text-xs rounded-xl shadow-glow-cyan hover:brightness-110 transition-all flex items-center justify-center gap-2">
                         <i class="ph-bold ph-lock-key-open text-base"></i>
                         <span>Buka Akses</span>
@@ -751,35 +703,30 @@
     </div>
 
     <script>
+        // ... [script unchanged until exportExecutiveReport] ...
         const SHEET_ID = '1A2N2FnkESTgsffNDXQYTPRcrUURZIXdHKBbMeL3YjJI';
         const GID_SUMMARY = '171218715';
         const GID_MASTER = '1732584925';
-
+        const SHEET_NAME_UPDATE = 'DATA'; 
         const URL_SUMMARY_GVIZ = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID_SUMMARY}`;
         const URL_SUMMARY_EXPORT = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID_SUMMARY}`;
-        
         const URL_MASTER_GVIZ = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=MASTERDATA`;
         const URL_MASTER_EXPORT = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID_MASTER}`;
-
+        const URL_UPDATE_GVIZ = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME_UPDATE}`;
+        const URL_UPDATE_EXPORT = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&sheet=${SHEET_NAME_UPDATE}`;
         const FALLBACK_SUMMARY_DATA = [
             { segment: 'RETAIL', sku: 'D1-R', weight: 40, qtyZak: 5555, qtyTon: 222.2 },
             { segment: 'RETAIL', sku: 'D2-R', weight: 40, qtyZak: 7430, qtyTon: 297.2 },
-            { segment: 'RETAIL', sku: 'D3-R', weight: 40, qtyZak: 25170, qtyTon: 1006.8 },
-            { segment: 'RETAIL', sku: 'K1-R', weight: 35, qtyZak: 48, qtyTon: 1.7 },
-            { segment: 'RETAIL', sku: 'K2-R', weight: 25, qtyZak: 8196, qtyTon: 204.9 },
-            { segment: 'RETAIL', sku: 'K3-R', weight: 25, qtyZak: 872, qtyTon: 21.8 },
-            { segment: 'RETAIL', sku: 'L1-R', weight: 40, qtyZak: 235, qtyTon: 9.4 },
-            { segment: 'PROJECT', sku: 'D1-P', weight: 40, qtyZak: 3238, qtyTon: 129.5 },
-            { segment: 'PROJECT', sku: 'D2-P', weight: 50, qtyZak: 10292, qtyTon: 514.6 },
-            { segment: 'PROJECT', sku: 'D3-P', weight: 40, qtyZak: 1323, qtyTon: 52.9 }
+            { segment: 'PROJECT', sku: 'D1-P', weight: 40, qtyZak: 3238, qtyTon: 129.5 }
         ];
 
         let summaryData = [];
         let execReportData = [];
         let masterDataRaw = { headers: [], rows: [] };
+        let lastUpdateDateStr = "-- --- ----";
+        let lastUpdateTimeStr = "--:--";
         let activeMainTab = 'stock';
         let stockDonutChartInstance = null;
-
         let isAuthenticated = false;
         let pendingTargetTab = null;
 
@@ -795,27 +742,17 @@
             if (!str) return 0;
             str = str.replace(/[^\d.,-]/g, '');
             if (!str) return 0;
-
             if (str.includes('.') && str.includes(',')) {
-                if (str.lastIndexOf('.') < str.lastIndexOf(',')) {
-                    str = str.replace(/\./g, '').replace(',', '.');
-                } else {
-                    str = str.replace(/,/g, '');
-                }
+                if (str.lastIndexOf('.') < str.lastIndexOf(',')) str = str.replace(/\./g, '').replace(',', '.');
+                else str = str.replace(/,/g, '');
             } else if (str.includes(',')) {
                 const parts = str.split(',');
-                if (parts.length === 2 && parts[1].length <= 2) {
-                    str = str.replace(',', '.');
-                } else {
-                    str = str.replace(/,/g, '');
-                }
+                if (parts.length === 2 && parts[1].length <= 2) str = str.replace(',', '.');
+                else str = str.replace(/,/g, '');
             } else if (str.includes('.')) {
                 const parts = str.split('.');
-                if (parts.length > 2) {
-                    str = str.replace(/\./g, '');
-                } else if (parts.length === 2 && parts[1].length === 3) {
-                    str = str.replace('.', '');
-                }
+                if (parts.length > 2) str = str.replace(/\./g, '');
+                else if (parts.length === 2 && parts[1].length === 3) str = str.replace('.', '');
             }
             const parsed = parseFloat(str);
             return isNaN(parsed) ? 0 : parsed;
@@ -823,45 +760,42 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             updateClock();
-            setInterval(updateClock, 1000);
-            
+            setInterval(updateClock, 1000); 
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('execDateFilter').value = today;
-
             fetchData();
         });
 
         function updateClock() {
             const now = new Date();
             const dateOptions = { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' };
-            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Asia/Jakarta' };
-            
             const dateStr = now.toLocaleDateString('en-GB', dateOptions);
-            const timeStr = now.toLocaleTimeString('en-GB', timeOptions) + ' WIB';
-
             document.getElementById('currentDateDisplay').innerText = dateStr;
-            document.getElementById('kpiTimeDisplay').innerText = dateStr;
-            document.getElementById('kpiClockDisplay').innerText = timeStr;
             document.getElementById('sidebarClock').innerText = `${dateStr} - ${now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
-            document.getElementById('tableSubtitle').innerText = `Per Tanggal: ${dateStr} ${timeStr}`;
-            if(document.getElementById('tableSubtitleOnly')) document.getElementById('tableSubtitleOnly').innerText = `Per Tanggal: ${dateStr} ${timeStr}`;
-            document.getElementById('syncTimestamp').innerText = `Auto-Sync: ${now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})} WIB`;
+        }
+
+        function updateLastUpdateUI() {
+            document.getElementById('kpiTimeDisplay').innerText = lastUpdateDateStr;
+            document.getElementById('kpiClockDisplay').innerText = lastUpdateTimeStr + (lastUpdateTimeStr !== "--:--" ? ' WIB' : '');
+            const subtitleText = `Update Terakhir: ${lastUpdateDateStr} ${lastUpdateTimeStr}`;
+            document.getElementById('tableSubtitle').innerText = subtitleText;
+            if(document.getElementById('tableSubtitleOnly')) document.getElementById('tableSubtitleOnly').innerText = subtitleText;
+            document.getElementById('syncTimestamp').innerText = `Data Time: ${lastUpdateTimeStr} WIB`;
+            const execTimeFilter = document.getElementById('execTimeFilter');
+            if (execTimeFilter && lastUpdateTimeStr !== "--:--") {
+                const dynamicOpt = Array.from(execTimeFilter.options).find(opt => opt.value === 'dynamic_update');
+                if (dynamicOpt) dynamicOpt.text = `00:00 - ${lastUpdateTimeStr} WIB (S/d Update)`;
+            }
         }
 
         function showToast(title, msg, type = 'success') {
             const toast = document.getElementById('toast');
             document.getElementById('toastTitle').innerText = title;
             document.getElementById('toastMsg').innerText = msg;
-            
             const icon = document.getElementById('toastIcon');
-            if(type === 'success') {
-                icon.className = 'ph-fill ph-check-circle text-statusSuccess text-2xl';
-            } else if (type === 'error') {
-                icon.className = 'ph-fill ph-warning-circle text-statusDanger text-2xl';
-            } else {
-                icon.className = 'ph-fill ph-info text-accentCyan text-2xl';
-            }
-
+            if(type === 'success') icon.className = 'ph-fill ph-check-circle text-statusSuccess text-2xl';
+            else if (type === 'error') icon.className = 'ph-fill ph-warning-circle text-statusDanger text-2xl';
+            else icon.className = 'ph-fill ph-info text-accentCyan text-2xl';
             toast.classList.add('show');
             setTimeout(() => { toast.classList.remove('show'); }, 3500);
         }
@@ -869,229 +803,137 @@
         function fetchData(manual = false) {
             document.getElementById('loadingOverlay').style.display = 'flex';
             document.getElementById('loadingOverlay').style.opacity = '1';
-
-            let summaryParsed = false;
-            let masterParsed = false;
-
+            let summaryParsed = false, masterParsed = false, updateParsed = false;
             const parseCSV = (url, callbackError, callbackSuccess) => {
-                Papa.parse(url, {
-                    download: true,
-                    header: false,
-                    skipEmptyLines: true,
-                    complete: (results) => callbackSuccess(results.data),
-                    error: (err) => callbackError(err)
-                });
+                Papa.parse(url, { download: true, header: false, skipEmptyLines: true, complete: (results) => callbackSuccess(results.data), error: (err) => callbackError(err) });
             };
-
             parseCSV(URL_SUMMARY_GVIZ, () => {
-                parseCSV(URL_SUMMARY_EXPORT, () => {
-                    processSummaryRows(null);
-                    summaryParsed = true;
-                    checkComplete();
-                }, (rows) => {
-                    processSummaryRows(rows);
-                    summaryParsed = true;
-                    checkComplete();
-                });
-            }, (rows) => {
-                processSummaryRows(rows);
-                summaryParsed = true;
-                checkComplete();
-            });
-
+                parseCSV(URL_SUMMARY_EXPORT, () => { processSummaryRows(null); summaryParsed = true; checkComplete(); }, (rows) => { processSummaryRows(rows); summaryParsed = true; checkComplete(); });
+            }, (rows) => { processSummaryRows(rows); summaryParsed = true; checkComplete(); });
             parseCSV(URL_MASTER_GVIZ, () => {
-                parseCSV(URL_MASTER_EXPORT, () => {
-                    masterParsed = true;
-                    checkComplete();
-                }, (rows) => {
-                    processMasterRows(rows);
-                    masterParsed = true;
-                    checkComplete();
-                });
-            }, (rows) => {
-                processMasterRows(rows);
-                masterParsed = true;
-                checkComplete();
-            });
-
+                parseCSV(URL_MASTER_EXPORT, () => { masterParsed = true; checkComplete(); }, (rows) => { processMasterRows(rows); masterParsed = true; checkComplete(); });
+            }, (rows) => { processMasterRows(rows); masterParsed = true; checkComplete(); });
+            parseCSV(URL_UPDATE_GVIZ, () => {
+                parseCSV(URL_UPDATE_EXPORT, () => { processUpdateRows(null); updateParsed = true; checkComplete(); }, (rows) => { processUpdateRows(rows); updateParsed = true; checkComplete(); });
+            }, (rows) => { processUpdateRows(rows); updateParsed = true; checkComplete(); });
             function checkComplete() {
-                if(summaryParsed && masterParsed) {
-                    generateExecReportData();
-                    renderSummaryTable();
-                    renderExecReportPreview();
-                    updateKPIs();
-                    renderCharts();
-                    
-                    setTimeout(() => {
-                        const overlay = document.getElementById('loadingOverlay');
-                        overlay.style.opacity = '0';
-                        setTimeout(() => overlay.style.display = 'none', 500);
-                    }, 400);
-
-                    if(manual) showToast('Sync Complete', 'Data berhasil diperbarui.');
+                if(summaryParsed && masterParsed && updateParsed) {
+                    generateExecReportData(); renderSummaryTable(); renderExecReportPreview(); updateKPIs(); renderCharts(); updateLastUpdateUI();
+                    setTimeout(() => { const overlay = document.getElementById('loadingOverlay'); overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 500); }, 400);
+                    if(manual) showToast('Sync Complete', 'Data berhasil diperbarui dari Server.');
                 }
             }
         }
 
-        function processSummaryRows(matrix) {
-            if (!matrix || matrix.length === 0) {
-                summaryData = FALLBACK_SUMMARY_DATA;
-                return;
-            }
-
-            let headerIdx = -1;
+        function processUpdateRows(matrix) {
+            if (!matrix || matrix.length === 0) return;
+            let latestDateObj = new Date(0), foundValidDate = false;
             for (let i = 0; i < matrix.length; i++) {
-                const rowStr = matrix[i].join(' ').toLowerCase();
-                if (rowStr.includes('segment') || rowStr.includes('sku')) {
-                    headerIdx = i;
-                    break;
+                if (!matrix[i]) continue;
+                const cellValue = matrix[i][0];
+                if(cellValue && cellValue.toString().trim() !== '') {
+                    const str = cellValue.toString().trim();
+                    let parsedDate = new Date(NaN);
+                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2})[:\.](\d{1,2})(?:[:\.](\d{1,2}))?)?/;
+                    const matchIndo = str.match(regexIndo);
+                    if (matchIndo) {
+                        const p1 = parseInt(matchIndo[1], 10), p2 = parseInt(matchIndo[2], 10), year = parseInt(matchIndo[3], 10), hour = matchIndo[4] ? parseInt(matchIndo[4], 10) : 0, min = matchIndo[5] ? parseInt(matchIndo[5], 10) : 0, sec = matchIndo[6] ? parseInt(matchIndo[6], 10) : 0;
+                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) parsedDate = new Date(year, p2 - 1, p1, hour, min, sec);
+                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2, hour, min, sec);
+                    }
+                    if (isNaN(parsedDate.getTime())) parsedDate = new Date(str);
+                    if (!isNaN(parsedDate.getTime()) && parsedDate.getFullYear() > 2000) { if (parsedDate > latestDateObj) { latestDateObj = parsedDate; foundValidDate = true; } }
                 }
             }
-
-            if (headerIdx === -1) {
-                summaryData = FALLBACK_SUMMARY_DATA;
-                return;
+            if (foundValidDate) {
+                const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }, timeOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
+                lastUpdateDateStr = latestDateObj.toLocaleDateString('en-GB', dateOptions); lastUpdateTimeStr = latestDateObj.toLocaleTimeString('en-GB', timeOptions);
             }
+        }
 
+        function processSummaryRows(matrix) {
+            if (!matrix || matrix.length === 0) { summaryData = FALLBACK_SUMMARY_DATA; return; }
+            let headerIdx = -1;
+            for (let i = 0; i < matrix.length; i++) { const rowStr = matrix[i].join(' ').toLowerCase(); if (rowStr.includes('segment') || rowStr.includes('sku')) { headerIdx = i; break; } }
+            if (headerIdx === -1) { summaryData = FALLBACK_SUMMARY_DATA; return; }
             const headers = matrix[headerIdx].map(h => h ? h.toString().trim().toLowerCase() : '');
-            let colSeg = headers.findIndex(h => h.includes('segment'));
-            let colSku = headers.findIndex(h => h.includes('sku'));
-            let colWeight = headers.findIndex(h => h.includes('weight') || h.includes('berat'));
-            let colZak = headers.findIndex(h => h.includes('zak') || h.includes('quantity') || h.includes('qty'));
-            let colTon = headers.findIndex(h => h.includes('ton'));
-
-            if (colSeg === -1) colSeg = 0;
-            if (colSku === -1) colSku = 1;
-
+            let colSeg = headers.findIndex(h => h.includes('segment')), colSku = headers.findIndex(h => h.includes('sku')), colWeight = headers.findIndex(h => h.includes('weight') || h.includes('berat')), colZak = headers.findIndex(h => h.includes('zak') || h.includes('quantity') || h.includes('qty')), colTon = headers.findIndex(h => h.includes('ton'));
+            if (colSeg === -1) colSeg = 0; if (colSku === -1) colSku = 1;
             const parsed = [];
             for (let i = headerIdx + 1; i < matrix.length; i++) {
-                const row = matrix[i];
-                if (!row || row.length === 0) continue;
-
+                const row = matrix[i]; if (!row || row.length === 0) continue;
                 const segVal = row[colSeg] ? row[colSeg].toString().trim().toUpperCase() : '';
                 if (!segVal || segVal === 'UNKNOWN' || segVal === 'TOTAL') continue;
-
-                parsed.push({
-                    segment: segVal,
-                    sku: row[colSku] ? row[colSku].toString().trim() : '-',
-                    weight: colWeight !== -1 ? cleanNum(row[colWeight]) : 0,
-                    qtyZak: colZak !== -1 ? cleanNum(row[colZak]) : 0,
-                    qtyTon: colTon !== -1 ? cleanNum(row[colTon]) : 0
-                });
+                parsed.push({ segment: segVal, sku: row[colSku] ? row[colSku].toString().trim() : '-', weight: colWeight !== -1 ? cleanNum(row[colWeight]) : 0, qtyZak: colZak !== -1 ? cleanNum(row[colZak]) : 0, qtyTon: colTon !== -1 ? cleanNum(row[colTon]) : 0 });
             }
             summaryData = parsed.length > 0 ? parsed : FALLBACK_SUMMARY_DATA;
         }
 
         function processMasterRows(matrix) {
             if (!matrix || matrix.length === 0) return;
-
             const headerKeywords = ['item', 'sku', 'code', 'desc', 'nama', 'barang', 'zak', 'qty', 'uom', 'satuan', 'weight', 'berat', 'segment', 'no', 'material', 'stok', 'type', 'tipe', 'jenis'];
             let bestHeaderIdx = -1, maxScore = -1;
-
             for (let i = 0; i < Math.min(matrix.length, 15); i++) {
-                const row = matrix[i];
-                if (!row) continue;
-                const filledCells = row.filter(c => c && c.toString().trim() !== '');
-                if (filledCells.length === 0) continue;
-                let score = 0;
-                row.forEach(cell => {
-                    if (!cell) return;
-                    const cellStr = cell.toString().toLowerCase().trim();
-                    headerKeywords.forEach(kw => { if (cellStr.includes(kw)) score += 10; });
-                });
-                if (filledCells.length >= 2) score += filledCells.length * 2;
-                if (score > maxScore) { maxScore = score; bestHeaderIdx = i; }
+                const row = matrix[i]; if (!row) continue;
+                const filledCells = row.filter(c => c && c.toString().trim() !== ''); if (filledCells.length === 0) continue;
+                let score = 0; row.forEach(cell => { if (!cell) return; const cellStr = cell.toString().toLowerCase().trim(); headerKeywords.forEach(kw => { if (cellStr.includes(kw)) score += 10; }); });
+                if (filledCells.length >= 2) score += filledCells.length * 2; if (score > maxScore) { maxScore = score; bestHeaderIdx = i; }
             }
             if (bestHeaderIdx === -1 || maxScore < 10) bestHeaderIdx = 0;
-
             const rawHeaders = matrix[bestHeaderIdx].map(h => h ? h.toString().replace(/[\r\n]+/g, ' ').trim() : '');
-            let maxCols = rawHeaders.length;
-            const rawRows = matrix.slice(bestHeaderIdx + 1);
-            rawRows.forEach(r => { if (r.length > maxCols) maxCols = r.length; });
-
+            let maxCols = rawHeaders.length; const rawRows = matrix.slice(bestHeaderIdx + 1); rawRows.forEach(r => { if (r.length > maxCols) maxCols = r.length; });
             const cleanedHeaders = [];
-            for (let c = 0; c < maxCols; c++) {
-                let hName = rawHeaders[c] || '';
-                if (!hName && rawRows.some(r => r[c] && r[c].toString().trim() !== '')) hName = `Kolom ${c + 1}`;
-                cleanedHeaders.push(hName);
-            }
+            for (let c = 0; c < maxCols; c++) { let hName = rawHeaders[c] || ''; if (!hName && rawRows.some(r => r[c] && r[c].toString().trim() !== '')) hName = `Kolom ${c + 1}`; cleanedHeaders.push(hName); }
             while (cleanedHeaders.length > 0 && !cleanedHeaders[cleanedHeaders.length - 1]) cleanedHeaders.pop();
-
             const validRows = [];
             rawRows.forEach(r => {
                 if (!r || r.length === 0) return;
-                const rowStr = r.join('').trim();
-                if (!rowStr) return;
-                const firstCell = (r[0] || '').toString().toLowerCase().trim();
-                if (firstCell.includes('lms') || firstCell.includes('report') || firstCell.includes('logistics')) return;
-
-                const rowCells = [];
-                for (let c = 0; c < cleanedHeaders.length; c++) {
-                    rowCells.push(r[c] !== undefined && r[c] !== null ? r[c].toString().trim() : '');
-                }
+                const rowStr = r.join('').trim(); if (!rowStr) return;
+                const firstCell = (r[0] || '').toString().toLowerCase().trim(); if (firstCell.includes('lms') || firstCell.includes('report') || firstCell.includes('logistics')) return;
+                const rowCells = []; for (let c = 0; c < cleanedHeaders.length; c++) rowCells.push(r[c] !== undefined && r[c] !== null ? r[c].toString().trim() : '');
                 if (rowCells.some(cell => cell !== '')) validRows.push(rowCells);
             });
-
-            masterDataRaw.headers = cleanedHeaders;
-            masterDataRaw.rows = validRows;
-            renderDetailTable();
+            masterDataRaw.headers = cleanedHeaders; masterDataRaw.rows = validRows; renderDetailTable();
         }
 
-        // Dikosongkan sesuai permintaan pengguna
         function generateExecReportData() {
             execReportData = summaryData.map(item => {
-                return {
-                    ...item,
-                    stokIn: '',
-                    stokOut: ''
-                };
+                const existing = execReportData.find(e => e.sku === item.sku && e.segment === item.segment);
+                return { ...item, stokIn: existing && existing.stokIn !== undefined ? existing.stokIn : '', stokOut: existing && existing.stokOut !== undefined ? existing.stokOut : '' };
             });
         }
+        
+        window.updateExecInput = function(segment, sku, field, value) {
+            const item = execReportData.find(i => i.segment === segment && i.sku === sku);
+            if (item) item[field] = value ? parseInt(value, 10) : '';
+        };
 
         function updateKPIs() {
             let totalWeight = 0, totalZakSummary = 0, totalTon = 0;
             const uniqueSKUs = new Set();
-            summaryData.forEach(item => {
-                totalWeight += item.weight;
-                totalZakSummary += item.qtyZak;
-                totalTon += item.qtyTon;
-                if(item.sku && item.sku !== '-') uniqueSKUs.add(item.sku);
-            });
-
-            let masterZakSum = 0;
-            const uomGroup = {};
-            let hasMasterData = false;
+            summaryData.forEach(item => { totalWeight += item.weight; totalZakSummary += item.qtyZak; totalTon += item.qtyTon; if(item.sku && item.sku !== '-') uniqueSKUs.add(item.sku); });
+            let masterZakSum = 0, hasMasterData = false; const uomGroup = {};
             if (masterDataRaw.headers && masterDataRaw.headers.length > 0 && masterDataRaw.rows.length > 0) {
                 const headers = masterDataRaw.headers.map(h => h.toLowerCase());
                 let colQtyZak = headers.findIndex(h => h.includes('qty zak') || h.includes('qty_zak') || h.includes('jumlah zak') || h.includes('zak'));
                 if (colQtyZak === -1) colQtyZak = headers.findIndex(h => h.includes('qty') || h.includes('jumlah') || h.includes('stok'));
                 let colUom = headers.findIndex(h => h.includes('uom') || h.includes('satuan') || h.includes('unit'));
-
                 if (colQtyZak !== -1) {
                     hasMasterData = true;
                     masterDataRaw.rows.forEach(row => {
-                        const qty = cleanNum(row[colQtyZak]);
-                        masterZakSum += qty;
+                        const qty = cleanNum(row[colQtyZak]); masterZakSum += qty;
                         let uom = colUom !== -1 && row[colUom] ? row[colUom].toString().trim().toUpperCase() : 'ZAK';
-                        if (!uom) uom = 'ZAK';
-                        uomGroup[uom] = (uomGroup[uom] || 0) + qty;
+                        if (!uom) uom = 'ZAK'; uomGroup[uom] = (uomGroup[uom] || 0) + qty;
                     });
                 }
             }
-
             const finalZakTotal = hasMasterData ? masterZakSum : totalZakSummary;
             if (!hasMasterData) uomGroup['ZAK'] = totalZakSummary;
-
-            const WAREHOUSE_CAPACITY_TON = 2737;
-            const spacePct = WAREHOUSE_CAPACITY_TON > 0 ? (totalTon / WAREHOUSE_CAPACITY_TON) * 100 : 0;
-            const remainingTon = Math.max(0, WAREHOUSE_CAPACITY_TON - totalTon);
-
+            const WAREHOUSE_CAPACITY_TON = 2737, spacePct = WAREHOUSE_CAPACITY_TON > 0 ? (totalTon / WAREHOUSE_CAPACITY_TON) * 100 : 0, remainingTon = Math.max(0, WAREHOUSE_CAPACITY_TON - totalTon);
             if(document.getElementById('kpiSpacePercent')) document.getElementById('kpiSpacePercent').innerText = `${fmtDec(spacePct)}%`;
             if(document.getElementById('kpiSpaceCurrent')) document.getElementById('kpiSpaceCurrent').innerText = `${fmtDec(totalTon)} Ton`;
             if(document.getElementById('kpiSpaceRemaining')) document.getElementById('kpiSpaceRemaining').innerText = `${fmtDec(remainingTon)} Ton`;
-            
-            const barEl = document.getElementById('kpiSpaceProgressBar');
-            const badgeEl = document.getElementById('kpiSpaceBadge');
+            const barEl = document.getElementById('kpiSpaceProgressBar'), badgeEl = document.getElementById('kpiSpaceBadge');
             if (barEl) {
                 const clampedPct = Math.min(100, Math.max(0, spacePct));
                 barEl.style.width = `${clampedPct}%`;
@@ -1100,219 +942,70 @@
                 else barEl.className = "h-full bg-gradient-to-r from-accentCyan to-accentPurple rounded-full transition-all duration-700";
             }
             if (badgeEl) {
-                if (spacePct > 90) {
-                    badgeEl.className = 'px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusDanger/10 text-statusDanger border-statusDanger/20';
-                    badgeEl.innerHTML = '<i class="ph-bold ph-warning"></i> Penuh';
-                } else if (spacePct > 75) {
-                    badgeEl.className = 'px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusWarning/10 text-statusWarning border-statusWarning/20';
-                    badgeEl.innerHTML = '<i class="ph-bold ph-info"></i> Tinggi';
-                } else {
-                    badgeEl.className = 'px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusSuccess/10 text-statusSuccess border-statusSuccess/20';
-                    badgeEl.innerHTML = '<i class="ph-bold ph-check-circle"></i> Optimal';
-                }
+                if (spacePct > 90) { badgeEl.className = 'px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusDanger/10 text-statusDanger border-statusDanger/20'; badgeEl.innerHTML = '<i class="ph-bold ph-warning"></i> Penuh'; }
+                else if (spacePct > 75) { badgeEl.className = 'px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusWarning/10 text-statusWarning border-statusWarning/20'; badgeEl.innerHTML = '<i class="ph-bold ph-info"></i> Tinggi'; }
+                else { badgeEl.className = 'px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusSuccess/10 text-statusSuccess border-statusSuccess/20'; badgeEl.innerHTML = '<i class="ph-bold ph-check-circle"></i> Optimal'; }
             }
-
             if(document.getElementById('kpiZak')) document.getElementById('kpiZak').innerHTML = `${fmtNum(finalZakTotal)} <span class="text-xs font-normal text-textSecondary">Total</span>`;
             if(document.getElementById('kpiTon')) document.getElementById('kpiTon').innerHTML = `${fmtDec(totalTon)} <span class="text-xs font-normal text-textSecondary">Ton</span>`;
             if(document.getElementById('kpiSku')) document.getElementById('kpiSku').innerHTML = `${uniqueSKUs.size} <span class="text-xs font-normal text-textSecondary">SKU</span>`;
-
             const uomContainer = document.getElementById('kpiUomBreakdown');
             if (uomContainer) {
-                uomContainer.innerHTML = '';
-                const uomKeys = Object.keys(uomGroup);
-                if (uomKeys.length > 0) {
-                    uomKeys.forEach(uomKey => {
-                        const badge = `<span class="bg-accentPurple/20 text-accentPurple border border-accentPurple/30 px-2 py-0.5 rounded-md font-mono font-bold flex items-center gap-1"><span>${uomKey}:</span><span class="text-white">${fmtNum(uomGroup[uomKey])}</span></span>`;
-                        uomContainer.insertAdjacentHTML('beforeend', badge);
-                    });
-                } else {
-                    uomContainer.innerHTML = '<span class="text-textSecondary text-[10px]">No UOM data</span>';
-                }
+                uomContainer.innerHTML = ''; const uomKeys = Object.keys(uomGroup);
+                if (uomKeys.length > 0) { uomKeys.forEach(uomKey => { const badge = `<span class="bg-accentPurple/20 text-accentPurple border border-accentPurple/30 px-2 py-0.5 rounded-md font-mono font-bold flex items-center gap-1"><span>${uomKey}:</span><span class="text-white">${fmtNum(uomGroup[uomKey])}</span></span>`; uomContainer.insertAdjacentHTML('beforeend', badge); }); } else uomContainer.innerHTML = '<span class="text-textSecondary text-[10px]">No UOM data</span>';
             }
         }
 
         function renderSummaryTable(filterQuery = '', segmentFilter = 'ALL') {
-            const tbody = document.getElementById('summaryTableBody');
-            const tbodyOnly = document.getElementById('summaryTableBodyOnly');
-
-            const grouped = {};
+            const tbody = document.getElementById('summaryTableBody'), tbodyOnly = document.getElementById('summaryTableBodyOnly'), grouped = {};
             summaryData.forEach(item => {
                 if (segmentFilter !== 'ALL' && item.segment !== segmentFilter) return;
-                if (filterQuery) {
-                    const q = filterQuery.toLowerCase();
-                    if (!(item.segment.toLowerCase().includes(q) || item.sku.toLowerCase().includes(q))) return;
-                }
-                if (!grouped[item.segment]) grouped[item.segment] = [];
-                grouped[item.segment].push(item);
+                if (filterQuery) { const q = filterQuery.toLowerCase(); if (!(item.segment.toLowerCase().includes(q) || item.sku.toLowerCase().includes(q))) return; }
+                if (!grouped[item.segment]) grouped[item.segment] = []; grouped[item.segment].push(item);
             });
-
-            const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'];
-            const segments = Object.keys(grouped).sort((a, b) => {
-                let idxA = customOrder.indexOf(a.toUpperCase());
-                let idxB = customOrder.indexOf(b.toUpperCase());
-                if (idxA === -1) idxA = 999;
-                if (idxB === -1) idxB = 999;
-                return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b);
-            });
-
-            if (segments.length === 0) {
-                const emptyRow = `<tr><td colspan="5" class="px-6 py-12 text-center text-textSecondary italic">Tidak ada data stok yang sesuai dengan filter.</td></tr>`;
-                if (tbody) tbody.innerHTML = emptyRow;
-                if (tbodyOnly) tbodyOnly.innerHTML = emptyRow;
-                return;
-            }
-
+            const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], segments = Object.keys(grouped).sort((a, b) => { let idxA = customOrder.indexOf(a.toUpperCase()), idxB = customOrder.indexOf(b.toUpperCase()); if (idxA === -1) idxA = 999; if (idxB === -1) idxB = 999; return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b); });
+            if (segments.length === 0) { const emptyRow = `<tr><td colspan="5" class="px-6 py-12 text-center text-textSecondary italic">Tidak ada data stok yang sesuai dengan filter.</td></tr>`; if (tbody) tbody.innerHTML = emptyRow; if (tbodyOnly) tbodyOnly.innerHTML = emptyRow; return; }
             let fullHtml = '';
             segments.forEach(seg => {
-                const items = grouped[seg];
-                const sumTon = items.reduce((a, b) => a + b.qtyTon, 0);
-                
-                let accentColor = seg === 'PROJECT' ? 'text-accentPurple' : seg === 'GENERAL' ? 'text-statusSuccess' : 'text-accentCyan';
-                let borderTint = seg === 'PROJECT' ? 'border-l-accentPurple' : seg === 'GENERAL' ? 'border-l-statusSuccess' : 'border-l-accentCyan';
-                let bgTint = seg === 'PROJECT' ? 'bg-accentPurple/5' : seg === 'GENERAL' ? 'bg-statusSuccess/5' : 'bg-accentCyan/5';
-
-                fullHtml += `
-                    <tr class="cursor-pointer ${bgTint} border-l-4 ${borderTint} border-b border-borderMain transition-all hover:bg-white/5" onclick="toggleGroupRow('${seg}')">
-                        <td colspan="5" class="px-6 py-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <i class="ph-bold ph-caret-down text-textSecondary transition-transform duration-300" id="icon-group-${seg}"></i>
-                                    <span class="font-bold text-white uppercase tracking-wider flex items-center gap-2 text-xs">
-                                        <i class="ph-fill ph-folder-open ${accentColor} text-base"></i> Segment: ${seg}
-                                    </span>
-                                </div>
-                                <div class="text-xs font-mono font-bold text-white">Subtotal: <span class="${accentColor}">${fmtDec(sumTon)} TON</span></div>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-
-                items.forEach(item => {
-                    fullHtml += `
-                        <tr class="row-group-${seg} table-row-hover border-b border-borderMain/40 text-textSecondary transition-colors">
-                            <td class="px-6 py-3 pl-12 font-medium text-xs text-textSecondary">${item.segment}</td>
-                            <td class="px-6 py-3 font-bold text-white font-mono text-xs">${item.sku}</td>
-                            <td class="px-6 py-3 text-right font-mono text-xs">${fmtNum(item.weight)}</td>
-                            <td class="px-6 py-3 text-right font-mono text-xs">${fmtNum(item.qtyZak)}</td>
-                            <td class="px-6 py-3 text-right font-mono text-xs font-bold text-accentCyan">${fmtDec(item.qtyTon)}</td>
-                        </tr>
-                    `;
-                });
+                const items = grouped[seg], sumTon = items.reduce((a, b) => a + b.qtyTon, 0);
+                let accentColor = seg === 'PROJECT' ? 'text-accentPurple' : seg === 'GENERAL' ? 'text-statusSuccess' : 'text-accentCyan', borderTint = seg === 'PROJECT' ? 'border-l-accentPurple' : seg === 'GENERAL' ? 'border-l-statusSuccess' : 'border-l-accentCyan', bgTint = seg === 'PROJECT' ? 'bg-accentPurple/5' : seg === 'GENERAL' ? 'bg-statusSuccess/5' : 'bg-accentCyan/5';
+                fullHtml += `<tr class="cursor-pointer ${bgTint} border-l-4 ${borderTint} border-b border-borderMain transition-all hover:bg-white/5" onclick="toggleGroupRow('${seg}')"><td colspan="5" class="px-6 py-3"><div class="flex items-center justify-between"><div class="flex items-center gap-3"><i class="ph-bold ph-caret-down text-textSecondary transition-transform duration-300" id="icon-group-${seg}"></i><span class="font-bold text-white uppercase tracking-wider flex items-center gap-2 text-xs"><i class="ph-fill ph-folder-open ${accentColor} text-base"></i> Segment: ${seg}</span></div><div class="text-xs font-mono font-bold text-white">Subtotal: <span class="${accentColor}">${fmtDec(sumTon)} TON</span></div></div></td></tr>`;
+                items.forEach(item => { fullHtml += `<tr class="row-group-${seg} table-row-hover border-b border-borderMain/40 text-textSecondary transition-colors"><td class="px-6 py-3 pl-12 font-medium text-xs text-textSecondary">${item.segment}</td><td class="px-6 py-3 font-bold text-white font-mono text-xs">${item.sku}</td><td class="px-6 py-3 text-right font-mono text-xs">${fmtNum(item.weight)}</td><td class="px-6 py-3 text-right font-mono text-xs">${fmtNum(item.qtyZak)}</td><td class="px-6 py-3 text-right font-mono text-xs font-bold text-accentCyan">${fmtDec(item.qtyTon)}</td></tr>`; });
             });
-
-            if (tbody) tbody.innerHTML = fullHtml;
-            if (tbodyOnly) tbodyOnly.innerHTML = fullHtml;
+            if (tbody) tbody.innerHTML = fullHtml; if (tbodyOnly) tbodyOnly.innerHTML = fullHtml;
         }
 
-        // Render Preview Laporan Eksekutif dengan Stok In & Stok Out Kosong
         function renderExecReportPreview() {
-            const tbody = document.getElementById('execReportTableBody');
-            if(!tbody) return;
-
-            generateExecReportData();
-
-            const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'];
-            
-            const sortedData = [...execReportData].sort((a, b) => {
-                let idxA = customOrder.indexOf(a.segment.toUpperCase());
-                let idxB = customOrder.indexOf(b.segment.toUpperCase());
-                if (idxA === -1) idxA = 999;
-                if (idxB === -1) idxB = 999;
-                if (idxA !== idxB) return idxA - idxB;
-                return a.sku.localeCompare(b.sku);
-            });
-
-            if(sortedData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-textSecondary">Data Kosong</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            let currentSegment = '';
-
+            const tbody = document.getElementById('execReportTableBody'); if(!tbody) return;
+            generateExecReportData(); const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], sortedData = [...execReportData].sort((a, b) => { let idxA = customOrder.indexOf(a.segment.toUpperCase()), idxB = customOrder.indexOf(b.segment.toUpperCase()); if (idxA === -1) idxA = 999; if (idxB === -1) idxB = 999; if (idxA !== idxB) return idxA - idxB; return a.sku.localeCompare(b.sku); });
+            if(sortedData.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-textSecondary">Data Kosong</td></tr>`; return; }
+            let html = '', currentSegment = '';
             sortedData.forEach(item => {
-                if(item.segment !== currentSegment) {
-                    html += `
-                        <tr class="bg-[#1c2e50] border-y border-borderMain">
-                            <td colspan="7" class="px-5 py-2 font-bold text-white text-xs tracking-widest uppercase">
-                                <i class="ph-bold ph-caret-down mr-1 text-textSecondary"></i> ${item.segment}
-                            </td>
-                        </tr>
-                    `;
-                    currentSegment = item.segment;
-                }
-
-                html += `
-                    <tr class="table-row-hover border-b border-borderMain/30 text-textSecondary transition-colors">
-                        <td class="px-5 py-2 pl-8 font-medium border-r border-borderMain/30">${item.segment}</td>
-                        <td class="px-5 py-2 font-bold text-white border-r border-borderMain/30">${item.sku}</td>
-                        <td class="px-5 py-2 text-right border-r border-borderMain/30">${fmtNum(item.weight)}</td>
-                        <td class="px-5 py-2 text-right border-r border-borderMain/30 text-statusSuccess font-bold"></td>
-                        <td class="px-5 py-2 text-right border-r border-borderMain/30 text-statusDanger font-bold"></td>
-                        <td class="px-5 py-2 text-right border-r border-borderMain/30">${fmtNum(item.qtyZak)}</td>
-                        <td class="px-5 py-2 text-right font-bold text-white">${fmtDec(item.qtyTon)}</td>
-                    </tr>
-                `;
+                if(item.segment !== currentSegment) { html += `<tr class="bg-[#1c2e50] border-y border-borderMain"><td colspan="7" class="px-5 py-2 font-bold text-white text-xs tracking-widest uppercase"><i class="ph-bold ph-caret-down mr-1 text-textSecondary"></i> ${item.segment}</td></tr>`; currentSegment = item.segment; }
+                html += `<tr class="table-row-hover border-b border-borderMain/30 text-textSecondary transition-colors"><td class="px-5 py-2 pl-8 font-medium border-r border-borderMain/30">${item.segment}</td><td class="px-5 py-2 font-bold text-white border-r border-borderMain/30">${item.sku}</td><td class="px-5 py-2 text-right border-r border-borderMain/30">${fmtNum(item.weight)}</td><td class="px-2 py-1 text-right border-r border-borderMain/30"><input type="number" min="0" value="${item.stokIn}" oninput="updateExecInput('${item.segment}', '${item.sku}', 'stokIn', this.value)" class="w-16 bg-bgPrimary/50 border border-borderMain/50 hover:border-statusSuccess/50 rounded px-2 py-1 text-right text-statusSuccess font-bold focus:outline-none focus:border-statusSuccess focus:bg-statusSuccess/10 transition-colors placeholder:text-statusSuccess/20" placeholder="0"></td><td class="px-2 py-1 text-right border-r border-borderMain/30"><input type="number" min="0" value="${item.stokOut}" oninput="updateExecInput('${item.segment}', '${item.sku}', 'stokOut', this.value)" class="w-16 bg-bgPrimary/50 border border-borderMain/50 hover:border-statusDanger/50 rounded px-2 py-1 text-right text-statusDanger font-bold focus:outline-none focus:border-statusDanger focus:bg-statusDanger/10 transition-colors placeholder:text-statusDanger/20" placeholder="0"></td><td class="px-5 py-2 text-right border-r border-borderMain/30">${fmtNum(item.qtyZak)}</td><td class="px-5 py-2 text-right font-bold text-white">${fmtDec(item.qtyTon)}</td></tr>`;
             });
-
             tbody.innerHTML = html;
         }
 
         window.toggleGroupRow = function(seg) {
-            const rows = document.querySelectorAll(`.row-group-${seg}`);
-            const icon = document.getElementById(`icon-group-${seg}`);
-            let isHidden = false;
-            rows.forEach(r => {
-                if(r.style.display === 'none') { r.style.display = 'table-row'; isHidden = false; } 
-                else { r.style.display = 'none'; isHidden = true; }
-            });
+            const rows = document.querySelectorAll(`.row-group-${seg}`), icon = document.getElementById(`icon-group-${seg}`); let isHidden = false;
+            rows.forEach(r => { if(r.style.display === 'none') { r.style.display = 'table-row'; isHidden = false; } else { r.style.display = 'none'; isHidden = true; } });
             if (icon) icon.style.transform = isHidden ? 'rotate(-90deg)' : 'rotate(0deg)';
         };
 
         function renderDetailTable(query = '') {
-            const thead = document.getElementById('detailTableHeader');
-            const tbody = document.getElementById('detailTableBody');
-
-            if (!masterDataRaw.headers || masterDataRaw.headers.length === 0) {
-                tbody.innerHTML = `<tr><td class="p-6 text-center text-textSecondary" colspan="10">Data Master belum dimuat.</td></tr>`;
-                return;
-            }
-
+            const thead = document.getElementById('detailTableHeader'), tbody = document.getElementById('detailTableBody');
+            if (!masterDataRaw.headers || masterDataRaw.headers.length === 0) { tbody.innerHTML = `<tr><td class="p-6 text-center text-textSecondary" colspan="10">Data Master belum dimuat.</td></tr>`; return; }
             const headers = masterDataRaw.headers;
-            thead.innerHTML = headers.map(h => {
-                const lower = (h || '').toLowerCase();
-                const isNum = lower.includes('qty') || lower.includes('zak') || lower.includes('ton') || lower.includes('jumlah') || lower.includes('stok') || lower.includes('weight') || lower.includes('berat');
-                return `<th class="px-6 py-4 ${isNum ? 'text-right' : 'text-left'} font-extrabold text-white tracking-wider">${h || '-'}</th>`;
-            }).join('');
-
-            const filteredRows = masterDataRaw.rows.filter(r => {
-                if (!query) return true;
-                return r.join(' ').toLowerCase().includes(query.toLowerCase());
-            });
-
-            if (filteredRows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${headers.length}" class="px-6 py-12 text-center text-textSecondary italic">Tidak ada data.</td></tr>`;
-                return;
-            }
-
+            thead.innerHTML = headers.map(h => { const lower = (h || '').toLowerCase(), isNum = lower.includes('qty') || lower.includes('zak') || lower.includes('ton') || lower.includes('jumlah') || lower.includes('stok') || lower.includes('weight') || lower.includes('berat'); return `<th class="px-6 py-4 ${isNum ? 'text-right' : 'text-left'} font-extrabold text-white tracking-wider">${h || '-'}</th>`; }).join('');
+            const filteredRows = masterDataRaw.rows.filter(r => !query || r.join(' ').toLowerCase().includes(query.toLowerCase()));
+            if (filteredRows.length === 0) { tbody.innerHTML = `<tr><td colspan="${headers.length}" class="px-6 py-12 text-center text-textSecondary italic">Tidak ada data.</td></tr>`; return; }
             tbody.innerHTML = filteredRows.map(row => {
                 const cellsHtml = headers.map((h, colIdx) => {
-                    const cellVal = row[colIdx] !== undefined ? row[colIdx] : '-';
-                    const lowerH = (h || '').toLowerCase();
-                    const isNumCol = lowerH.includes('qty') || lowerH.includes('zak') || lowerH.includes('ton') || lowerH.includes('jumlah') || lowerH.includes('stok') || lowerH.includes('weight') || lowerH.includes('berat');
-                    
-                    if (isNumCol) {
-                        const num = cleanNum(cellVal);
-                        const isDec = lowerH.includes('ton') || lowerH.includes('berat') || lowerH.includes('weight');
-                        const formatted = cellVal === '-' || cellVal === '' ? '-' : (isDec ? fmtDec(num) : fmtNum(num));
-                        return `<td class="px-6 py-3.5 text-right font-mono font-bold text-accentCyan">${formatted}</td>`;
-                    }
-                    if (lowerH.includes('no') || lowerH.includes('sku') || lowerH.includes('code') || lowerH.includes('item')) {
-                        return `<td class="px-6 py-3.5 font-mono font-bold text-white">${cellVal || '-'}</td>`;
-                    }
-                    if (lowerH.includes('desc') || lowerH.includes('nama') || lowerH.includes('barang') || lowerH.includes('material')) {
-                        return `<td class="px-6 py-3.5 font-sans font-medium text-white/90 min-w-[220px] whitespace-normal">${cellVal || '-'}</td>`;
-                    }
+                    const cellVal = row[colIdx] !== undefined ? row[colIdx] : '-', lowerH = (h || '').toLowerCase(), isNumCol = lowerH.includes('qty') || lowerH.includes('zak') || lowerH.includes('ton') || lowerH.includes('jumlah') || lowerH.includes('stok') || lowerH.includes('weight') || lowerH.includes('berat');
+                    if (isNumCol) { const num = cleanNum(cellVal), isDec = lowerH.includes('ton') || lowerH.includes('berat') || lowerH.includes('weight'), formatted = cellVal === '-' || cellVal === '' ? '-' : (isDec ? fmtDec(num) : fmtNum(num)); return `<td class="px-6 py-3.5 text-right font-mono font-bold text-accentCyan">${formatted}</td>`; }
+                    if (lowerH.includes('no') || lowerH.includes('sku') || lowerH.includes('code') || lowerH.includes('item')) return `<td class="px-6 py-3.5 font-mono font-bold text-white">${cellVal || '-'}</td>`;
+                    if (lowerH.includes('desc') || lowerH.includes('nama') || lowerH.includes('barang') || lowerH.includes('material')) return `<td class="px-6 py-3.5 font-sans font-medium text-white/90 min-w-[220px] whitespace-normal">${cellVal || '-'}</td>`;
                     return `<td class="px-6 py-3.5 text-textSecondary">${cellVal || '-'}</td>`;
                 }).join('');
                 return `<tr class="table-row-hover border-b border-borderMain/30 transition-colors">${cellsHtml}</tr>`;
@@ -1320,426 +1013,167 @@
         }
 
         function renderCharts() {
-            const segMap = {};
-            summaryData.forEach(item => {
-                if(!segMap[item.segment]) segMap[item.segment] = 0;
-                segMap[item.segment] += item.qtyTon;
-            });
-
-            const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'];
-            const labels = Object.keys(segMap).sort((a, b) => {
-                let idxA = customOrder.indexOf(a.toUpperCase());
-                let idxB = customOrder.indexOf(b.toUpperCase());
-                return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b);
-            });
-            
-            const dataVals = labels.map(l => segMap[l]);
-            const chartColors = ['#00E5FF', '#6D5DF6', '#00D084', '#FFB800'];
-
+            const segMap = {}; summaryData.forEach(item => { if(!segMap[item.segment]) segMap[item.segment] = 0; segMap[item.segment] += item.qtyTon; });
+            const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], labels = Object.keys(segMap).sort((a, b) => { let idxA = customOrder.indexOf(a.toUpperCase()), idxB = customOrder.indexOf(b.toUpperCase()); return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b); });
+            const dataVals = labels.map(l => segMap[l]), chartColors = ['#00E5FF', '#6D5DF6', '#00D084', '#FFB800'];
             const ctxDonut = document.getElementById('stockDonutChart');
             if(ctxDonut) {
                 if(stockDonutChartInstance) stockDonutChartInstance.destroy();
-                stockDonutChartInstance = new Chart(ctxDonut.getContext('2d'), {
-                    type: 'doughnut',
-                    data: { labels: labels, datasets: [{ data: dataVals, backgroundColor: chartColors.slice(0, labels.length), borderWidth: 0 }] },
-                    options: {
-                        responsive: true, maintainAspectRatio: false, cutout: '75%',
-                        plugins: { legend: { position: 'right', labels: { color: '#B8C0D9', font: { family: 'Plus Jakarta Sans', size: 11 }, usePointStyle: true, padding: 16 } } }
-                    }
-                });
+                stockDonutChartInstance = new Chart(ctxDonut.getContext('2d'), { type: 'doughnut', data: { labels: labels, datasets: [{ data: dataVals, backgroundColor: chartColors.slice(0, labels.length), borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: { color: '#B8C0D9', font: { family: 'Plus Jakarta Sans', size: 11 }, usePointStyle: true, padding: 16 } } } } });
             }
-
-            const skuMap = {};
-            summaryData.forEach(item => {
-                if(item.sku && item.sku !== '-') {
-                    if(!skuMap[item.sku]) skuMap[item.sku] = 0;
-                    skuMap[item.sku] += item.qtyTon;
-                }
-            });
-
+            const skuMap = {}; summaryData.forEach(item => { if(item.sku && item.sku !== '-') { if(!skuMap[item.sku]) skuMap[item.sku] = 0; skuMap[item.sku] += item.qtyTon; } });
             const sortedSKUs = Object.keys(skuMap).map(k => ({ sku: k, ton: skuMap[k] })).sort((a, b) => b.ton - a.ton).slice(0, 5);
-            const maxVal = sortedSKUs.length > 0 ? sortedSKUs[0].ton : 1;
-            const container = document.getElementById('topSkuRankingContainer');
+            const maxVal = sortedSKUs.length > 0 ? sortedSKUs[0].ton : 1, container = document.getElementById('topSkuRankingContainer');
             if(container) {
-                container.innerHTML = '';
-                sortedSKUs.forEach((item, index) => {
-                    const pct = (item.ton / maxVal) * 100;
-                    const barColor = index === 0 ? 'bg-accentCyan' : index === 1 ? 'bg-accentPurple' : 'bg-statusSuccess';
-                    container.insertAdjacentHTML('beforeend', `
-                        <div>
-                            <div class="flex justify-between items-center text-xs mb-1">
-                                <span class="font-bold text-white font-mono">${index + 1}. ${item.sku}</span>
-                                <span class="text-textSecondary font-mono">${fmtDec(item.ton)} TON</span>
-                            </div>
-                            <div class="h-2 w-full bg-bgPrimary rounded-full overflow-hidden">
-                                <div class="h-full ${barColor} rounded-full transition-all duration-1000" style="width: ${pct}%"></div>
-                            </div>
-                        </div>
-                    `);
+                container.innerHTML = ''; sortedSKUs.forEach((item, index) => {
+                    const pct = (item.ton / maxVal) * 100, barColor = index === 0 ? 'bg-accentCyan' : index === 1 ? 'bg-accentPurple' : 'bg-statusSuccess';
+                    container.insertAdjacentHTML('beforeend', `<div><div class="flex justify-between items-center text-xs mb-1"><span class="font-bold text-white font-mono">${index + 1}. ${item.sku}</span><span class="text-textSecondary font-mono">${fmtDec(item.ton)} TON</span></div><div class="h-2 w-full bg-bgPrimary rounded-full overflow-hidden"><div class="h-full ${barColor} rounded-full transition-all duration-1000" style="width: ${pct}%"></div></div></div>`);
                 });
             }
         }
 
         function handleTabClick(tabName) {
             const privateTabs = ['offtake', 'pallet'];
-            
-            if (privateTabs.includes(tabName)) {
-                if (isAuthenticated) switchMainTab(tabName);
-                else { pendingTargetTab = tabName; openAuthModal(); }
-            } else {
-                switchMainTab(tabName);
-            }
+            if (privateTabs.includes(tabName)) { if (isAuthenticated) switchMainTab(tabName); else { pendingTargetTab = tabName; openAuthModal(); } } else switchMainTab(tabName);
         }
 
         function switchMainTab(tabName) {
             activeMainTab = tabName;
-
-            const kpiContainer = document.getElementById('kpiContainer');
-            const actionControls = document.getElementById('generalActionControls');
-            
-            if (['detail', 'summary-only', 'offtake', 'pallet', 'exec-report'].includes(tabName)) {
-                if(kpiContainer) kpiContainer.classList.add('hidden');
-            } else {
-                if(kpiContainer) kpiContainer.classList.remove('hidden');
-            }
-
-            if(tabName === 'exec-report') {
-                if(actionControls) actionControls.classList.add('hidden');
-            } else {
-                if(actionControls) actionControls.classList.remove('hidden');
-            }
-
+            const kpiContainer = document.getElementById('kpiContainer'), actionControls = document.getElementById('generalActionControls');
+            if (['detail', 'summary-only', 'offtake', 'pallet', 'exec-report'].includes(tabName)) { if(kpiContainer) kpiContainer.classList.add('hidden'); } else { if(kpiContainer) kpiContainer.classList.remove('hidden'); }
+            if(tabName === 'exec-report') { if(actionControls) actionControls.classList.add('hidden'); } else { if(actionControls) actionControls.classList.remove('hidden'); }
             ['stock', 'detail', 'summary-only', 'exec-report', 'offtake', 'pallet'].forEach(t => {
-                const view = document.getElementById(`view-${t}`);
-                const btn = document.getElementById(`nav-btn-${t}`);
-
+                const view = document.getElementById(`view-${t}`), btn = document.getElementById(`nav-btn-${t}`);
                 if(t === tabName) {
                     if (view) view.classList.remove('hidden');
-                    if(btn) {
-                        if(t === 'exec-report') {
-                            btn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-statusSuccess/20 to-transparent text-statusSuccess font-semibold border border-statusSuccess/30 shadow-glow-green transition-all text-left";
-                        } else {
-                            btn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-accentCyan/20 to-transparent text-accentCyan font-semibold border border-accentCyan/30 shadow-glow-cyan transition-all text-left";
-                        }
-                    }
+                    if(btn) btn.className = t === 'exec-report' ? "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-statusSuccess/20 to-transparent text-statusSuccess font-semibold border border-statusSuccess/30 shadow-glow-green transition-all text-left" : "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-accentCyan/20 to-transparent text-accentCyan font-semibold border border-accentCyan/30 shadow-glow-cyan transition-all text-left";
                 } else {
-                    if (view) view.classList.add('hidden');
-                    if(btn) btn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group";
+                    if (view) view.classList.add('hidden'); if(btn) btn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group";
                 }
             });
-
-            const pTitle = document.getElementById('pageTitle');
-            const pSub = document.getElementById('pageSubTitle');
-            const icon = document.getElementById('pageTitleIcon');
-            const iconContainer = document.getElementById('pageTitleIconContainer');
-
-            if(tabName === 'stock') {
-                pTitle.innerText = 'Finished Goods Stock Overview';
-                pSub.innerText = 'Real-time FG Analytics & Stock Monitoring Report';
-                icon.className = 'ph-fill ph-chart-polar text-3xl text-accentCyan';
-                iconContainer.className = 'p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-2xl shadow-glow-purple';
-            } else if(tabName === 'detail') {
-                pTitle.innerText = 'Detail Master Data Stok';
-                pSub.innerText = 'Rincian Operasional & Master Item';
-                icon.className = 'ph-fill ph-database text-3xl text-accentPurple';
-                iconContainer.className = 'p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-2xl shadow-glow-purple';
-            } else if(tabName === 'summary-only') {
-                pTitle.innerText = 'Ringkasan Stok Overview';
-                pSub.innerText = 'Tabel Ringkasan Stok Finished Goods';
-                icon.className = 'ph-fill ph-table text-3xl text-accentCyan';
-                iconContainer.className = 'p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-2xl shadow-glow-purple';
-            } else if(tabName === 'exec-report') {
-                pTitle.innerText = 'Format Laporan Eksekutif';
-                pSub.innerText = 'Unduhan Tabel Pivot Profesional (Siap Cetak)';
-                icon.className = 'ph-fill ph-file-pdf text-3xl text-statusSuccess';
-                iconContainer.className = 'p-3.5 bg-gradient-to-br from-statusSuccess/20 to-emerald-600/10 border border-statusSuccess/30 rounded-2xl shadow-glow-green';
-            } else if(tabName === 'offtake' || tabName === 'pallet') {
-                pTitle.innerText = tabName === 'offtake' ? 'Offtake Module' : 'Pallet Management';
-                pSub.innerText = 'Restricted Access Module';
-                icon.className = 'ph-fill ph-lock-key text-3xl text-statusWarning';
-                iconContainer.className = 'p-3.5 bg-gradient-to-br from-statusWarning/20 to-statusDanger/10 border border-statusWarning/30 rounded-2xl';
-            }
+            const pTitle = document.getElementById('pageTitle'), pSub = document.getElementById('pageSubTitle'), icon = document.getElementById('pageTitleIcon'), iconContainer = document.getElementById('pageTitleIconContainer');
+            if(tabName === 'stock') { pTitle.innerText = 'Finished Goods Stock Overview'; pSub.innerText = 'Real-time FG Analytics & Stock Monitoring Report'; icon.className = 'ph-fill ph-chart-polar text-3xl text-accentCyan'; iconContainer.className = 'p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-2xl shadow-glow-purple'; }
+            else if(tabName === 'detail') { pTitle.innerText = 'Detail Master Data Stok'; pSub.innerText = 'Rincian Operasional & Master Item'; icon.className = 'ph-fill ph-database text-3xl text-accentPurple'; iconContainer.className = 'p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-2xl shadow-glow-purple'; }
+            else if(tabName === 'summary-only') { pTitle.innerText = 'Ringkasan Stok Overview'; pSub.innerText = 'Tabel Ringkasan Stok Finished Goods'; icon.className = 'ph-fill ph-table text-3xl text-accentCyan'; iconContainer.className = 'p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-2xl shadow-glow-purple'; }
+            else if(tabName === 'exec-report') { pTitle.innerText = 'Format Laporan Eksekutif'; pSub.innerText = 'Unduhan Tabel Pivot Profesional (Siap Cetak)'; icon.className = 'ph-fill ph-file-pdf text-3xl text-statusSuccess'; iconContainer.className = 'p-3.5 bg-gradient-to-br from-statusSuccess/20 to-emerald-600/10 border border-statusSuccess/30 rounded-2xl shadow-glow-green'; }
+            else if(tabName === 'offtake' || tabName === 'pallet') { pTitle.innerText = tabName === 'offtake' ? 'Offtake Module' : 'Pallet Management'; pSub.innerText = 'Restricted Access Module'; icon.className = 'ph-fill ph-lock-key text-3xl text-statusWarning'; iconContainer.className = 'p-3.5 bg-gradient-to-br from-statusWarning/20 to-statusDanger/10 border border-statusWarning/30 rounded-2xl'; }
         }
 
         function handleSearch(val) {
-            if(activeMainTab === 'stock' || activeMainTab === 'summary-only') {
-                renderSummaryTable(val, document.getElementById('segmentFilterSelect').value);
-            } else if(activeMainTab === 'detail') {
-                renderDetailTable(val);
-            }
+            if(activeMainTab === 'stock' || activeMainTab === 'summary-only') renderSummaryTable(val, document.getElementById('segmentFilterSelect').value);
+            else if(activeMainTab === 'detail') renderDetailTable(val);
         }
 
-        function filterBySegment(val) {
-            renderSummaryTable(document.getElementById('globalSearchInput').value, val);
-        }
+        function filterBySegment(val) { renderSummaryTable(document.getElementById('globalSearchInput').value, val); }
 
         function openAuthModal() {
-            const modal = document.getElementById('authModal');
-            const container = document.getElementById('authModalContainer');
-            document.getElementById('authUsername').value = '';
-            document.getElementById('authPassword').value = '';
-            document.getElementById('authErrorMsg').classList.add('hidden');
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.remove('opacity-0'); container.classList.remove('scale-95'); }, 10);
+            const modal = document.getElementById('authModal'), container = document.getElementById('authModalContainer');
+            document.getElementById('authUsername').value = ''; document.getElementById('authPassword').value = ''; document.getElementById('authErrorMsg').classList.add('hidden');
+            modal.classList.remove('hidden'); setTimeout(() => { modal.classList.remove('opacity-0'); container.classList.remove('scale-95'); }, 10);
         }
-
         function closeAuthModal() {
-            const modal = document.getElementById('authModal');
-            const container = document.getElementById('authModalContainer');
-            modal.classList.add('opacity-0');
-            container.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); pendingTargetTab = null; }, 300);
+            const modal = document.getElementById('authModal'), container = document.getElementById('authModalContainer');
+            modal.classList.add('opacity-0'); container.classList.add('scale-95'); setTimeout(() => { modal.classList.add('hidden'); pendingTargetTab = null; }, 300);
         }
-
         function submitAuthForm(e) {
             e.preventDefault();
             if (document.getElementById('authUsername').value.trim() === atob(SEC_U) && document.getElementById('authPassword').value.trim() === atob(SEC_P)) {
-                isAuthenticated = true;
-                updateAuthUI();
-                closeAuthModal();
-                showToast('Akses Diberikan', 'Sesi privat berhasil diverifikasi.', 'success');
+                isAuthenticated = true; updateAuthUI(); closeAuthModal(); showToast('Akses Diberikan', 'Sesi privat berhasil diverifikasi.', 'success');
                 if (pendingTargetTab) switchMainTab(pendingTargetTab);
-            } else {
-                document.getElementById('authErrorMsg').classList.remove('hidden');
-                document.getElementById('authErrorText').innerText = 'Username atau Password salah!';
-            }
+            } else { document.getElementById('authErrorMsg').classList.remove('hidden'); document.getElementById('authErrorText').innerText = 'Username atau Password salah!'; }
         }
+        function logoutSession() { isAuthenticated = false; updateAuthUI(); showToast('Sesi Terkunci', 'Anda telah kembali ke mode Publik.', 'info'); if (['offtake', 'pallet'].includes(activeMainTab)) switchMainTab('stock'); }
+        function updateAuthUI() { const statusLabel = document.getElementById('sessionStatusLabel'); if (statusLabel) statusLabel.innerHTML = isAuthenticated ? '<span class="w-1.5 h-1.5 rounded-full bg-statusSuccess"></span> Akses Privat (Aktif)' : '<span class="w-1.5 h-1.5 rounded-full bg-statusWarning"></span> Publik Mode'; }
 
-        function logoutSession() {
-            isAuthenticated = false;
-            updateAuthUI();
-            showToast('Sesi Terkunci', 'Anda telah kembali ke mode Publik.', 'info');
-            if (['offtake', 'pallet'].includes(activeMainTab)) switchMainTab('stock');
-        }
-
-        function updateAuthUI() {
-            const statusLabel = document.getElementById('sessionStatusLabel');
-            if (statusLabel) {
-                statusLabel.innerHTML = isAuthenticated 
-                    ? '<span class="w-1.5 h-1.5 rounded-full bg-statusSuccess"></span> Akses Privat (Aktif)'
-                    : '<span class="w-1.5 h-1.5 rounded-full bg-statusWarning"></span> Publik Mode';
-            }
-        }
-
-        // Export Laporan Eksekutif dengan kolom Stok In & Stok Out kosong
         function exportExecutiveReport() {
-            showToast('Menyiapkan Laporan...', 'Format Excel Eksekutif sedang dibuat...', 'info');
+            showToast('Preparing Report...', 'Generating Executive Excel Format...', 'info');
             generateExecReportData();
+            const dateSelected = document.getElementById('execDateFilter').value, timeRangeSelected = document.getElementById('execTimeFilter').value;
+            let timeRangeText = document.getElementById('execTimeFilter').options[document.getElementById('execTimeFilter').selectedIndex].text, fileTimeLabel = timeRangeSelected.replace(/:/g, '').replace(/-/g, '_');
+            if (timeRangeSelected === 'dynamic_update') { timeRangeText = `00:00 - ${lastUpdateTimeStr} WIB`; fileTimeLabel = `0000_${lastUpdateTimeStr.replace(/:/g, '')}`; }
+            const wb = XLSX.utils.book_new(), ws = {};
+            const borderAll = { top: { style: "thin", color: { rgb: "000000" } }, bottom: { style: "thin", color: { rgb: "000000" } }, left: { style: "thin", color: { rgb: "000000" } }, right: { style: "thin", color: { rgb: "000000" } } };
+            const styleCompany = { font: { name: "Arial", sz: 14, bold: true }, alignment: { horizontal: "center" } }, styleTitle = { font: { name: "Arial", sz: 12, bold: true }, alignment: { horizontal: "center" } }, styleFilter = { font: { name: "Arial", sz: 10, italic: true }, alignment: { horizontal: "center" } };
+            const styleHeader = { font: { name: "Arial", sz: 10, bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "1F497D" } }, alignment: { horizontal: "center", vertical: "center", wrapText: true }, border: borderAll };
+            const styleSegmentRow = { font: { name: "Arial", sz: 10, bold: true, color: { rgb: "000000" } }, fill: { fgColor: { rgb: "DCE6F1" } }, alignment: { horizontal: "left", vertical: "center" }, border: borderAll };
+            const styleDataLeft = { font: { name: "Arial", sz: 10 }, alignment: { horizontal: "left", vertical: "center" }, border: borderAll }, styleDataRight = { font: { name: "Arial", sz: 10 }, alignment: { horizontal: "right", vertical: "center" }, border: borderAll }, styleDataRightBold = { font: { name: "Arial", sz: 10, bold: true }, alignment: { horizontal: "right", vertical: "center" }, border: borderAll };
+            const styleGrandTotal = { font: { name: "Arial", sz: 11, bold: true }, fill: { fgColor: { rgb: "C5D9F1" } }, alignment: { horizontal: "right", vertical: "center" }, border: { ...borderAll, top: { style: "double", color: { rgb: "000000" } } } };
 
-            const dateSelected = document.getElementById('execDateFilter').value;
-            const timeRangeSelected = document.getElementById('execTimeFilter').value;
-            const timeRangeText = document.getElementById('execTimeFilter').options[document.getElementById('execTimeFilter').selectedIndex].text;
+            function setCell(r, c, val, style, t, z) { ws[XLSX.utils.encode_cell({ r, c })] = { v: val, t: t || (typeof val === 'number' ? 'n' : 's'), s: style, ...(z && {z}) }; }
 
-            const wb = XLSX.utils.book_new();
-            const ws = {};
-
-            const styleCompany = { font: { name: "Arial", sz: 14, bold: true }, alignment: { horizontal: "center" } };
-            const styleTitle = { font: { name: "Arial", sz: 12, bold: true }, alignment: { horizontal: "center" } };
-            const styleFilter = { font: { name: "Arial", sz: 10, italic: true }, alignment: { horizontal: "center" } };
-            
-            const borderAll = {
-                top: { style: "thin", color: { rgb: "000000" } }, bottom: { style: "thin", color: { rgb: "000000" } },
-                left: { style: "thin", color: { rgb: "000000" } }, right: { style: "thin", color: { rgb: "000000" } }
-            };
-
-            const styleHeader = {
-                font: { name: "Arial", sz: 10, bold: true, color: { rgb: "FFFFFF" } },
-                fill: { fgColor: { rgb: "1F497D" } },
-                alignment: { horizontal: "center", vertical: "center", wrapText: true },
-                border: borderAll
-            };
-
-            const styleSegmentRow = {
-                font: { name: "Arial", sz: 10, bold: true, color: { rgb: "000000" } },
-                fill: { fgColor: { rgb: "DCE6F1" } },
-                alignment: { horizontal: "left", vertical: "center" },
-                border: borderAll
-            };
-
-            const styleDataLeft = { font: { name: "Arial", sz: 10 }, alignment: { horizontal: "left", vertical: "center" }, border: borderAll };
-            const styleDataRight = { font: { name: "Arial", sz: 10 }, alignment: { horizontal: "right", vertical: "center" }, border: borderAll };
-            const styleDataRightBold = { font: { name: "Arial", sz: 10, bold: true }, alignment: { horizontal: "right", vertical: "center" }, border: borderAll };
-
-            const styleGrandTotal = {
-                font: { name: "Arial", sz: 11, bold: true },
-                fill: { fgColor: { rgb: "C5D9F1" } },
-                alignment: { horizontal: "right", vertical: "center" },
-                border: { ...borderAll, top: { style: "double", color: { rgb: "000000" } } }
-            };
-
-            function setCell(r, c, val, style, t, z) {
-                const cell = { v: val, t: t || (typeof val === 'number' ? 'n' : 's'), s: style };
-                if (z) cell.z = z;
-                ws[XLSX.utils.encode_cell({ r, c })] = cell;
-            }
-
-            setCell(0, 0, "MORTAR INDONESIA", styleCompany);
-            setCell(1, 0, "LAPORAN PERGERAKAN STOK - FORMAT EKSEKUTIF", styleTitle);
-            setCell(2, 0, `Tanggal: ${dateSelected} | Rentang Jam: ${timeRangeText}`, styleFilter);
+            setCell(0, 0, "MORTAR INDONESIA", styleCompany); 
+            setCell(1, 0, "FINISHED GOODS STOCK REPORT", styleTitle); 
+            setCell(2, 0, `Date: ${dateSelected} | Time Range: ${timeRangeText}`, styleFilter);
             
             if(!ws['!merges']) ws['!merges'] = [];
-            ws['!merges'].push({ s: {r:0, c:0}, e: {r:0, c:6} });
-            ws['!merges'].push({ s: {r:1, c:0}, e: {r:1, c:6} });
-            ws['!merges'].push({ s: {r:2, c:0}, e: {r:2, c:6} });
-
-            const headers = ["Segment", "SKU Code", "Weight (KG)", "Stok In", "Stok Out", "Qty Zak", "Qty Ton"];
-            headers.forEach((h, i) => setCell(4, i, h, styleHeader));
+            ws['!merges'].push({ s: {r:0, c:0}, e: {r:0, c:6} }, { s: {r:1, c:0}, e: {r:1, c:6} }, { s: {r:2, c:0}, e: {r:2, c:6} });
+            ["Segment", "SKU Code", "Weight (KG)", "Stock In", "Stock Out", "Qty (ZAK)", "Qty (TON)"].forEach((h, i) => setCell(4, i, h, styleHeader));
 
             let currentRow = 5;
-            const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'];
-            
-            const grouped = {};
-            execReportData.forEach(item => {
-                if (!grouped[item.segment]) grouped[item.segment] = [];
-                grouped[item.segment].push(item);
-            });
-
+            const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], grouped = {};
+            execReportData.forEach(item => { if (!grouped[item.segment]) grouped[item.segment] = []; grouped[item.segment].push(item); });
             const segments = Object.keys(grouped).sort((a, b) => {
-                let idxA = customOrder.indexOf(a.toUpperCase());
-                let idxB = customOrder.indexOf(b.toUpperCase());
-                if (idxA === -1) idxA = 999;
-                if (idxB === -1) idxB = 999;
-                return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b);
+                let idxA = customOrder.indexOf(a.toUpperCase()), idxB = customOrder.indexOf(b.toUpperCase());
+                if (idxA === -1) idxA = 999; if (idxB === -1) idxB = 999; return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b);
             });
 
-            let gTotalZak = 0, gTotalTon = 0;
-
+            let gTotalZak = 0, gTotalTon = 0, gTotalIn = 0, gTotalOut = 0;
             segments.forEach(seg => {
-                setCell(currentRow, 0, seg, styleSegmentRow);
-                for(let c=1; c<7; c++) setCell(currentRow, c, "", styleSegmentRow);
-                ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:6} });
-                currentRow++;
-
+                setCell(currentRow, 0, seg, styleSegmentRow); for(let c=1; c<7; c++) setCell(currentRow, c, "", styleSegmentRow);
+                ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:6} }); currentRow++;
                 const items = grouped[seg].sort((a,b) => a.sku.localeCompare(b.sku));
-                let subZak = 0, subTon = 0;
-
+                let subZak = 0, subTon = 0, subIn = 0, subOut = 0;
                 items.forEach(item => {
-                    setCell(currentRow, 0, item.segment, styleDataLeft);
-                    setCell(currentRow, 1, item.sku, styleDataLeft);
-                    setCell(currentRow, 2, item.weight, styleDataRight, 'n', '#,##0');
-                    setCell(currentRow, 3, "", styleDataRight); // Kolom Stok In dikosongkan
-                    setCell(currentRow, 4, "", styleDataRight); // Kolom Stok Out dikosongkan
-                    setCell(currentRow, 5, item.qtyZak, styleDataRight, 'n', '#,##0');
-                    setCell(currentRow, 6, item.qtyTon, styleDataRightBold, 'n', '#,##0.0');
-
-                    subZak += item.qtyZak; subTon += item.qtyTon;
+                    const inVal = item.stokIn !== '' ? parseInt(item.stokIn) : "", outVal = item.stokOut !== '' ? parseInt(item.stokOut) : "";
+                    setCell(currentRow, 0, item.segment, styleDataLeft); setCell(currentRow, 1, item.sku, styleDataLeft); setCell(currentRow, 2, item.weight, styleDataRight, 'n', '#,##0');
+                    setCell(currentRow, 3, inVal, styleDataRight, inVal !== "" ? 'n' : 's', '#,##0'); setCell(currentRow, 4, outVal, styleDataRight, outVal !== "" ? 'n' : 's', '#,##0');
+                    setCell(currentRow, 5, item.qtyZak, styleDataRight, 'n', '#,##0'); setCell(currentRow, 6, item.qtyTon, styleDataRightBold, 'n', '#,##0.0');
+                    subZak += item.qtyZak; subTon += item.qtyTon; if(inVal !== "") subIn += inVal; if(outVal !== "") subOut += outVal;
                     currentRow++;
                 });
-
-                setCell(currentRow, 0, `Subtotal ${seg}`, styleSegmentRow);
-                setCell(currentRow, 1, "", styleSegmentRow);
-                setCell(currentRow, 2, "", styleSegmentRow);
-                setCell(currentRow, 3, "", styleSegmentRow);
-                setCell(currentRow, 4, "", styleSegmentRow);
-                setCell(currentRow, 5, subZak, styleDataRightBold, 'n', '#,##0');
-                setCell(currentRow, 6, subTon, styleDataRightBold, 'n', '#,##0.0');
-                
-                ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:2} });
-                currentRow++;
-
-                gTotalZak += subZak; gTotalTon += subTon;
+                setCell(currentRow, 0, `Subtotal ${seg}`, styleSegmentRow); for(let c=1; c<3; c++) setCell(currentRow, c, "", styleSegmentRow);
+                setCell(currentRow, 3, subIn || "", styleDataRightBold, subIn ? 'n' : 's', '#,##0'); setCell(currentRow, 4, subOut || "", styleDataRightBold, subOut ? 'n' : 's', '#,##0');
+                setCell(currentRow, 5, subZak, styleDataRightBold, 'n', '#,##0'); setCell(currentRow, 6, subTon, styleDataRightBold, 'n', '#,##0.0');
+                ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:2} }); currentRow++;
+                gTotalZak += subZak; gTotalTon += subTon; gTotalIn += subIn; gTotalOut += subOut;
             });
-
-            setCell(currentRow, 0, "GRAND TOTAL", styleGrandTotal);
-            setCell(currentRow, 1, "", styleGrandTotal);
-            setCell(currentRow, 2, "", styleGrandTotal);
-            setCell(currentRow, 3, "", styleGrandTotal);
-            setCell(currentRow, 4, "", styleGrandTotal);
-            setCell(currentRow, 5, gTotalZak, styleGrandTotal, 'n', '#,##0');
-            setCell(currentRow, 6, gTotalTon, styleGrandTotal, 'n', '#,##0.0');
-            ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:2} });
-
-            ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow, c: 6 } });
-            ws['!cols'] = [ { wch: 15 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 15 } ];
-
-            XLSX.utils.book_append_sheet(wb, ws, "Laporan Eksekutif");
-            
-            const sanitizedDate = dateSelected.replace(/-/g, '');
-            const safeTime = timeRangeSelected.replace(/:/g, '');
-            XLSX.writeFile(wb, `Laporan_Eksekutif_Stok_${sanitizedDate}_${safeTime}.xlsx`);
-            
-            setTimeout(() => showToast('Sukses Export', 'Format Eksekutif berhasil diunduh.', 'success'), 500);
+            setCell(currentRow, 0, "GRAND TOTAL", styleGrandTotal); for(let c=1; c<3; c++) setCell(currentRow, c, "", styleGrandTotal);
+            setCell(currentRow, 3, gTotalIn || "", styleGrandTotal, gTotalIn ? 'n' : 's', '#,##0'); setCell(currentRow, 4, gTotalOut || "", styleGrandTotal, gTotalOut ? 'n' : 's', '#,##0');
+            setCell(currentRow, 5, gTotalZak, styleGrandTotal, 'n', '#,##0'); setCell(currentRow, 6, gTotalTon, styleGrandTotal, 'n', '#,##0.0');
+            ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:2} }); ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow, c: 6 } }); ws['!cols'] = [ { wch: 15 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 15 } ];
+            XLSX.utils.book_append_sheet(wb, ws, "Executive Report");
+            XLSX.writeFile(wb, `Executive_Stock_Report_${dateSelected.replace(/-/g, '')}_${fileTimeLabel}.xlsx`);
+            setTimeout(() => showToast('Export Success', 'Executive format downloaded.', 'success'), 500);
         }
 
-        // Export data standar
         function exportData() {
-            showToast('Exporting...', 'Menyiapkan laporan Excel baku...', 'info');
-
-            const wb = XLSX.utils.book_new();
-            const now = new Date();
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            
-            const printDateStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} pukul ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')} WIB`;
-
+            showToast('Exporting...', 'Preparing standard Excel report...', 'info');
+            const wb = XLSX.utils.book_new(), now = new Date(), ws = {};
+            const printDateStr = `${['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][now.getDay()]}, ${now.getDate()} ${['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][now.getMonth()]} ${now.getFullYear()} pukul ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')} WIB`;
             const isDetailTab = activeMainTab === 'detail';
-            const reportTitle = isDetailTab ? "REPORT - MASTER DATA DETAIL OPERASIONAL" : "REPORT - FINISHED GOODS STOCK OVERVIEW";
-            const sectionTitle = isDetailTab ? "RINCIAN DETAIL STOK MASTER" : "RINCIAN STOK PER SEGMENT & SKU";
-            
-            const ws = {};
             const borderThin = { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } };
-            
-            const styleTitle = { font: { name: "Calibri", sz: 11, bold: true } };
-            const styleHeader = { font: { name: "Calibri", sz: 10, bold: true }, fill: { fgColor: { rgb: "E2E0D8" } }, alignment: { horizontal: "center", vertical: "center" }, border: borderThin };
-            const styleDataLeft = { font: { name: "Calibri", sz: 10 }, alignment: { horizontal: "left", vertical: "center" }, border: borderThin };
-            const styleDataRight = { font: { name: "Calibri", sz: 10 }, alignment: { horizontal: "right", vertical: "center" }, border: borderThin };
-
-            function setCell(r, c, val, style, t, z) {
-                const cell = { v: val, t: t || (typeof val === 'number' ? 'n' : 's'), s: style };
-                if (z) cell.z = z;
-                ws[XLSX.utils.encode_cell({ r, c })] = cell;
-            }
-
-            setCell(0, 0, "LOGISTICS MONITORING SYSTEM (LMS)", styleTitle);
-            setCell(1, 0, reportTitle, styleTitle);
-            setCell(2, 0, `Tanggal Cetak: ${printDateStr}`, { font: { name: "Calibri", sz: 10 } });
-            setCell(4, 0, sectionTitle, styleTitle);
-
-            let currentRow = 6;
-            let maxCols = 0;
-
+            const styleTitle = { font: { name: "Calibri", sz: 11, bold: true } }, styleHeader = { font: { name: "Calibri", sz: 10, bold: true }, fill: { fgColor: { rgb: "E2E0D8" } }, alignment: { horizontal: "center", vertical: "center" }, border: borderThin }, styleDataLeft = { font: { name: "Calibri", sz: 10 }, alignment: { horizontal: "left", vertical: "center" }, border: borderThin }, styleDataRight = { font: { name: "Calibri", sz: 10 }, alignment: { horizontal: "right", vertical: "center" }, border: borderThin };
+            function setCell(r, c, val, style, t, z) { ws[XLSX.utils.encode_cell({ r, c })] = { v: val, t: t || (typeof val === 'number' ? 'n' : 's'), s: style, ...(z && {z}) }; }
+            setCell(0, 0, "LOGISTICS MONITORING SYSTEM (LMS)", styleTitle); setCell(1, 0, isDetailTab ? "REPORT - MASTER DATA DETAIL" : "REPORT - FINISHED GOODS STOCK OVERVIEW", styleTitle); setCell(2, 0, `Print Date: ${printDateStr}`, { font: { name: "Calibri", sz: 10 } }); setCell(4, 0, isDetailTab ? "MASTER DATA DETAILS" : "STOCK BY SEGMENT & SKU", styleTitle);
+            let currentRow = 6, maxCols = 0;
             if (isDetailTab) {
-                const headers = masterDataRaw.headers && masterDataRaw.headers.length > 0 ? [...masterDataRaw.headers] : ["SKU", "Deskripsi", "QTY ZAK", "UOM"];
-                maxCols = headers.length;
-                headers.forEach((h, i) => setCell(5, i, h, styleHeader));
-
+                const headers = masterDataRaw.headers && masterDataRaw.headers.length > 0 ? [...masterDataRaw.headers] : ["SKU", "Description", "QTY ZAK", "UOM"];
+                maxCols = headers.length; headers.forEach((h, i) => setCell(5, i, h, styleHeader));
                 const query = (document.getElementById('detailSearchInput')?.value || '').trim().toLowerCase();
-                const rows = masterDataRaw.rows.filter(r => !query || r.join(' ').toLowerCase().includes(query));
-
-                rows.forEach(row => {
-                    headers.forEach((h, i) => {
-                        const val = row[i] !== undefined ? row[i] : '';
-                        const hLower = (h || '').toLowerCase();
-                        if (hLower.includes('qty') || hLower.includes('zak') || hLower.includes('ton')) {
-                            setCell(currentRow, i, cleanNum(val), styleDataRight, 'n', '#,##0');
-                        } else {
-                            setCell(currentRow, i, String(val), styleDataLeft);
-                        }
-                    });
+                masterDataRaw.rows.filter(r => !query || r.join(' ').toLowerCase().includes(query)).forEach(row => {
+                    headers.forEach((h, i) => { const val = row[i] !== undefined ? row[i] : '', hLower = (h || '').toLowerCase(); if (hLower.includes('qty') || hLower.includes('zak') || hLower.includes('ton')) setCell(currentRow, i, cleanNum(val), styleDataRight, 'n', '#,##0'); else setCell(currentRow, i, String(val), styleDataLeft); });
                     currentRow++;
                 });
                 ws['!cols'] = headers.map(h => ({ wch: Math.max(14, (h||'').length + 4) }));
             } else {
                 const headers = ["Segment", "SKU Code", "Weight (KG)", "Quantity (ZAK)", "Quantity (TON)"];
-                maxCols = headers.length;
-                headers.forEach((h, i) => setCell(5, i, h, styleHeader));
-
-                summaryData.forEach(item => {
-                    setCell(currentRow, 0, item.segment, styleDataLeft);
-                    setCell(currentRow, 1, item.sku, styleDataLeft);
-                    setCell(currentRow, 2, item.weight, styleDataRight, 'n', '#,##0');
-                    setCell(currentRow, 3, item.qtyZak, styleDataRight, 'n', '#,##0');
-                    setCell(currentRow, 4, item.qtyTon, styleDataRight, 'n', '0.0');
-                    currentRow++;
-                });
+                maxCols = headers.length; headers.forEach((h, i) => setCell(5, i, h, styleHeader));
+                summaryData.forEach(item => { setCell(currentRow, 0, item.segment, styleDataLeft); setCell(currentRow, 1, item.sku, styleDataLeft); setCell(currentRow, 2, item.weight, styleDataRight, 'n', '#,##0'); setCell(currentRow, 3, item.qtyZak, styleDataRight, 'n', '#,##0'); setCell(currentRow, 4, item.qtyTon, styleDataRight, 'n', '0.0'); currentRow++; });
                 ws['!cols'] = [{ wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 18 }, { wch: 18 }];
             }
-
             ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow, c: Math.max(0, maxCols - 1) } });
             XLSX.utils.book_append_sheet(wb, ws, isDetailTab ? "Master Data" : "Stock");
-            
-            const dateStamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-            XLSX.writeFile(wb, `LMS_Report_${dateStamp}.xlsx`);
+            XLSX.writeFile(wb, `LMS_Report_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`);
         }
     </script>
 </body>
