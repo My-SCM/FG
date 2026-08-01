@@ -334,98 +334,107 @@
                 </div>
             </div>
 
-            <!-- KPI CARDS GRID -->
-            <div id="kpiContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-8">
-                <!-- KPI 1: Space Gudang -->
+            <!-- KPI CARDS GRID (Updated Structure) -->
+            <div id="kpiContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+                
+                <!-- KPI 1: Space Gudang + Pallet Management -->
                 <div class="neon-card cyan-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
-                    <div class="flex justify-between items-start mb-1">
-                        <div>
-                            <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-0.5">Kapasitas Gudang</p>
-                            <div class="flex items-baseline gap-1.5">
-                                <h3 class="text-2xl font-black text-white font-mono" id="kpiSpacePercent">0%</h3>
-                                <span class="text-[11px] font-semibold text-textSecondary">Terpakai</span>
+                    <!-- Space Gudang Section -->
+                    <div>
+                        <div class="flex justify-between items-start mb-1">
+                            <div>
+                                <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-0.5">Kapasitas Gudang</p>
+                                <div class="flex items-baseline gap-1.5">
+                                    <h3 class="text-2xl font-black text-white font-mono" id="kpiSpacePercent">0%</h3>
+                                    <span class="text-[11px] font-semibold text-textSecondary">Terpakai</span>
+                                </div>
+                            </div>
+                            <div id="kpiSpaceBadge" class="px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusSuccess/10 text-statusSuccess border-statusSuccess/20">
+                                <i class="ph-bold ph-check-circle"></i> Optimal
                             </div>
                         </div>
-                        <div id="kpiSpaceBadge" class="px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusSuccess/10 text-statusSuccess border-statusSuccess/20">
-                            <i class="ph-bold ph-check-circle"></i> Optimal
+                        <div class="w-full bg-bgPrimary/80 h-2 rounded-full overflow-hidden border border-borderMain/60 my-2">
+                            <div id="kpiSpaceProgressBar" class="h-full bg-gradient-to-r from-accentCyan to-accentPurple rounded-full transition-all duration-700" style="width: 0%"></div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1 pt-2 border-t border-borderMain/50 text-[10px]">
+                            <div>
+                                <span class="text-textSecondary/70 block">Terisi</span>
+                                <span class="font-bold text-white font-mono" id="kpiSpaceCurrent">0 Ton</span>
+                            </div>
+                            <div class="text-center">
+                                <span class="text-textSecondary/70 block">Sisa</span>
+                                <span class="font-bold text-accentCyan font-mono" id="kpiSpaceRemaining">0 Ton</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-textSecondary/70 block">Maksimal</span>
+                                <span class="font-bold text-textSecondary font-mono" id="kpiSpaceMax">2.737 Ton</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="w-full bg-bgPrimary/80 h-2 rounded-full overflow-hidden border border-borderMain/60 my-2">
-                        <div id="kpiSpaceProgressBar" class="h-full bg-gradient-to-r from-accentCyan to-accentPurple rounded-full transition-all duration-700" style="width: 0%"></div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-1 pt-2 border-t border-borderMain/50 text-[10px]">
-                        <div>
-                            <span class="text-textSecondary/70 block">Terisi</span>
-                            <span class="font-bold text-white font-mono" id="kpiSpaceCurrent">0 Ton</span>
+                    
+                    <!-- Pallet Management Section -->
+                    <div class="mt-4 pt-4 border-t border-borderMain/50">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Pallet Management</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[9px] bg-accentPurple/20 text-accentPurple px-2 py-0.5 rounded font-bold">1368 PalPos</span>
+                                    <span class="text-[9px] bg-accentCyan/20 text-accentCyan px-2 py-0.5 rounded font-bold">3 Staging</span>
+                                </div>
+                            </div>
+                            <div class="p-2 bg-accentPurple/10 border border-accentPurple/20 rounded-xl text-accentPurple">
+                                <i class="ph-fill ph-stack text-lg"></i>
+                            </div>
                         </div>
-                        <div class="text-center">
-                            <span class="text-textSecondary/70 block">Sisa</span>
-                            <span class="font-bold text-accentCyan font-mono" id="kpiSpaceRemaining">0 Ton</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-textSecondary/70 block">Maksimal</span>
-                            <span class="font-bold text-textSecondary font-mono" id="kpiSpaceMax">2.737 Ton</span>
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <p class="text-[9px] text-textSecondary uppercase">Retail (Silog)</p>
+                                <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletRetail">0</h4>
+                                <p class="text-[9px] text-textSecondary" id="kpiTonRetail">0 Ton</p>
+                            </div>
+                            <div class="w-px bg-borderMain/50"></div>
+                            <div class="flex-1">
+                                <p class="text-[9px] text-textSecondary uppercase">Project</p>
+                                <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletProject">0</h4>
+                                <p class="text-[9px] text-textSecondary" id="kpiTonProject">0 Ton</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- KPI 2: Quantity ZAK -->
+                <!-- KPI 2: Total Quantity (ZAK) + TON + Active SKU -->
                 <div class="neon-card purple-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
+                    <!-- Main Quantity (ZAK) -->
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Quantity</p>
+                            <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Quantity (ZAK)</p>
                             <h3 class="text-2xl font-black text-white font-mono flex items-baseline gap-1" id="kpiZak">
-                                0 <span class="text-xs font-normal text-textSecondary">Zak</span>
+                                0 <span class="text-xs font-normal text-textSecondary">Total</span>
                             </h3>
                         </div>
                         <div class="p-2.5 bg-accentPurple/10 border border-accentPurple/20 rounded-xl text-accentPurple">
                             <i class="ph-fill ph-package text-xl"></i>
                         </div>
                     </div>
-                    <div class="mt-2 pt-2 border-t border-borderMain/50 flex flex-wrap gap-1.5 items-center text-[10px]" id="kpiUomBreakdown">
-                        <span class="text-textSecondary/60 italic">Memuat UOM...</span>
-                    </div>
-                </div>
-
-                <!-- KPI 3: Quantity TON -->
-                <div class="neon-card cyan-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
-                    <div class="flex justify-between items-start">
+                    
+                    <!-- Sub-KPIs (TON & SKU) -->
+                    <div class="mt-4 grid grid-cols-2 gap-4 border-t border-borderMain/50 pt-4">
                         <div>
                             <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Qty (TON)</p>
-                            <h3 class="text-2xl font-black text-white font-mono flex items-baseline gap-1" id="kpiTon">
+                            <h3 class="text-lg font-black text-white font-mono flex items-baseline gap-1" id="kpiTon">
                                 0 <span class="text-xs font-normal text-textSecondary">Ton</span>
                             </h3>
                         </div>
-                        <div class="p-2.5 bg-accentCyan/10 border border-accentCyan/20 rounded-xl text-accentCyan">
-                            <i class="ph-fill ph-truck text-xl"></i>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between text-xs mt-3">
-                        <span class="text-statusSuccess font-bold flex items-center gap-1 bg-statusSuccess/10 px-2 py-0.5 rounded-lg border border-statusSuccess/20">
-                            <i class="ph-bold ph-trend-up"></i> All Segments Sum
-                        </span>
-                    </div>
-                </div>
-
-                <!-- KPI 4: Total SKU -->
-                <div class="neon-card green-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
-                    <div class="flex justify-between items-start">
                         <div>
                             <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Active SKU</p>
-                            <h3 class="text-2xl font-black text-white font-mono flex items-baseline gap-1" id="kpiSku">
+                            <h3 class="text-lg font-black text-white font-mono flex items-baseline gap-1" id="kpiSku">
                                 0 <span class="text-xs font-normal text-textSecondary">SKU</span>
                             </h3>
                         </div>
-                        <div class="p-2.5 bg-statusSuccess/10 border border-statusSuccess/20 rounded-xl text-statusSuccess">
-                            <i class="ph-fill ph-barcode text-xl"></i>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between text-xs mt-3">
-                        <span class="text-statusSuccess font-bold text-[11px]">100% Active Master</span>
                     </div>
                 </div>
 
-                <!-- KPI 5: DATA LAST UPDATE -->
+                <!-- KPI 3: DATA LAST UPDATE -->
                 <div class="glass-panel p-5 rounded-2xl flex flex-col justify-center min-h-[150px] border-l-4 border-l-statusWarning relative overflow-hidden">
                     <div class="absolute right-[-20px] top-[-20px] opacity-10">
                         <i class="ph-fill ph-clock text-9xl text-statusWarning"></i>
@@ -437,36 +446,6 @@
                         <h3 class="text-xl font-black text-white" id="kpiTimeDisplay">-- --- ----</h3>
                         <p class="text-xs font-mono text-statusWarning font-bold mt-0.5" id="kpiClockDisplay">--:-- WIB</p>
                         <p class="text-[9px] text-textSecondary mt-2">Source: G-Sheets (Cloud Sync)</p>
-                    </div>
-                </div>
-
-                <!-- MERGED KPI: Pallet Overview (Retail & Project) -->
-                <div class="neon-card purple-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Pallet Management</p>
-                            <h3 class="text-lg font-black text-white font-mono">Overview</h3>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="text-[9px] bg-accentPurple/20 text-accentPurple px-2 py-0.5 rounded font-bold">1368 PalPos</span>
-                                <span class="text-[9px] bg-accentCyan/20 text-accentCyan px-2 py-0.5 rounded font-bold">3 Staging</span>
-                            </div>
-                        </div>
-                        <div class="p-2.5 bg-accentPurple/10 border border-accentPurple/20 rounded-xl text-accentPurple">
-                            <i class="ph-fill ph-stack text-xl"></i>
-                        </div>
-                    </div>
-                    <div class="flex gap-4 border-t border-borderMain/50 pt-3">
-                        <div class="flex-1">
-                            <p class="text-[9px] text-textSecondary uppercase">Retail (Silog)</p>
-                            <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletRetail">0</h4>
-                            <p class="text-[9px] text-textSecondary" id="kpiTonRetail">0 Ton</p>
-                        </div>
-                        <div class="w-px bg-borderMain/50"></div>
-                        <div class="flex-1">
-                            <p class="text-[9px] text-textSecondary uppercase">Project</p>
-                            <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletProject">0</h4>
-                            <p class="text-[9px] text-textSecondary" id="kpiTonProject">0 Ton</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1006,11 +985,6 @@
             if(document.getElementById('kpiTon')) document.getElementById('kpiTon').innerHTML = `${fmtDec(totalTon)} <span class="text-xs font-normal text-textSecondary">Ton</span>`;
             if(document.getElementById('kpiSku')) document.getElementById('kpiSku').innerHTML = `${uniqueSKUs.size} <span class="text-xs font-normal text-textSecondary">SKU</span>`;
             
-            const uomContainer = document.getElementById('kpiUomBreakdown');
-            if (uomContainer) {
-                uomContainer.innerHTML = `<span class="bg-accentPurple/20 text-accentPurple border border-accentPurple/30 px-2 py-0.5 rounded-md font-mono font-bold flex items-center gap-1"><span>ZAK:</span><span class="text-white">${fmtNum(masterZakSum)}</span></span>`;
-            }
-
             // Update Pallet KPIs (Kapasitas 2 Ton / Pallet)
             if(document.getElementById('kpiPalletRetail')) {
                 document.getElementById('kpiPalletRetail').innerText = fmtNum(Math.ceil(totalTonRetail / 2));
@@ -1284,15 +1258,13 @@
             } else {
                 const headers = ["Segment", "SKU Code", "Weight (KG)", "Quantity (ZAK)", "Quantity (TON)"];
                 maxCols = headers.length; headers.forEach((h, i) => setCell(5, i, h, styleHeader));
-                summaryData.forEach(item => { setCell(currentRow, 0, item.segment, styleDataLeft); setCell(currentRow, 1, item.sku, styleDataLeft); setCell(currentRow, 2, item.weight, styleDataRight, 'n', '#,##0'); setCell(currentRow, 3, item.qtyZak, styleDataRight, 'n', '#,##0'); setCell(currentRow, 4, item.qtyTon, styleDataRight, 'n', '0.0'); currentRow++; });
-                ws['!cols'] = [{ wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 18 }, { wch: 18 }];
+                summaryData.forEach(item => { setCell(currentRow, 0, item.segment, styleDataLeft); setCell(currentRow, 1, item.sku, styleDataLeft); setCell(currentRow, 2, item.weight, styleDataRight, 'n', '#,##0'); setCell(currentRow, 3, item.qtyZak, styleDataRight, 'n', '#,##0'); setCell(currentRow, 4, item.qtyTon, styleDataRight, 'n', '#,##0.0'); currentRow++; });
+                ws['!cols'] = [ { wch: 15 }, { wch: 20 }, { wch: 15 }, { wch: 20 }, { wch: 20 } ];
             }
-            ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow, c: Math.max(0, maxCols - 1) } });
-            
-            ws['!views'] = [{ showGridLines: false }];
-
-            XLSX.utils.book_append_sheet(wb, ws, isDetailTab ? "Master Data" : "Stock");
-            XLSX.writeFile(wb, `LMS_Report_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`);
+            ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow - 1, c: Math.max(maxCols - 1, 0) } });
+            XLSX.utils.book_append_sheet(wb, ws, isDetailTab ? "Master Detail" : "Stock Overview");
+            XLSX.writeFile(wb, `LMS_Report_${now.getFullYear()}${String(now.getMonth()+1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}.xlsx`);
+            setTimeout(() => showToast('Export Success', 'File Excel berhasil diunduh.', 'success'), 500);
         }
     </script>
 </body>
