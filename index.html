@@ -188,21 +188,21 @@
                     <li>
                         <button id="nav-btn-detail" onclick="handleTabClick('detail')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-database text-xl group-hover:text-accentPurple transition-colors"></i>
-                            <span class="flex-1">Detail Stok Master</span>
+                            <span class="flex-1">Master Stock Details</span>
                         </button>
                     </li>
                     <li>
                         <button id="nav-btn-summary-only" onclick="handleTabClick('summary-only')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-table text-xl group-hover:text-accentCyan transition-colors"></i>
-                            <span class="flex-1">Ringkasan Stok Overview</span>
+                            <span class="flex-1">Stock Summary Overview</span>
                         </button>
                     </li>
-                    <!-- Laporan Eksekutif Menu (Private) -->
+                    <!-- Report Menu (Private) -->
                     <li>
                         <button id="nav-btn-exec-report" onclick="handleTabClick('exec-report')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-file-pdf text-xl group-hover:text-statusSuccess transition-colors"></i>
-                            <span class="flex-1">Laporan Eksekutif</span>
-                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Akses Privat"></i>
+                            <span class="flex-1">Report</span>
+                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Private Access"></i>
                         </button>
                     </li>
                     <!-- Offtake Menu (Private) -->
@@ -210,7 +210,7 @@
                         <button id="nav-btn-offtake" onclick="handleTabClick('offtake')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-truck text-xl group-hover:text-accentCyan transition-colors"></i>
                             <span class="flex-1">Offtake</span>
-                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Akses Privat"></i>
+                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Private Access"></i>
                         </button>
                     </li>
                     <!-- Pallet Menu (Private) -->
@@ -218,7 +218,7 @@
                         <button id="nav-btn-pallet" onclick="handleTabClick('pallet')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-stack text-xl group-hover:text-accentCyan transition-colors"></i>
                             <span class="flex-1">Pallet</span>
-                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Akses Privat"></i>
+                            <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Private Access"></i>
                         </button>
                     </li>
                 </ul>
@@ -335,7 +335,7 @@
             </div>
 
             <!-- KPI CARDS GRID -->
-            <div id="kpiContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
+            <div id="kpiContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-8">
                 <!-- KPI 1: Space Gudang -->
                 <div class="neon-card cyan-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
                     <div class="flex justify-between items-start mb-1">
@@ -350,11 +350,9 @@
                             <i class="ph-bold ph-check-circle"></i> Optimal
                         </div>
                     </div>
-                    <!-- Visual Progress Bar -->
                     <div class="w-full bg-bgPrimary/80 h-2 rounded-full overflow-hidden border border-borderMain/60 my-2">
                         <div id="kpiSpaceProgressBar" class="h-full bg-gradient-to-r from-accentCyan to-accentPurple rounded-full transition-all duration-700" style="width: 0%"></div>
                     </div>
-                    <!-- Clean Metric Breakdown -->
                     <div class="grid grid-cols-3 gap-1 pt-2 border-t border-borderMain/50 text-[10px]">
                         <div>
                             <span class="text-textSecondary/70 block">Terisi</span>
@@ -427,7 +425,7 @@
                     </div>
                 </div>
 
-                <!-- KPI 5: DATA LAST UPDATE FROM SHEET -->
+                <!-- KPI 5: DATA LAST UPDATE -->
                 <div class="glass-panel p-5 rounded-2xl flex flex-col justify-center min-h-[150px] border-l-4 border-l-statusWarning relative overflow-hidden">
                     <div class="absolute right-[-20px] top-[-20px] opacity-10">
                         <i class="ph-fill ph-clock text-9xl text-statusWarning"></i>
@@ -439,6 +437,36 @@
                         <h3 class="text-xl font-black text-white" id="kpiTimeDisplay">-- --- ----</h3>
                         <p class="text-xs font-mono text-statusWarning font-bold mt-0.5" id="kpiClockDisplay">--:-- WIB</p>
                         <p class="text-[9px] text-textSecondary mt-2">Source: G-Sheets (Cloud Sync)</p>
+                    </div>
+                </div>
+
+                <!-- MERGED KPI: Pallet Overview (Retail & Project) -->
+                <div class="neon-card purple-top p-5 flex flex-col justify-between min-h-[150px] glass-panel">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Pallet Management</p>
+                            <h3 class="text-lg font-black text-white font-mono">Overview</h3>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-[9px] bg-accentPurple/20 text-accentPurple px-2 py-0.5 rounded font-bold">1368 PalPos</span>
+                                <span class="text-[9px] bg-accentCyan/20 text-accentCyan px-2 py-0.5 rounded font-bold">3 Staging</span>
+                            </div>
+                        </div>
+                        <div class="p-2.5 bg-accentPurple/10 border border-accentPurple/20 rounded-xl text-accentPurple">
+                            <i class="ph-fill ph-stack text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 border-t border-borderMain/50 pt-3">
+                        <div class="flex-1">
+                            <p class="text-[9px] text-textSecondary uppercase">Retail (Silog)</p>
+                            <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletRetail">0</h4>
+                            <p class="text-[9px] text-textSecondary" id="kpiTonRetail">0 Ton</p>
+                        </div>
+                        <div class="w-px bg-borderMain/50"></div>
+                        <div class="flex-1">
+                            <p class="text-[9px] text-textSecondary uppercase">Project</p>
+                            <h4 class="text-lg font-bold text-white font-mono" id="kpiPalletProject">0</h4>
+                            <p class="text-[9px] text-textSecondary" id="kpiTonProject">0 Ton</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -504,9 +532,9 @@
                     <div class="p-5 border-b border-borderMain bg-bgCard/90 flex justify-between items-center">
                         <div>
                             <h3 class="font-bold text-white text-base flex items-center gap-2">
-                                <i class="ph-fill ph-database text-accentPurple text-xl"></i> Master Data Detail Operasional
+                                <i class="ph-fill ph-database text-accentPurple text-xl"></i> Master Stock Data Details
                             </h3>
-                            <p class="text-xs text-textSecondary mt-0.5">Seluruh Rincian Stok Dari Sheet MasterData</p>
+                            <p class="text-xs text-textSecondary mt-0.5">Detailed operational stock records from MasterData sheet</p>
                         </div>
                         <input type="text" id="detailSearchInput" oninput="renderDetailTable(this.value)" placeholder="Filter Master Data..." class="bg-bgPrimary border border-borderMain text-white rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-accentCyan w-64">
                     </div>
@@ -560,19 +588,19 @@
                     <div class="p-5 border-b border-borderMain bg-bgCard/90 flex flex-wrap justify-between items-end gap-4">
                         <div class="flex-1 min-w-[300px]">
                             <h3 class="font-bold text-white text-base flex items-center gap-2 mb-1">
-                                <i class="ph-fill ph-file-pdf text-statusSuccess text-xl"></i> Setup Laporan Eksekutif
+                                <i class="ph-fill ph-file-pdf text-statusSuccess text-xl"></i> Executive Report Setup
                             </h3>
-                            <p class="text-xs text-textSecondary">Format laporan eksekutif pergerakan stok untuk kebutuhan cetak dan analisa.</p>
+                            <p class="text-xs text-textSecondary">Professional stock movement report format for printing and analysis.</p>
                         </div>
                         <div class="flex items-end gap-3 bg-bgPrimary/50 p-3 rounded-xl border border-borderMain w-full lg:w-auto">
                             <div>
-                                <label class="block text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Tanggal</label>
+                                <label class="block text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Date</label>
                                 <input type="date" id="execDateFilter" onchange="renderExecReportPreview()" class="bg-bgCard border border-borderMain text-white rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-statusSuccess transition-all cursor-pointer w-full">
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Rentang Jam</label>
+                                <label class="block text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Time Range</label>
                                 <select id="execTimeFilter" class="bg-bgCard border border-borderMain text-white rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-statusSuccess transition-all cursor-pointer w-full" onchange="renderExecReportPreview()">
-                                    <option value="dynamic_update" selected>00:00 - Update Terakhir</option>
+                                    <option value="dynamic_update" selected>00:00 - Last Update</option>
                                     <option value="00:00-08:00">00:00 - 08:00 WIB (Shift 1)</option>
                                     <option value="08:00-16:00">08:00 - 16:00 WIB (Shift 2)</option>
                                     <option value="16:00-24:00">16:00 - 24:00 WIB (Shift 3)</option>
@@ -581,7 +609,7 @@
                             </div>
                             <button onclick="exportExecutiveReport()" class="bg-gradient-to-r from-statusSuccess to-emerald-600 hover:from-emerald-500 hover:to-statusSuccess text-bgPrimary font-bold px-5 py-2 rounded-lg shadow-glow-green transition-all flex items-center gap-2 text-xs transform hover:scale-105 active:scale-95 h-[34px] whitespace-nowrap">
                                 <i class="ph-bold ph-download-simple text-base"></i>
-                                Unduh Format Eksekutif
+                                Download Executive Report
                             </button>
                         </div>
                     </div>
@@ -610,7 +638,6 @@
                                     </table>
                                 </div>
                             </div>
-                            <!-- Small note added below the table -->
                             <div class="mt-4 p-4 bg-bgCard border border-borderMain rounded-xl text-textSecondary text-[11px] space-y-2">
                                 <p class="flex items-start gap-2">
                                     <i class="ph-bold ph-info text-accentCyan mt-0.5"></i>
@@ -629,7 +656,7 @@
                     </div>
                 </div>
 
-                <!-- TABS: OFFTAKE & PALLET (UNDER CONSTRUCTION) -->
+                <!-- TABS: OFFTAKE & PALLET -->
                 <div id="view-offtake" class="hidden glass-panel rounded-2xl p-16 text-center border border-borderMain flex flex-col items-center justify-center h-[650px]">
                     <div class="p-6 bg-gradient-to-br from-accentPurple/20 to-accentCyan/20 border border-accentPurple/30 rounded-full shadow-glow-purple mb-6">
                         <i class="ph-fill ph-cone text-6xl text-accentPurple animate-pulse"></i>
@@ -644,7 +671,6 @@
                     <h3 class="text-2xl font-extrabold text-white mb-3">This website is under construction</h3>
                     <p class="text-sm text-textSecondary max-w-md">Modul Manajemen Pallet sedang dalam tahap pengembangan struktur data.</p>
                 </div>
-
             </div>
 
             <!-- FOOTER -->
@@ -652,11 +678,10 @@
                 <p>&copy; 2026 Enterprise Logistics Monitoring System (LMS). All rights reserved.</p>
                 <p>Powered by Abi Habudin | Live Cloud Node Active</p>
             </div>
-
         </div>
     </main>
 
-    <!-- AUTHENTICATION MODAL FOR PRIVATE MENU -->
+    <!-- AUTHENTICATION MODAL -->
     <div id="authModal" class="fixed inset-0 bg-bgPrimary/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-bgCard border border-borderMain w-full max-w-md rounded-2xl p-6 shadow-glass relative transform scale-95 transition-transform duration-300" id="authModalContainer">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-textSecondary hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors">
@@ -701,7 +726,7 @@
         </div>
     </div>
 
-    <!-- CUSTOM TOAST NOTIFICATION -->
+    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="toast-box">
         <div class="flex items-center gap-3">
             <i id="toastIcon" class="ph-fill ph-check-circle text-statusSuccess text-2xl"></i>
@@ -739,8 +764,8 @@
         let isAuthenticated = false;
         let pendingTargetTab = null;
 
-        const SEC_U = 'YWRtaW4='; // admin
-        const SEC_P = 'bWl0cmErMDA='; // mitra+00
+        const SEC_U = 'YWRtaW4='; 
+        const SEC_P = 'bWl0cmErMDA=';
 
         const fmtNum = (num) => new Intl.NumberFormat('id-ID').format(Math.round(num || 0));
         const fmtDec = (num) => new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(num || 0);
@@ -943,8 +968,20 @@
 
         function updateKPIs() {
             let totalWeight = 0, totalZakSummary = 0, totalTon = 0;
+            let totalTonRetail = 0, totalTonProject = 0;
             const uniqueSKUs = new Set();
-            summaryData.forEach(item => { totalWeight += item.weight; totalZakSummary += item.qtyZak; totalTon += item.qtyTon; if(item.sku && item.sku !== '-') uniqueSKUs.add(item.sku); });
+            
+            summaryData.forEach(item => { 
+                totalWeight += item.weight; 
+                totalZakSummary += item.qtyZak; 
+                totalTon += item.qtyTon; 
+                
+                if(item.sku && item.sku !== '-') uniqueSKUs.add(item.sku); 
+                
+                if(item.segment.toUpperCase() === 'RETAIL') totalTonRetail += item.qtyTon;
+                if(item.segment.toUpperCase() === 'PROJECT') totalTonProject += item.qtyTon;
+            });
+            
             let masterZakSum = totalZakSummary; 
             const WAREHOUSE_CAPACITY_TON = 2737, spacePct = WAREHOUSE_CAPACITY_TON > 0 ? (totalTon / WAREHOUSE_CAPACITY_TON) * 100 : 0, remainingTon = Math.max(0, WAREHOUSE_CAPACITY_TON - totalTon);
             if(document.getElementById('kpiSpacePercent')) document.getElementById('kpiSpacePercent').innerText = `${fmtDec(spacePct)}%`;
@@ -964,6 +1001,7 @@
                 else if (spacePct > 75) { badgeEl.className = 'px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusWarning/10 text-statusWarning border-statusWarning/20'; badgeEl.innerHTML = '<i class="ph-bold ph-info"></i> Tinggi'; }
                 else { badgeEl.className = 'px-2 py-0.5 rounded-lg border text-[10px] font-bold flex items-center gap-1 bg-statusSuccess/10 text-statusSuccess border-statusSuccess/20'; badgeEl.innerHTML = '<i class="ph-bold ph-check-circle"></i> Optimal'; }
             }
+            
             if(document.getElementById('kpiZak')) document.getElementById('kpiZak').innerHTML = `${fmtNum(masterZakSum)} <span class="text-xs font-normal text-textSecondary">Total</span>`;
             if(document.getElementById('kpiTon')) document.getElementById('kpiTon').innerHTML = `${fmtDec(totalTon)} <span class="text-xs font-normal text-textSecondary">Ton</span>`;
             if(document.getElementById('kpiSku')) document.getElementById('kpiSku').innerHTML = `${uniqueSKUs.size} <span class="text-xs font-normal text-textSecondary">SKU</span>`;
@@ -971,6 +1009,16 @@
             const uomContainer = document.getElementById('kpiUomBreakdown');
             if (uomContainer) {
                 uomContainer.innerHTML = `<span class="bg-accentPurple/20 text-accentPurple border border-accentPurple/30 px-2 py-0.5 rounded-md font-mono font-bold flex items-center gap-1"><span>ZAK:</span><span class="text-white">${fmtNum(masterZakSum)}</span></span>`;
+            }
+
+            // Update Pallet KPIs (Kapasitas 2 Ton / Pallet)
+            if(document.getElementById('kpiPalletRetail')) {
+                document.getElementById('kpiPalletRetail').innerText = fmtNum(Math.ceil(totalTonRetail / 2));
+                document.getElementById('kpiTonRetail').innerText = `${fmtDec(totalTonRetail)} Ton`;
+            }
+            if(document.getElementById('kpiPalletProject')) {
+                document.getElementById('kpiPalletProject').innerText = fmtNum(Math.ceil(totalTonProject / 2));
+                document.getElementById('kpiTonProject').innerText = `${fmtDec(totalTonProject)} Ton`;
             }
         }
 
@@ -1066,7 +1114,6 @@
         }
 
         function handleTabClick(tabName) {
-            // MENAMBAHKAN 'exec-report' KE DALAM ARRAY PRIVATE TABS
             const privateTabs = ['exec-report', 'offtake', 'pallet']; 
             if (privateTabs.includes(tabName)) { 
                 if (isAuthenticated) switchMainTab(tabName); 
@@ -1123,7 +1170,6 @@
             isAuthenticated = false; 
             updateAuthUI(); 
             showToast('Sesi Terkunci', 'Anda telah kembali ke mode Publik.', 'info'); 
-            // Tambahkan exec-report ke daftar tab yang harus ditendang keluar saat logout
             if (['exec-report', 'offtake', 'pallet'].includes(activeMainTab)) switchMainTab('stock'); 
         }
         
@@ -1131,7 +1177,6 @@
             const statusLabel = document.getElementById('sessionStatusLabel'); 
             if (statusLabel) statusLabel.innerHTML = isAuthenticated ? '<span class="w-1.5 h-1.5 rounded-full bg-statusSuccess"></span> Akses Privat (Aktif)' : '<span class="w-1.5 h-1.5 rounded-full bg-statusWarning"></span> Publik Mode'; 
             
-            // Ubah gaya ikon gembok pada menu sidebar (Terbuka Hijau / Terkunci Kuning)
             const lockIcons = document.querySelectorAll('.private-lock-icon');
             lockIcons.forEach(icon => {
                 icon.className = isAuthenticated ? 'ph-bold ph-lock-key-open text-statusSuccess private-lock-icon' : 'ph-bold ph-lock-key text-statusWarning private-lock-icon';
@@ -1210,7 +1255,6 @@
             ws['!cols'] = [ { wch: 15 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 15 } ];
             ws['!rows'] = []; ws['!rows'][currentRow] = { hpx: 45 }; ws['!rows'][currentRow-1] = { hpx: 45 };
             
-            // HIDE GRIDLINES
             ws['!views'] = [{ showGridLines: false }];
 
             XLSX.utils.book_append_sheet(wb, ws, "Executive Report");
@@ -1245,7 +1289,6 @@
             }
             ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: currentRow, c: Math.max(0, maxCols - 1) } });
             
-            // HIDE GRIDLINES
             ws['!views'] = [{ showGridLines: false }];
 
             XLSX.utils.book_append_sheet(wb, ws, isDetailTab ? "Master Data" : "Stock");
