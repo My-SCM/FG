@@ -1025,7 +1025,30 @@
 
         function renderExecReportPreview() {
             const tbody = document.getElementById('execReportTableBody'); if(!tbody) return;
-            generateExecReportData(); const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], sortedData = [...execReportData].sort((a, b) => { let idxA = customOrder.indexOf(a.segment.toUpperCase()), idxB = customOrder.indexOf(b.segment.toUpperCase()); if (idxA === -1) idxA = 999; if (idxB === -1) idxB = 999; if (idxA !== idxB) return idxA - idxB; return a.sku.localeCompare(b.sku); });
+            generateExecReportData();
+            
+            // Changed: Only group by segment using custom order, DO NOT sort SKUs alphabetically
+            const grouped = {};
+            execReportData.forEach(item => {
+                if (!grouped[item.segment]) grouped[item.segment] = [];
+                grouped[item.segment].push(item);
+            });
+            
+            const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'];
+            const segments = Object.keys(grouped).sort((a, b) => {
+                let idxA = customOrder.indexOf(a.toUpperCase());
+                let idxB = customOrder.indexOf(b.toUpperCase());
+                if (idxA === -1) idxA = 999;
+                if (idxB === -1) idxB = 999;
+                return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b);
+            });
+
+            const sortedData = [];
+            segments.forEach(seg => {
+                // We directly spread the grouped segment to maintain the original order from master data
+                sortedData.push(...grouped[seg]);
+            });
+
             if(sortedData.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-textSecondary">Data Kosong</td></tr>`; return; }
             let html = '', currentSegment = '';
             sortedData.forEach(item => {
@@ -1169,7 +1192,11 @@
             segments.forEach(seg => {
                 setCell(currentRow, 0, seg, styleSegmentRow); for(let c=1; c<7; c++) setCell(currentRow, c, "", styleSegmentRow);
                 ws['!merges'].push({ s: {r:currentRow, c:0}, e: {r:currentRow, c:6} }); currentRow++;
-                const items = grouped[seg].sort((a,b) => a.sku.localeCompare(b.sku));
+                
+                // Changed: Removed the explicit .sort((a,b) => a.sku.localeCompare(b.sku)) 
+                // to maintain the original fetched order from Master Data
+                const items = grouped[seg]; 
+                
                 let subZak = 0, subTon = 0, subIn = 0, subOut = 0;
                 items.forEach(item => {
                     const inVal = item.stokIn !== '' ? parseInt(item.stokIn) : "", outVal = item.stokOut !== '' ? parseInt(item.stokOut) : "";
