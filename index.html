@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logistics Monitoring System (LMS) | Enterprise Logistics Monitoring Dashboard</title>
     
-    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -174,7 +173,6 @@
 </head>
 <body class="flex h-screen w-full overflow-hidden bg-bgPrimary">
 
-    <!-- Mobile Sidebar Overlay -->
     <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
     <!-- LEFT SIDEBAR -->
@@ -388,7 +386,7 @@
             <div id="kpiContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-6 md:mb-8">
                 
                 <!-- KPI 1: Space Gudang + Pallet Management -->
-                <div class="neon-card cyan-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full group overflow-hidden">
+                <div class="neon-card cyan-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full group relative overflow-hidden">
                     <div>
                         <div class="flex flex-wrap justify-between items-start mb-1 gap-2">
                             <div>
@@ -449,16 +447,16 @@
                         </div>
                     </div>
 
-                    <!-- Overlay Insight KPI 1 -->
-                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-5 flex flex-col justify-center items-center text-center pointer-events-none border border-accentCyan/30">
-                        <i class="ph-fill ph-brain text-3xl md:text-4xl text-accentCyan mb-2"></i>
-                        <h4 class="text-white font-bold text-xs md:text-sm mb-1 uppercase tracking-widest">Analisa Kapasitas & Pallet</h4>
-                        <p class="text-[10px] md:text-xs text-textSecondary leading-relaxed" id="kpi1InsightText">Menghitung analitik cerdas...</p>
+                    <!-- Hover Insight Overlay -->
+                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-accentCyan/30">
+                        <i class="ph-fill ph-brain text-3xl text-accentCyan mb-1"></i>
+                        <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Analisa Kapasitas Gudang</h4>
+                        <p class="text-[10px] text-textSecondary leading-relaxed" id="kpi1InsightText">Menghitung analitik cerdas utilitas gudang...</p>
                     </div>
                 </div>
 
                 <!-- KPI 2: Total Quantity (ZAK) + IN/OUT Summary + TON + Active SKU -->
-                <div class="neon-card purple-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full group overflow-hidden">
+                <div class="neon-card purple-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full group relative overflow-hidden">
                     <div class="flex justify-between items-start mb-2">
                         <div>
                             <p class="text-[9px] md:text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Quantity (ZAK)</p>
@@ -471,7 +469,6 @@
                         </div>
                     </div>
                     
-                    <!-- Added IN/OUT Summary -->
                     <div class="flex flex-col gap-1.5 md:gap-2 mb-2">
                         <div class="flex flex-col sm:flex-row justify-between sm:items-center text-[9px] md:text-[10px] bg-bgPrimary/50 rounded-lg p-1.5 md:p-2 border border-borderMain gap-1.5 sm:gap-0">
                             <div class="flex flex-col">
@@ -502,12 +499,12 @@
                             </h3>
                         </div>
                     </div>
-                    
-                    <!-- Overlay Insight KPI 2 -->
-                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-5 flex flex-col justify-center items-center text-center pointer-events-none border border-accentPurple/30">
-                        <i class="ph-fill ph-chart-line-up text-3xl md:text-4xl text-accentPurple mb-2"></i>
-                        <h4 class="text-white font-bold text-xs md:text-sm mb-1 uppercase tracking-widest">Analisa Pergerakan Stok</h4>
-                        <p class="text-[10px] md:text-xs text-textSecondary leading-relaxed" id="kpi2InsightText">Menghitung analitik cerdas...</p>
+
+                    <!-- Hover Insight Overlay -->
+                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-accentPurple/30">
+                        <i class="ph-fill ph-chart-line-up text-3xl text-accentPurple mb-1"></i>
+                        <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Analisa Pergerakan Stok</h4>
+                        <p class="text-[10px] text-textSecondary leading-relaxed" id="kpi2InsightText">Menghitung analitik arus masuk dan keluar...</p>
                     </div>
                 </div>
 
@@ -525,11 +522,11 @@
                         <p class="text-[8px] md:text-[9px] text-textSecondary mt-1.5 md:mt-2">Source: G-Sheets (Cloud Sync)</p>
                     </div>
 
-                    <!-- Overlay Insight KPI 3 -->
-                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-5 flex flex-col justify-center items-center text-center pointer-events-none border border-statusWarning/30">
-                        <i class="ph-fill ph-cloud-check text-3xl md:text-4xl text-statusWarning mb-2"></i>
-                        <h4 class="text-white font-bold text-xs md:text-sm mb-1 uppercase tracking-widest">Status Sistem Cloud</h4>
-                        <p class="text-[10px] md:text-xs text-textSecondary leading-relaxed" id="kpi3InsightText">Sistem terhubung aktif. Sinkronisasi data dari Google Sheets berjalan normal dan diproses secara real-time.</p>
+                    <!-- Hover Insight Overlay -->
+                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-statusWarning/30">
+                        <i class="ph-fill ph-cloud-check text-3xl text-statusWarning mb-1"></i>
+                        <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Status Sistem Cloud</h4>
+                        <p class="text-[10px] text-textSecondary leading-relaxed">Sinkronisasi Google Sheets terhubung aktif. Data diperbarui secara real-time dari database pusat.</p>
                     </div>
                 </div>
             </div>
@@ -592,9 +589,8 @@
                         </div>
                     </div>
                     
-                    <!-- Bottom Row: New Trend and Output vs Delivery Charts -->
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 w-full">
-                        <div class="xl:col-span-2 glass-panel rounded-2xl p-4 md:p-5 border border-borderMain h-[350px] md:h-[450px] flex flex-col">
+                        <div class="xl:col-span-2 glass-panel rounded-2xl p-4 md:p-5 border border-borderMain h-[380px] md:h-[460px] flex flex-col">
                             <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
                                 <i class="ph-fill ph-chart-line-up text-accentCyan text-base md:text-lg"></i> Tren Daily Output Produksi vs Delivery vs Stok on Hand (Bulan Berjalan)
                             </h3>
@@ -602,13 +598,13 @@
                                 <canvas id="trendLineChart"></canvas>
                             </div>
                         </div>
-                        <div class="xl:col-span-1 glass-panel rounded-2xl p-4 md:p-5 border border-borderMain h-[350px] md:h-[450px] flex flex-col relative">
+                        <div class="xl:col-span-1 glass-panel rounded-2xl p-4 md:p-5 border border-borderMain h-[380px] md:h-[460px] flex flex-col relative">
                             <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest mb-4 flex items-center gap-2 text-center w-full justify-center">
                                 <i class="ph-fill ph-chart-donut text-statusWarning text-base md:text-lg"></i> Output Produksi vs Delivery
                             </h3>
                             <div class="flex-1 relative w-full h-full flex items-center justify-center">
                                 <canvas id="comparisonDonutChart"></canvas>
-                                <!-- Custom Center Text for Donut -->
+                                <!-- Custom Center Text for 3D Donut -->
                                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-6">
                                     <span id="donutCenterPct" class="text-2xl md:text-4xl font-black font-mono">0%</span>
                                     <span id="donutCenterLabel" class="text-[9px] md:text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-1">Perubahan Stok</span>
@@ -915,8 +911,9 @@
         let lastUpdateTimeStr = "--:--";
         let activeMainTab = 'stock';
         let stockDonutChartInstance = null;
-        let trendLineChartInstance = null; // New variable
-        let comparisonDonutChartInstance = null; // New variable
+        let trendLineChartInstance = null;
+        let comparisonDonutChartInstance = null;
+        let chartAnimInterval = null;
         let isAuthenticated = false;
         let pendingTargetTab = null;
 
@@ -1243,7 +1240,6 @@
             
             let todayZakDelta = 0;
             
-            // Monthly Summary Variables
             let monthInZak = 0;
             let monthOutZak = 0;
             let validDaysInMonth = new Set();
@@ -1258,7 +1254,6 @@
                     const isIn = typeUpper.includes('IN') || typeUpper.includes('MASUK') || typeUpper.includes('PRODUCTION') || typeUpper.includes('PRODUKSI');
                     const isOut = typeUpper.includes('OUT') || typeUpper.includes('KELUAR') || typeUpper.includes('OFFTAKE') || typeUpper.includes('DELIVERY') || typeUpper.includes('KIRIM');
 
-                    // Today's delta
                     if (recDateIso === todayStrIso) {
                         if (isIn) {
                             todayZakDelta += rec.zak;
@@ -1267,7 +1262,6 @@
                         }
                     }
                     
-                    // Monthly Summary
                     if (recMonth === currentMonth && recYear === currentYear) {
                         validDaysInMonth.add(recDateIso);
                         if (isIn) {
@@ -1279,12 +1273,10 @@
                 }
             });
 
-            // Calculate Daily Average for the month
             const daysCount = validDaysInMonth.size > 0 ? validDaysInMonth.size : 1;
             const netMonthlyChange = monthInZak - monthOutZak;
             const avgDailyChange = netMonthlyChange / daysCount;
             
-            // Update IN/OUT KPI elements
             if(document.getElementById('kpiMonthIn')) document.getElementById('kpiMonthIn').innerText = fmtNum(monthInZak);
             if(document.getElementById('kpiMonthOut')) document.getElementById('kpiMonthOut').innerText = fmtNum(monthOutZak);
             
@@ -1296,7 +1288,6 @@
                 else if(avgDailyChange < 0) avgEl.className = 'font-mono font-bold text-statusDanger text-[10px] md:text-xs';
                 else avgEl.className = 'font-mono font-bold text-textSecondary text-[10px] md:text-xs';
             }
-
 
             let masterZakSum = totalZakSummary + todayZakDelta;
             let adjustedTotalTon = totalTon + (todayZakDelta * 40 / 1000);
@@ -1336,21 +1327,21 @@
                 document.getElementById('kpiTonProject').innerText = `${fmtDec(totalTonProject)} Ton`;
             }
 
-            // --- AI Insights for KPI Overlays ---
+            // Update Hover Insight Texts for KPIs
             let insight1 = '';
-            if (spacePct > 90) insight1 = `Kritis! Gudang melebihi 90% kapasitas maksimal (${fmtNum(WAREHOUSE_CAPACITY_TON)} Ton). Disarankan segera mengaktifkan Staging Area tambahan dan mempercepat proses Delivery untuk membebaskan ruang (Sisa: ${fmtDec(remainingTon)} Ton).`;
-            else if (spacePct > 75) insight1 = `Waspada! Utilisasi gudang mencapai ${fmtDec(spacePct)}%. Manajemen ruang pallet perlu dioptimalkan untuk menampung potensi antrean produksi.`;
-            else insight1 = `Kondisi Optimal. Utilisasi ruang ${fmtDec(spacePct)}%. Masih tersedia kapasitas ${fmtDec(remainingTon)} Ton. Proporsi pallet Retail dan Project dalam batas aman.`;
+            if (spacePct > 90) insight1 = `Kritis! Gudang melebihi 90% kapasitas maksimal (${fmtNum(WAREHOUSE_CAPACITY_TON)} Ton). Segera aktifkan Staging Area tambahan dan percepat proses Delivery (Sisa: ${fmtDec(remainingTon)} Ton).`;
+            else if (spacePct > 75) insight1 = `Waspada! Utilisasi gudang mencapai ${fmtDec(spacePct)}%. Manajemen ruang pallet perlu dioptimalkan untuk menampung antrean produksi.`;
+            else insight1 = `Kondisi Optimal. Utilisasi ruang ${fmtDec(spacePct)}%. Masih tersedia kapasitas ${fmtDec(remainingTon)} Ton.`;
             
-            let kpi1El = document.getElementById('kpi1InsightText');
+            const kpi1El = document.getElementById('kpi1InsightText');
             if(kpi1El) kpi1El.innerText = insight1;
 
             let insight2 = '';
-            if (netMonthlyChange > 0) insight2 = `Tren Positif (Surplus): Terdapat penumpukan stok sebesar ${fmtNum(netMonthlyChange)} ZAK bulan ini karena Output melampaui Delivery. Rata-rata penambahan ${fmtNum(avgDailyChange)} ZAK/hari.`;
-            else if (netMonthlyChange < 0) insight2 = `Tren Negatif (Defisit): Laju Delivery lebih cepat dari Produksi. Stok berkurang sebesar ${fmtNum(Math.abs(netMonthlyChange))} ZAK bulan ini. Rata-rata penurunan ${fmtNum(Math.abs(avgDailyChange))} ZAK/hari. Pastikan pasokan aman!`;
+            if (netMonthlyChange > 0) insight2 = `Tren Positif (Surplus): Terdapat penumpukan stok sebesar ${fmtNum(netMonthlyChange)} ZAK bulan ini karena Output melampaui Delivery (+${fmtNum(avgDailyChange)} ZAK/hari).`;
+            else if (netMonthlyChange < 0) insight2 = `Tren Negatif (Defisit): Laju Delivery lebih cepat dari Produksi. Stok berkurang sebesar ${fmtNum(Math.abs(netMonthlyChange))} ZAK bulan ini (-${fmtNum(Math.abs(avgDailyChange))} ZAK/hari).`;
             else insight2 = `Tren Seimbang: Aliran barang masuk (In) dan keluar (Out) bulan ini seimbang, tidak ada penumpukan berlebih.`;
             
-            let kpi2El = document.getElementById('kpi2InsightText');
+            const kpi2El = document.getElementById('kpi2InsightText');
             if(kpi2El) kpi2El.innerText = insight2;
         }
 
@@ -1426,14 +1417,13 @@
         }
 
         function renderCharts() {
-            // -- 1. Segment Stock Donut & Top SKU (Existing) --
+            // Segment Donut
             const segMap = {}; summaryData.forEach(item => { if(!segMap[item.segment]) segMap[item.segment] = 0; segMap[item.segment] += item.qtyTon; });
             const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], labels = Object.keys(segMap).sort((a, b) => { let idxA = customOrder.indexOf(a.toUpperCase()), idxB = customOrder.indexOf(b.toUpperCase()); return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b); });
             const dataVals = labels.map(l => segMap[l]), chartColors = ['#00E5FF', '#6D5DF6', '#00D084', '#FFB800'];
             const ctxDonut = document.getElementById('stockDonutChart');
             if(ctxDonut) {
                 if(stockDonutChartInstance) stockDonutChartInstance.destroy();
-                // Determine responsive options
                 const isMobile = window.innerWidth < 768;
                 stockDonutChartInstance = new Chart(ctxDonut.getContext('2d'), { 
                     type: 'doughnut', 
@@ -1451,6 +1441,8 @@
                     } 
                 });
             }
+
+            // Top SKU Distribution
             const skuMap = {}; summaryData.forEach(item => { if(item.sku && item.sku !== '-') { if(!skuMap[item.sku]) skuMap[item.sku] = 0; skuMap[item.sku] += item.qtyTon; } });
             const sortedSKUs = Object.keys(skuMap).map(k => ({ sku: k, ton: skuMap[k] })).sort((a, b) => b.ton - a.ton).slice(0, 5);
             const maxVal = sortedSKUs.length > 0 ? sortedSKUs[0].ton : 1, container = document.getElementById('topSkuRankingContainer');
@@ -1461,27 +1453,26 @@
                 });
             }
 
-            // -- 2. Render New Trend & Comparison Charts --
+            // Render Trend & 3D Donut Comparison with Progressive Animation Loop
             renderTrendAndComparisonCharts();
         }
 
         function renderTrendAndComparisonCharts() {
+            if (chartAnimInterval) clearInterval(chartAnimInterval);
+
             const todayObj = new Date();
             const currentMonth = todayObj.getMonth();
             const currentYear = todayObj.getFullYear();
             const todayDate = todayObj.getDate();
-            // Get total days in current month
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-            // 1. Get base live stock (using logic from updateKPIs)
             let totalZakSummary = 0;
             summaryData.forEach(item => totalZakSummary += item.qtyZak);
             let todayZakDelta = 0;
 
-            // 2. Aggregate daily IN/OUT for current month
             let dailyIn = new Array(daysInMonth + 1).fill(0);
             let dailyOut = new Array(daysInMonth + 1).fill(0);
-            let dailySkuMovements = new Array(daysInMonth + 1).fill(null).map(() => ({})); // Array to store SKU details per day
+            let dailySkuMovements = new Array(daysInMonth + 1).fill(null).map(() => ({})); 
             let totalMonthIn = 0;
             let totalMonthOut = 0;
 
@@ -1497,13 +1488,11 @@
                     const isIn = typeUpper.includes('IN') || typeUpper.includes('MASUK') || typeUpper.includes('PRODUCTION') || typeUpper.includes('PRODUKSI');
                     const isOut = typeUpper.includes('OUT') || typeUpper.includes('KELUAR') || typeUpper.includes('OFFTAKE') || typeUpper.includes('DELIVERY') || typeUpper.includes('KIRIM');
 
-                    // Calculate today's delta for current live stock
                     if (recDateIso === todayStrIso) {
                         if (isIn) todayZakDelta += rec.zak;
                         else if (isOut) todayZakDelta -= rec.zak;
                     }
 
-                    // Aggregate for current month trend & SKU specifics
                     if (recYear === currentYear && recMonth === currentMonth) {
                         const skuName = rec.produk && rec.produk !== '-' ? rec.produk : 'UNKNOWN SKU';
                         if(!dailySkuMovements[recDate][skuName]) {
@@ -1523,37 +1512,32 @@
                 }
             });
 
-            // This is the current actual stock
             let currentLiveStock = totalZakSummary + todayZakDelta;
-
-            // 3. Backtrack Daily Stock from today to beginning of month
             let dailyStock = new Array(daysInMonth + 1).fill(null);
             dailyStock[todayDate] = currentLiveStock;
 
-            // Backtrack calculation: Stock(yesterday) = Stock(today) - IN(today) + OUT(today)
             for (let d = todayDate - 1; d >= 1; d--) {
                 dailyStock[d] = dailyStock[d + 1] - dailyIn[d + 1] + dailyOut[d + 1];
-                // Ensure stock doesn't theoretically go below 0 (though data issues might cause it)
                 if(dailyStock[d] < 0) dailyStock[d] = 0;
             }
 
-            // Prepare arrays for Chart.js
             let labels = [];
-            let plotIn = [];
-            let plotOut = [];
-            let plotStock = [];
+            let fullPlotIn = [];
+            let fullPlotOut = [];
+            let fullPlotStock = [];
 
             for (let d = 1; d <= daysInMonth; d++) {
                 labels.push(d.toString());
-                plotIn.push(dailyIn[d]);
-                plotOut.push(dailyOut[d]);
-                // Only plot stock line up to current day
+                fullPlotIn.push(dailyIn[d]);
+                fullPlotOut.push(dailyOut[d]);
                 if (d <= todayDate) {
-                    plotStock.push(dailyStock[d]);
+                    fullPlotStock.push(dailyStock[d]);
                 } else {
-                    plotStock.push(null);
+                    fullPlotStock.push(null);
                 }
             }
+
+            const startStock = dailyStock[1] || currentLiveStock; 
 
             // -- TREND LINE CHART --
             const ctxTrend = document.getElementById('trendLineChart');
@@ -1562,7 +1546,6 @@
                 
                 const ctx2d = ctxTrend.getContext('2d');
                 
-                // Create futuristic gradient fills
                 let gradientStock = ctx2d.createLinearGradient(0, 0, 0, 400);
                 gradientStock.addColorStop(0, 'rgba(0, 208, 132, 0.4)');
                 gradientStock.addColorStop(1, 'rgba(0, 208, 132, 0.0)');
@@ -1576,14 +1559,13 @@
                 gradientOut.addColorStop(1, 'rgba(255, 77, 109, 0.0)');
 
                 trendLineChartInstance = new Chart(ctx2d, {
-                    type: 'line', // ALL lines for executive readability
+                    type: 'line', 
                     data: {
                         labels: labels,
                         datasets: [
                             {
                                 label: 'Stok on Hand',
-                                data: plotStock,
-                                // Color logic based on stock movement (Up = Green, Down = Red, Same = Cyan)
+                                data: [],
                                 segment: {
                                     borderColor: ctx => {
                                         if(!ctx.p0 || !ctx.p1) return '#00D084';
@@ -1592,28 +1574,28 @@
                                 },
                                 backgroundColor: gradientStock,
                                 borderWidth: 3.5,
-                                tension: 0.4, // Smooth curve
+                                tension: 0.4,
                                 fill: true,
                                 pointBackgroundColor: '#070B14',
                                 pointBorderColor: ctx => {
                                     if(ctx.dataIndex === 0) return '#00D084';
-                                    const curr = plotStock[ctx.dataIndex];
-                                    const prev = plotStock[ctx.dataIndex - 1];
+                                    const curr = fullPlotStock[ctx.dataIndex];
+                                    const prev = fullPlotStock[ctx.dataIndex - 1];
                                     return curr > prev ? '#00D084' : (curr < prev ? '#FF4D6D' : '#00E5FF');
                                 },
                                 pointBorderWidth: 2,
-                                pointRadius: ctx => ctx.dataIndex === todayDate - 1 ? 6 : 0, // Show point only on current day
+                                pointRadius: 6,
                                 pointHoverRadius: 8,
                                 yAxisID: 'yStock',
                                 order: 3
                             },
                             {
                                 label: 'Output Produksi (IN)',
-                                data: plotIn,
+                                data: [],
                                 borderColor: '#00E5FF',
                                 backgroundColor: gradientIn,
                                 borderWidth: 2.5,
-                                borderDash: [5, 5], // Digital dashed line effect
+                                borderDash: [5, 5],
                                 tension: 0.4,
                                 fill: true,
                                 pointBackgroundColor: '#070B14',
@@ -1626,7 +1608,7 @@
                             },
                             {
                                 label: 'Delivery (OUT)',
-                                data: plotOut,
+                                data: [],
                                 borderColor: '#FF4D6D',
                                 backgroundColor: gradientOut,
                                 borderWidth: 2.5,
@@ -1646,9 +1628,7 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         interaction: { mode: 'index', intersect: false },
-                        animation: {
-                            y: { duration: 1500, easing: 'easeOutQuart' } // Smooth vertical entry animation
-                        },
+                        animation: { duration: 600 },
                         plugins: {
                             legend: { 
                                 position: 'top',
@@ -1659,14 +1639,14 @@
                                 titleColor: '#FFFFFF',
                                 titleFont: { size: 13, family: 'JetBrains Mono' },
                                 bodyColor: '#B8C0D9',
-                                bodyFont: { size: 12, family: 'Plus Jakarta Sans' },
+                                bodyFont: { size: 11, family: 'Plus Jakarta Sans' },
                                 borderColor: 'rgba(255,255,255,0.15)',
                                 borderWidth: 1,
                                 padding: 12,
                                 boxPadding: 6,
                                 usePointStyle: true,
                                 callbacks: {
-                                    title: function(context) { return 'Tanggal ' + context[0].label; },
+                                    title: function(context) { return 'Tanggal ' + context[0].label + ' Bulan Berjalan'; },
                                     label: function(context) {
                                         let label = context.dataset.label || '';
                                         if (label) { label += ': '; }
@@ -1674,7 +1654,6 @@
                                         return label;
                                     },
                                     afterBody: function(context) {
-                                        // Smart Analytical Insight in Tooltip
                                         let inVal = 0, outVal = 0, stockVal = 0, prevStock = 0;
                                         let dayIdx = context[0].dataIndex;
                                         let dayNumber = dayIdx + 1;
@@ -1685,8 +1664,8 @@
                                             if (ctx.dataset.label.includes('Stok')) stockVal = ctx.parsed.y;
                                         });
 
-                                        if (dayIdx > 0 && plotStock[dayIdx-1] !== null) {
-                                            prevStock = plotStock[dayIdx-1];
+                                        if (dayIdx > 0 && fullPlotStock[dayIdx-1] !== null) {
+                                            prevStock = fullPlotStock[dayIdx-1];
                                         }
 
                                         let insights = [];
@@ -1704,15 +1683,13 @@
                                             insights.push(`🚀 Agresivitas Delivery: -${new Intl.NumberFormat('id-ID').format(outVal - inVal)} ZAK`);
                                         }
                                         
-                                        // --- NEW: SKU Breakdown per Day ---
                                         insights.push('');
-                                        insights.push('📦 DETAIL PERGERAKAN SKU (HARI INI):');
+                                        insights.push('📦 DETAIL PERGERAKAN SKU HARI INI:');
                                         
                                         let skuData = dailySkuMovements[dayNumber];
                                         if (!skuData || Object.keys(skuData).length === 0) {
                                             insights.push('  Tidak ada transaksi spesifik');
                                         } else {
-                                            // Sort by absolute movement volume
                                             let sortedSkus = Object.keys(skuData).sort((a,b) => {
                                                 return (skuData[b].in + skuData[b].out) - (skuData[a].in + skuData[a].out);
                                             });
@@ -1744,7 +1721,7 @@
                             x: { 
                                 grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false, borderDash: [5, 5] }, 
                                 ticks: { color: '#B8C0D9', font: {size: 10, family: 'JetBrains Mono'} },
-                                title: { display: true, text: `Timeline Bulan Berjalan`, color: '#B8C0D9', font: {size: 10, weight: 'bold'} }
+                                title: { display: true, text: `Timeline Tanggal Bulan Berjalan`, color: '#B8C0D9', font: {size: 10, weight: 'bold'} }
                             },
                             yVolume: { 
                                 type: 'linear', display: true, position: 'left', 
@@ -1763,16 +1740,13 @@
                 });
             }
 
-            // -- COMPARISON DONUT CHART --
+            // -- COMPARISON 3D DONUT CHART --
             const ctxDonutCmp = document.getElementById('comparisonDonutChart');
             if(ctxDonutCmp) {
                 if(comparisonDonutChartInstance) comparisonDonutChartInstance.destroy();
                 
-                // Avoid rendering empty donut if no data yet for the month
-                const hasData = totalMonthIn > 0 || totalMonthOut > 0;
                 const ctxD = ctxDonutCmp.getContext('2d');
 
-                // Create 3D-like linear gradients for slices
                 let gradIn3D = ctxD.createLinearGradient(0, 0, 0, 300);
                 gradIn3D.addColorStop(0, '#00E5FF');
                 gradIn3D.addColorStop(1, '#007A88');
@@ -1786,15 +1760,15 @@
                     data: {
                         labels: ['Output Produksi', 'Delivery'],
                         datasets: [{
-                            data: hasData ? [totalMonthIn, totalMonthOut] : [1, 1],
-                            backgroundColor: hasData ? [gradIn3D, gradOut3D] : ['rgba(255,255,255,0.05)', 'rgba(255,255,255,0.05)'],
-                            borderColor: '#070B14', // Background color for gap effect
+                            data: [0, 0],
+                            backgroundColor: [gradIn3D, gradOut3D],
+                            borderColor: '#070B14',
                             borderWidth: 5,
-                            borderRadius: 12, // Creates a 3D pill/capsule shape for slices
-                            hoverBackgroundColor: hasData ? ['#00FFFF', '#FF6680'] : [],
+                            borderRadius: 12,
+                            hoverBackgroundColor: ['#00FFFF', '#FF6680'],
                             hoverBorderColor: ['#00E5FF', '#FF4D6D'],
                             hoverBorderWidth: 2,
-                            hoverOffset: hasData ? 15 : 0 // Pop-out 3D effect on hover
+                            hoverOffset: 15
                         }]
                     },
                     options: {
@@ -1802,12 +1776,7 @@
                         maintainAspectRatio: false,
                         cutout: '72%',
                         layout: { padding: 15 },
-                        animation: {
-                            animateScale: true,
-                            animateRotate: true,
-                            duration: 2500,
-                            easing: 'easeOutElastic'
-                        },
+                        animation: { animateScale: true, animateRotate: true, duration: 600, easing: 'easeOutElastic' },
                         plugins: {
                             legend: { position: 'bottom', labels: { color: '#B8C0D9', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }, usePointStyle: true, padding: 15 } },
                             tooltip: {
@@ -1819,18 +1788,22 @@
                                 padding: 12,
                                 callbacks: {
                                     label: function(context) {
-                                        if(!hasData) return 'Belum ada data';
-                                        let label = context.label || '';
                                         let val = context.raw;
-                                        let total = totalMonthIn + totalMonthOut;
-                                        let pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                                        if (!val) return 'Belum ada data';
+                                        let label = context.label || '';
+                                        let datasetData = context.chart.data.datasets[0].data;
+                                        let currentTot = (datasetData[0] || 0) + (datasetData[1] || 0);
+                                        let pct = currentTot > 0 ? ((val / currentTot) * 100).toFixed(1) : 0;
                                         return ` ${label}: ${new Intl.NumberFormat('id-ID').format(val)} ZAK (${pct}%)`;
                                     },
                                     afterLabel: function(context) {
-                                        // Smart Analytical Tooltip
-                                        if(!hasData) return '';
+                                        let datasetData = context.chart.data.datasets[0].data;
+                                        let currentIn = datasetData[0] || 0;
+                                        let currentOut = datasetData[1] || 0;
+                                        if (currentIn === 0 && currentOut === 0) return '';
+                                        
                                         let label = context.label;
-                                        let diff = totalMonthIn - totalMonthOut;
+                                        let diff = currentIn - currentOut;
                                         let absDiff = new Intl.NumberFormat('id-ID').format(Math.abs(diff));
                                         
                                         if (label.includes('Output')) {
@@ -1848,43 +1821,98 @@
                         }
                     }
                 });
+            }
 
-                // -- Calculate Center Percentage --
-                const startStock = dailyStock[1] || currentLiveStock; 
-                const netChange = totalMonthIn - totalMonthOut;
-                let pctChange = 0;
-                
-                if (startStock > 0 && hasData) {
-                    pctChange = (netChange / startStock) * 100;
-                }
-
+            const updateCenterLabel = (inVal, outVal) => {
                 const pctEl = document.getElementById('donutCenterPct');
                 const labelEl = document.getElementById('donutCenterLabel');
-                if (pctEl && labelEl) {
-                    if (!hasData) {
-                        pctEl.innerText = '-';
-                        pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-textSecondary';
-                        labelEl.innerText = 'Data Kosong';
-                    } else {
-                        const prefix = pctChange > 0 ? '+' : '';
-                        pctEl.innerText = `${prefix}${pctChange.toFixed(1)}%`;
-                        
-                        if (pctChange > 0) {
-                            pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-statusSuccess drop-shadow-[0_0_10px_rgba(0,208,132,0.3)] transform transition-transform duration-500 hover:scale-110';
-                            labelEl.innerText = 'Kenaikan Stok';
-                        } else if (pctChange < 0) {
-                            pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-statusDanger drop-shadow-[0_0_10px_rgba(255,77,109,0.3)] transform transition-transform duration-500 hover:scale-110';
-                            labelEl.innerText = 'Penurunan Stok';
-                        } else {
-                            pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-white transform transition-transform duration-500 hover:scale-110';
-                            labelEl.innerText = 'Stok Stabil';
+                if (!pctEl || !labelEl) return;
+                
+                if (inVal === 0 && outVal === 0) {
+                    pctEl.innerText = '-';
+                    pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-textSecondary';
+                    labelEl.innerText = 'Menunggu Data';
+                    return;
+                }
+                
+                const netChange = inVal - outVal;
+                let pctChange = startStock > 0 ? (netChange / startStock) * 100 : 0;
+                
+                const prefix = pctChange > 0 ? '+' : '';
+                pctEl.innerText = `${prefix}${pctChange.toFixed(1)}%`;
+                
+                if (pctChange > 0) {
+                    pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-statusSuccess drop-shadow-[0_0_10px_rgba(0,208,132,0.3)]';
+                    labelEl.innerText = 'Kenaikan Stok';
+                } else if (pctChange < 0) {
+                    pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-statusDanger drop-shadow-[0_0_10px_rgba(255,77,109,0.3)]';
+                    labelEl.innerText = 'Penurunan Stok';
+                } else {
+                    pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-white';
+                    labelEl.innerText = 'Stok Stabil';
+                }
+            };
+
+            // PROGRESSIVE ANIMATION LOOP (Runs from Day 1 to todayDate with pause & tooltip display at each date step)
+            let currentDayIndex = 1;
+            let accIn = 0;
+            let accOut = 0;
+            
+            updateCenterLabel(0, 0);
+
+            chartAnimInterval = setInterval(() => {
+                // Update Line Chart dataset up to currentDayIndex
+                trendLineChartInstance.data.datasets[0].data = fullPlotStock.slice(0, currentDayIndex);
+                trendLineChartInstance.data.datasets[1].data = fullPlotIn.slice(0, currentDayIndex);
+                trendLineChartInstance.data.datasets[2].data = fullPlotOut.slice(0, currentDayIndex);
+                trendLineChartInstance.update();
+                
+                // Update Donut accumulated values
+                accIn += dailyIn[currentDayIndex];
+                accOut += dailyOut[currentDayIndex];
+                
+                comparisonDonutChartInstance.data.datasets[0].data = [accIn, accOut];
+                comparisonDonutChartInstance.update();
+                
+                updateCenterLabel(accIn, accOut);
+                
+                // Trigger Tooltip popup at the active step point
+                const pointIdx = currentDayIndex - 1;
+                setTimeout(() => {
+                    if (trendLineChartInstance && trendLineChartInstance.tooltip) {
+                        const meta = trendLineChartInstance.getDatasetMeta(0);
+                        const element = meta.data[pointIdx];
+                        if (element) {
+                            trendLineChartInstance.setActiveElements([
+                                { datasetIndex: 0, index: pointIdx },
+                                { datasetIndex: 1, index: pointIdx },
+                                { datasetIndex: 2, index: pointIdx }
+                            ]);
+                            trendLineChartInstance.tooltip.setActiveElements([
+                                { datasetIndex: 0, index: pointIdx },
+                                { datasetIndex: 1, index: pointIdx },
+                                { datasetIndex: 2, index: pointIdx }
+                            ], { x: element.x, y: element.y });
+                            trendLineChartInstance.update('none'); 
                         }
                     }
+                }, 400);
+                
+                currentDayIndex++;
+                
+                if (currentDayIndex > todayDate) {
+                    clearInterval(chartAnimInterval);
+                    setTimeout(() => {
+                        if(trendLineChartInstance) {
+                            trendLineChartInstance.setActiveElements([]);
+                            trendLineChartInstance.tooltip.setActiveElements([], {x:0, y:0});
+                            trendLineChartInstance.update('none');
+                        }
+                    }, 4000); // Keep final tooltip visible for 4s before closing
                 }
-            }
+            }, 2200); // 2.2 seconds interval per date step for executive presentation
         }
 
-        // Handle window resize to re-render charts for responsiveness
         window.addEventListener('resize', () => {
             if(activeMainTab === 'stock') {
                 renderCharts();
@@ -2027,7 +2055,6 @@
         }
 
         function handleTabClick(tabName) {
-            // Close mobile sidebar on link click
             if (window.innerWidth < 1024) {
                 toggleSidebar();
             }
@@ -2069,7 +2096,6 @@
 
             if(tabName === 'trans-detail') renderTransDetail();
             if(tabName === 'trans-summary') renderTransSummary();
-            // Re-render charts when switching back to stock tab to ensure proper sizing
             if(tabName === 'stock') {
                 setTimeout(renderCharts, 10);
             }
@@ -2124,7 +2150,6 @@
             });
         }
 
-        
         function exportExecutiveReport() {
             showToast('Preparing Report...', 'Generating Executive Excel Format...', 'info');
             generateExecReportData();
