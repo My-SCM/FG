@@ -388,7 +388,7 @@
             <div id="kpiContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-6 md:mb-8">
                 
                 <!-- KPI 1: Space Gudang + Pallet Management -->
-                <div class="neon-card cyan-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full">
+                <div class="neon-card cyan-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full group overflow-hidden">
                     <div>
                         <div class="flex flex-wrap justify-between items-start mb-1 gap-2">
                             <div>
@@ -448,10 +448,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Overlay Insight KPI 1 -->
+                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-5 flex flex-col justify-center items-center text-center pointer-events-none border border-accentCyan/30">
+                        <i class="ph-fill ph-brain text-3xl md:text-4xl text-accentCyan mb-2"></i>
+                        <h4 class="text-white font-bold text-xs md:text-sm mb-1 uppercase tracking-widest">Analisa Kapasitas & Pallet</h4>
+                        <p class="text-[10px] md:text-xs text-textSecondary leading-relaxed" id="kpi1InsightText">Menghitung analitik cerdas...</p>
+                    </div>
                 </div>
 
                 <!-- KPI 2: Total Quantity (ZAK) + IN/OUT Summary + TON + Active SKU -->
-                <div class="neon-card purple-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full">
+                <div class="neon-card purple-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full group overflow-hidden">
                     <div class="flex justify-between items-start mb-2">
                         <div>
                             <p class="text-[9px] md:text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Quantity (ZAK)</p>
@@ -495,10 +502,17 @@
                             </h3>
                         </div>
                     </div>
+                    
+                    <!-- Overlay Insight KPI 2 -->
+                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-5 flex flex-col justify-center items-center text-center pointer-events-none border border-accentPurple/30">
+                        <i class="ph-fill ph-chart-line-up text-3xl md:text-4xl text-accentPurple mb-2"></i>
+                        <h4 class="text-white font-bold text-xs md:text-sm mb-1 uppercase tracking-widest">Analisa Pergerakan Stok</h4>
+                        <p class="text-[10px] md:text-xs text-textSecondary leading-relaxed" id="kpi2InsightText">Menghitung analitik cerdas...</p>
+                    </div>
                 </div>
 
                 <!-- KPI 3: DATA LAST UPDATE -->
-                <div class="glass-panel p-4 md:p-5 rounded-2xl flex flex-col justify-center min-h-[150px] border-l-4 border-l-statusWarning relative overflow-hidden w-full">
+                <div class="glass-panel p-4 md:p-5 rounded-2xl flex flex-col justify-center min-h-[150px] border-l-4 border-l-statusWarning relative overflow-hidden w-full group">
                     <div class="absolute right-[-10px] md:right-[-20px] top-[-10px] md:top-[-20px] opacity-10 pointer-events-none">
                         <i class="ph-fill ph-clock text-7xl md:text-9xl text-statusWarning"></i>
                     </div>
@@ -510,6 +524,13 @@
                         <p class="text-[10px] md:text-xs font-mono text-statusWarning font-bold mt-0.5" id="kpiClockDisplay">--:-- WIB</p>
                         <p class="text-[8px] md:text-[9px] text-textSecondary mt-1.5 md:mt-2">Source: G-Sheets (Cloud Sync)</p>
                     </div>
+
+                    <!-- Overlay Insight KPI 3 -->
+                    <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-5 flex flex-col justify-center items-center text-center pointer-events-none border border-statusWarning/30">
+                        <i class="ph-fill ph-cloud-check text-3xl md:text-4xl text-statusWarning mb-2"></i>
+                        <h4 class="text-white font-bold text-xs md:text-sm mb-1 uppercase tracking-widest">Status Sistem Cloud</h4>
+                        <p class="text-[10px] md:text-xs text-textSecondary leading-relaxed" id="kpi3InsightText">Sistem terhubung aktif. Sinkronisasi data dari Google Sheets berjalan normal dan diproses secara real-time.</p>
+                    </div>
                 </div>
             </div>
 
@@ -517,53 +538,81 @@
             <div id="mainViewContainer" class="w-full">
                 
                 <!-- TAB 1: STOCK MONITORING VIEW -->
-                <div id="view-stock" class="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 w-full">
-                    <div class="xl:col-span-2 glass-panel rounded-2xl flex flex-col overflow-hidden h-[500px] md:h-[620px] border border-borderMain w-full">
-                        <div class="p-3 md:p-5 border-b border-borderMain bg-bgCard/90 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-                            <div class="flex items-center gap-2 md:gap-3">
-                                <i class="ph-fill ph-table text-xl md:text-2xl text-accentCyan"></i>
-                                <div>
-                                    <h3 class="font-bold text-white text-sm md:text-base">Finished Goods Stock Summary Report</h3>
-                                    <p class="text-[10px] md:text-xs text-statusWarning font-mono" id="tableSubtitle">Update Terakhir: -- --- ----</p>
+                <div id="view-stock" class="flex flex-col gap-4 md:gap-6 w-full">
+                    <!-- Top Row: Table and Basic Side Charts -->
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 w-full">
+                        <div class="xl:col-span-2 glass-panel rounded-2xl flex flex-col overflow-hidden h-[500px] md:h-[620px] border border-borderMain w-full">
+                            <div class="p-3 md:p-5 border-b border-borderMain bg-bgCard/90 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+                                <div class="flex items-center gap-2 md:gap-3">
+                                    <i class="ph-fill ph-table text-xl md:text-2xl text-accentCyan"></i>
+                                    <div>
+                                        <h3 class="font-bold text-white text-sm md:text-base">Finished Goods Stock Summary Report</h3>
+                                        <p class="text-[10px] md:text-xs text-statusWarning font-mono" id="tableSubtitle">Update Terakhir: -- --- ----</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 w-full sm:w-auto">
+                                    <button onclick="fetchData(true)" class="w-full sm:w-auto justify-center p-2 md:p-2.5 bg-bgPrimary hover:bg-white/10 border border-borderMain rounded-lg md:rounded-xl text-textSecondary hover:text-white transition-all text-[10px] md:text-xs flex items-center gap-1.5 font-semibold">
+                                        <i class="ph-bold ph-arrows-clockwise text-accentCyan"></i> Reload
+                                    </button>
                                 </div>
                             </div>
-                            <div class="flex gap-2 w-full sm:w-auto">
-                                <button onclick="fetchData(true)" class="w-full sm:w-auto justify-center p-2 md:p-2.5 bg-bgPrimary hover:bg-white/10 border border-borderMain rounded-lg md:rounded-xl text-textSecondary hover:text-white transition-all text-[10px] md:text-xs flex items-center gap-1.5 font-semibold">
-                                    <i class="ph-bold ph-arrows-clockwise text-accentCyan"></i> Reload
-                                </button>
+                            <div class="flex-1 overflow-auto w-full">
+                                <table class="w-full text-left border-collapse whitespace-nowrap text-xs md:text-sm">
+                                    <thead class="sticky top-0 bg-[#14213d] z-10 border-b border-borderMain shadow-sm">
+                                        <tr class="text-[9px] md:text-[11px] font-bold text-textSecondary uppercase tracking-wider">
+                                            <th class="px-3 md:px-6 py-3 md:py-4">Segment / Details</th>
+                                            <th class="px-3 md:px-6 py-3 md:py-4">SKU Code</th>
+                                            <th class="px-3 md:px-6 py-3 md:py-4 text-right">Weight (KG)</th>
+                                            <th class="px-3 md:px-6 py-3 md:py-4 text-right">Qty (ZAK)</th>
+                                            <th class="px-3 md:px-6 py-3 md:py-4 text-right">Qty (TON)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="summaryTableBody" class="divide-y divide-borderMain/40 font-sans">
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="flex-1 overflow-auto w-full">
-                            <table class="w-full text-left border-collapse whitespace-nowrap text-xs md:text-sm">
-                                <thead class="sticky top-0 bg-[#14213d] z-10 border-b border-borderMain shadow-sm">
-                                    <tr class="text-[9px] md:text-[11px] font-bold text-textSecondary uppercase tracking-wider">
-                                        <th class="px-3 md:px-6 py-3 md:py-4">Segment / Details</th>
-                                        <th class="px-3 md:px-6 py-3 md:py-4">SKU Code</th>
-                                        <th class="px-3 md:px-6 py-3 md:py-4 text-right">Weight (KG)</th>
-                                        <th class="px-3 md:px-6 py-3 md:py-4 text-right">Qty (ZAK)</th>
-                                        <th class="px-3 md:px-6 py-3 md:py-4 text-right">Qty (TON)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="summaryTableBody" class="divide-y divide-borderMain/40 font-sans">
-                                </tbody>
-                            </table>
+
+                        <div class="xl:col-span-1 flex flex-col gap-4 md:gap-6 w-full">
+                            <div class="glass-panel rounded-2xl p-4 md:p-5 border border-borderMain h-[300px] md:h-[400px] flex flex-col">
+                                <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest mb-2 md:mb-3 flex items-center gap-2">
+                                    <i class="ph-fill ph-chart-donut text-accentPurple text-base md:text-lg"></i> Segment Stock Share
+                                </h3>
+                                <div class="flex-1 relative flex items-center justify-center w-full">
+                                    <canvas id="stockDonutChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="glass-panel rounded-2xl p-4 md:p-5 border border-borderMain flex-1 flex flex-col min-h-[200px]">
+                                <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2">
+                                    <i class="ph-fill ph-chart-bar text-accentCyan text-base md:text-lg"></i> Top SKU Distribution (TON)
+                                </h3>
+                                <div class="flex-1 overflow-y-auto space-y-2.5 md:space-y-3.5 pr-1 md:pr-2" id="topSkuRankingContainer">
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="xl:col-span-1 flex flex-col gap-4 md:gap-6 w-full">
-                        <div class="glass-panel rounded-2xl p-4 md:p-5 border border-borderMain h-[300px] md:h-[400px] flex flex-col">
-                            <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest mb-2 md:mb-3 flex items-center gap-2">
-                                <i class="ph-fill ph-chart-donut text-accentPurple text-base md:text-lg"></i> Segment Stock Share
+                    
+                    <!-- Bottom Row: New Trend and Output vs Delivery Charts -->
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 w-full">
+                        <div class="xl:col-span-2 glass-panel rounded-2xl p-4 md:p-5 border border-borderMain h-[350px] md:h-[450px] flex flex-col">
+                            <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i class="ph-fill ph-chart-line-up text-accentCyan text-base md:text-lg"></i> Tren Daily Output Produksi vs Delivery vs Stok on Hand (Bulan Berjalan)
                             </h3>
-                            <div class="flex-1 relative flex items-center justify-center w-full">
-                                <canvas id="stockDonutChart"></canvas>
+                            <div class="flex-1 relative w-full h-full">
+                                <canvas id="trendLineChart"></canvas>
                             </div>
                         </div>
-                        <div class="glass-panel rounded-2xl p-4 md:p-5 border border-borderMain flex-1 flex flex-col min-h-[200px]">
-                            <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2">
-                                <i class="ph-fill ph-chart-bar text-accentCyan text-base md:text-lg"></i> Top SKU Distribution (TON)
+                        <div class="xl:col-span-1 glass-panel rounded-2xl p-4 md:p-5 border border-borderMain h-[350px] md:h-[450px] flex flex-col relative">
+                            <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest mb-4 flex items-center gap-2 text-center w-full justify-center">
+                                <i class="ph-fill ph-chart-donut text-statusWarning text-base md:text-lg"></i> Output Produksi vs Delivery
                             </h3>
-                            <div class="flex-1 overflow-y-auto space-y-2.5 md:space-y-3.5 pr-1 md:pr-2" id="topSkuRankingContainer">
+                            <div class="flex-1 relative w-full h-full flex items-center justify-center">
+                                <canvas id="comparisonDonutChart"></canvas>
+                                <!-- Custom Center Text for Donut -->
+                                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-6">
+                                    <span id="donutCenterPct" class="text-2xl md:text-4xl font-black font-mono">0%</span>
+                                    <span id="donutCenterLabel" class="text-[9px] md:text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-1">Perubahan Stok</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -866,6 +915,8 @@
         let lastUpdateTimeStr = "--:--";
         let activeMainTab = 'stock';
         let stockDonutChartInstance = null;
+        let trendLineChartInstance = null; // New variable
+        let comparisonDonutChartInstance = null; // New variable
         let isAuthenticated = false;
         let pendingTargetTab = null;
 
@@ -1284,6 +1335,23 @@
                 document.getElementById('kpiPalletProject').innerText = fmtNum(Math.ceil(totalTonProject / 2));
                 document.getElementById('kpiTonProject').innerText = `${fmtDec(totalTonProject)} Ton`;
             }
+
+            // --- AI Insights for KPI Overlays ---
+            let insight1 = '';
+            if (spacePct > 90) insight1 = `Kritis! Gudang melebihi 90% kapasitas maksimal (${fmtNum(WAREHOUSE_CAPACITY_TON)} Ton). Disarankan segera mengaktifkan Staging Area tambahan dan mempercepat proses Delivery untuk membebaskan ruang (Sisa: ${fmtDec(remainingTon)} Ton).`;
+            else if (spacePct > 75) insight1 = `Waspada! Utilisasi gudang mencapai ${fmtDec(spacePct)}%. Manajemen ruang pallet perlu dioptimalkan untuk menampung potensi antrean produksi.`;
+            else insight1 = `Kondisi Optimal. Utilisasi ruang ${fmtDec(spacePct)}%. Masih tersedia kapasitas ${fmtDec(remainingTon)} Ton. Proporsi pallet Retail dan Project dalam batas aman.`;
+            
+            let kpi1El = document.getElementById('kpi1InsightText');
+            if(kpi1El) kpi1El.innerText = insight1;
+
+            let insight2 = '';
+            if (netMonthlyChange > 0) insight2 = `Tren Positif (Surplus): Terdapat penumpukan stok sebesar ${fmtNum(netMonthlyChange)} ZAK bulan ini karena Output melampaui Delivery. Rata-rata penambahan ${fmtNum(avgDailyChange)} ZAK/hari.`;
+            else if (netMonthlyChange < 0) insight2 = `Tren Negatif (Defisit): Laju Delivery lebih cepat dari Produksi. Stok berkurang sebesar ${fmtNum(Math.abs(netMonthlyChange))} ZAK bulan ini. Rata-rata penurunan ${fmtNum(Math.abs(avgDailyChange))} ZAK/hari. Pastikan pasokan aman!`;
+            else insight2 = `Tren Seimbang: Aliran barang masuk (In) dan keluar (Out) bulan ini seimbang, tidak ada penumpukan berlebih.`;
+            
+            let kpi2El = document.getElementById('kpi2InsightText');
+            if(kpi2El) kpi2El.innerText = insight2;
         }
 
         function renderSummaryTable(filterQuery = '', segmentFilter = 'ALL') {
@@ -1358,6 +1426,7 @@
         }
 
         function renderCharts() {
+            // -- 1. Segment Stock Donut & Top SKU (Existing) --
             const segMap = {}; summaryData.forEach(item => { if(!segMap[item.segment]) segMap[item.segment] = 0; segMap[item.segment] += item.qtyTon; });
             const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], labels = Object.keys(segMap).sort((a, b) => { let idxA = customOrder.indexOf(a.toUpperCase()), idxB = customOrder.indexOf(b.toUpperCase()); return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b); });
             const dataVals = labels.map(l => segMap[l]), chartColors = ['#00E5FF', '#6D5DF6', '#00D084', '#FFB800'];
@@ -1390,6 +1459,428 @@
                     const pct = (item.ton / maxVal) * 100, barColor = index === 0 ? 'bg-accentCyan' : index === 1 ? 'bg-accentPurple' : 'bg-statusSuccess';
                     container.insertAdjacentHTML('beforeend', `<div><div class="flex justify-between items-center text-[10px] md:text-xs mb-1"><span class="font-bold text-white font-mono">${index + 1}. ${item.sku}</span><span class="text-textSecondary font-mono">${fmtDec(item.ton)} TON</span></div><div class="h-1.5 md:h-2 w-full bg-bgPrimary rounded-full overflow-hidden"><div class="h-full ${barColor} rounded-full transition-all duration-1000" style="width: ${pct}%"></div></div></div>`);
                 });
+            }
+
+            // -- 2. Render New Trend & Comparison Charts --
+            renderTrendAndComparisonCharts();
+        }
+
+        function renderTrendAndComparisonCharts() {
+            const todayObj = new Date();
+            const currentMonth = todayObj.getMonth();
+            const currentYear = todayObj.getFullYear();
+            const todayDate = todayObj.getDate();
+            // Get total days in current month
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            // 1. Get base live stock (using logic from updateKPIs)
+            let totalZakSummary = 0;
+            summaryData.forEach(item => totalZakSummary += item.qtyZak);
+            let todayZakDelta = 0;
+
+            // 2. Aggregate daily IN/OUT for current month
+            let dailyIn = new Array(daysInMonth + 1).fill(0);
+            let dailyOut = new Array(daysInMonth + 1).fill(0);
+            let dailySkuMovements = new Array(daysInMonth + 1).fill(null).map(() => ({})); // Array to store SKU details per day
+            let totalMonthIn = 0;
+            let totalMonthOut = 0;
+
+            transactionRecords.forEach(rec => {
+                if (!isNaN(rec.dateObj)) {
+                    const recYear = rec.dateObj.getFullYear();
+                    const recMonth = rec.dateObj.getMonth();
+                    const recDate = rec.dateObj.getDate();
+                    const recDateIso = rec.dateObj.toISOString().split('T')[0];
+                    const todayStrIso = todayObj.toISOString().split('T')[0];
+
+                    const typeUpper = rec.type.toUpperCase();
+                    const isIn = typeUpper.includes('IN') || typeUpper.includes('MASUK') || typeUpper.includes('PRODUCTION') || typeUpper.includes('PRODUKSI');
+                    const isOut = typeUpper.includes('OUT') || typeUpper.includes('KELUAR') || typeUpper.includes('OFFTAKE') || typeUpper.includes('DELIVERY') || typeUpper.includes('KIRIM');
+
+                    // Calculate today's delta for current live stock
+                    if (recDateIso === todayStrIso) {
+                        if (isIn) todayZakDelta += rec.zak;
+                        else if (isOut) todayZakDelta -= rec.zak;
+                    }
+
+                    // Aggregate for current month trend & SKU specifics
+                    if (recYear === currentYear && recMonth === currentMonth) {
+                        const skuName = rec.produk && rec.produk !== '-' ? rec.produk : 'UNKNOWN SKU';
+                        if(!dailySkuMovements[recDate][skuName]) {
+                            dailySkuMovements[recDate][skuName] = { in: 0, out: 0 };
+                        }
+
+                        if (isIn) {
+                            dailyIn[recDate] += rec.zak;
+                            totalMonthIn += rec.zak;
+                            dailySkuMovements[recDate][skuName].in += rec.zak;
+                        } else if (isOut) {
+                            dailyOut[recDate] += rec.zak;
+                            totalMonthOut += rec.zak;
+                            dailySkuMovements[recDate][skuName].out += rec.zak;
+                        }
+                    }
+                }
+            });
+
+            // This is the current actual stock
+            let currentLiveStock = totalZakSummary + todayZakDelta;
+
+            // 3. Backtrack Daily Stock from today to beginning of month
+            let dailyStock = new Array(daysInMonth + 1).fill(null);
+            dailyStock[todayDate] = currentLiveStock;
+
+            // Backtrack calculation: Stock(yesterday) = Stock(today) - IN(today) + OUT(today)
+            for (let d = todayDate - 1; d >= 1; d--) {
+                dailyStock[d] = dailyStock[d + 1] - dailyIn[d + 1] + dailyOut[d + 1];
+                // Ensure stock doesn't theoretically go below 0 (though data issues might cause it)
+                if(dailyStock[d] < 0) dailyStock[d] = 0;
+            }
+
+            // Prepare arrays for Chart.js
+            let labels = [];
+            let plotIn = [];
+            let plotOut = [];
+            let plotStock = [];
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                labels.push(d.toString());
+                plotIn.push(dailyIn[d]);
+                plotOut.push(dailyOut[d]);
+                // Only plot stock line up to current day
+                if (d <= todayDate) {
+                    plotStock.push(dailyStock[d]);
+                } else {
+                    plotStock.push(null);
+                }
+            }
+
+            // -- TREND LINE CHART --
+            const ctxTrend = document.getElementById('trendLineChart');
+            if(ctxTrend) {
+                if(trendLineChartInstance) trendLineChartInstance.destroy();
+                
+                const ctx2d = ctxTrend.getContext('2d');
+                
+                // Create futuristic gradient fills
+                let gradientStock = ctx2d.createLinearGradient(0, 0, 0, 400);
+                gradientStock.addColorStop(0, 'rgba(0, 208, 132, 0.4)');
+                gradientStock.addColorStop(1, 'rgba(0, 208, 132, 0.0)');
+
+                let gradientIn = ctx2d.createLinearGradient(0, 0, 0, 400);
+                gradientIn.addColorStop(0, 'rgba(0, 229, 255, 0.3)');
+                gradientIn.addColorStop(1, 'rgba(0, 229, 255, 0.0)');
+
+                let gradientOut = ctx2d.createLinearGradient(0, 0, 0, 400);
+                gradientOut.addColorStop(0, 'rgba(255, 77, 109, 0.3)');
+                gradientOut.addColorStop(1, 'rgba(255, 77, 109, 0.0)');
+
+                trendLineChartInstance = new Chart(ctx2d, {
+                    type: 'line', // ALL lines for executive readability
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Stok on Hand',
+                                data: plotStock,
+                                // Color logic based on stock movement (Up = Green, Down = Red, Same = Cyan)
+                                segment: {
+                                    borderColor: ctx => {
+                                        if(!ctx.p0 || !ctx.p1) return '#00D084';
+                                        return ctx.p1.parsed.y > ctx.p0.parsed.y ? '#00D084' : (ctx.p1.parsed.y < ctx.p0.parsed.y ? '#FF4D6D' : '#00E5FF');
+                                    }
+                                },
+                                backgroundColor: gradientStock,
+                                borderWidth: 3.5,
+                                tension: 0.4, // Smooth curve
+                                fill: true,
+                                pointBackgroundColor: '#070B14',
+                                pointBorderColor: ctx => {
+                                    if(ctx.dataIndex === 0) return '#00D084';
+                                    const curr = plotStock[ctx.dataIndex];
+                                    const prev = plotStock[ctx.dataIndex - 1];
+                                    return curr > prev ? '#00D084' : (curr < prev ? '#FF4D6D' : '#00E5FF');
+                                },
+                                pointBorderWidth: 2,
+                                pointRadius: ctx => ctx.dataIndex === todayDate - 1 ? 6 : 0, // Show point only on current day
+                                pointHoverRadius: 8,
+                                yAxisID: 'yStock',
+                                order: 3
+                            },
+                            {
+                                label: 'Output Produksi (IN)',
+                                data: plotIn,
+                                borderColor: '#00E5FF',
+                                backgroundColor: gradientIn,
+                                borderWidth: 2.5,
+                                borderDash: [5, 5], // Digital dashed line effect
+                                tension: 0.4,
+                                fill: true,
+                                pointBackgroundColor: '#070B14',
+                                pointBorderColor: '#00E5FF',
+                                pointBorderWidth: 2,
+                                pointRadius: 0,
+                                pointHoverRadius: 6,
+                                yAxisID: 'yVolume',
+                                order: 2
+                            },
+                            {
+                                label: 'Delivery (OUT)',
+                                data: plotOut,
+                                borderColor: '#FF4D6D',
+                                backgroundColor: gradientOut,
+                                borderWidth: 2.5,
+                                tension: 0.4,
+                                fill: true,
+                                pointBackgroundColor: '#070B14',
+                                pointBorderColor: '#FF4D6D',
+                                pointBorderWidth: 2,
+                                pointRadius: 0,
+                                pointHoverRadius: 6,
+                                yAxisID: 'yVolume',
+                                order: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        animation: {
+                            y: { duration: 1500, easing: 'easeOutQuart' } // Smooth vertical entry animation
+                        },
+                        plugins: {
+                            legend: { 
+                                position: 'top',
+                                labels: { color: '#B8C0D9', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }, usePointStyle: true, padding: 15 } 
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(17, 28, 51, 0.95)',
+                                titleColor: '#FFFFFF',
+                                titleFont: { size: 13, family: 'JetBrains Mono' },
+                                bodyColor: '#B8C0D9',
+                                bodyFont: { size: 12, family: 'Plus Jakarta Sans' },
+                                borderColor: 'rgba(255,255,255,0.15)',
+                                borderWidth: 1,
+                                padding: 12,
+                                boxPadding: 6,
+                                usePointStyle: true,
+                                callbacks: {
+                                    title: function(context) { return 'Tanggal ' + context[0].label; },
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed.y !== null) { label += new Intl.NumberFormat('id-ID').format(context.parsed.y) + ' ZAK'; }
+                                        return label;
+                                    },
+                                    afterBody: function(context) {
+                                        // Smart Analytical Insight in Tooltip
+                                        let inVal = 0, outVal = 0, stockVal = 0, prevStock = 0;
+                                        let dayIdx = context[0].dataIndex;
+                                        let dayNumber = dayIdx + 1;
+                                        
+                                        context.forEach(ctx => {
+                                            if (ctx.dataset.label.includes('IN')) inVal = ctx.parsed.y;
+                                            if (ctx.dataset.label.includes('OUT')) outVal = ctx.parsed.y;
+                                            if (ctx.dataset.label.includes('Stok')) stockVal = ctx.parsed.y;
+                                        });
+
+                                        if (dayIdx > 0 && plotStock[dayIdx-1] !== null) {
+                                            prevStock = plotStock[dayIdx-1];
+                                        }
+
+                                        let insights = [];
+                                        insights.push('-------------------------');
+                                        
+                                        if (stockVal > prevStock && dayIdx > 0) {
+                                            insights.push(`📈 Tren Stok: NAIK (+${new Intl.NumberFormat('id-ID').format(stockVal - prevStock)} ZAK)`);
+                                        } else if (stockVal < prevStock && dayIdx > 0) {
+                                            insights.push(`📉 Tren Stok: TURUN (-${new Intl.NumberFormat('id-ID').format(prevStock - stockVal)} ZAK)`);
+                                        }
+                                        
+                                        if (inVal > outVal) {
+                                            insights.push(`⚠️ Surplus Produksi: +${new Intl.NumberFormat('id-ID').format(inVal - outVal)} ZAK`);
+                                        } else if (outVal > inVal) {
+                                            insights.push(`🚀 Agresivitas Delivery: -${new Intl.NumberFormat('id-ID').format(outVal - inVal)} ZAK`);
+                                        }
+                                        
+                                        // --- NEW: SKU Breakdown per Day ---
+                                        insights.push('');
+                                        insights.push('📦 DETAIL PERGERAKAN SKU (HARI INI):');
+                                        
+                                        let skuData = dailySkuMovements[dayNumber];
+                                        if (!skuData || Object.keys(skuData).length === 0) {
+                                            insights.push('  Tidak ada transaksi spesifik');
+                                        } else {
+                                            // Sort by absolute movement volume
+                                            let sortedSkus = Object.keys(skuData).sort((a,b) => {
+                                                return (skuData[b].in + skuData[b].out) - (skuData[a].in + skuData[a].out);
+                                            });
+                                            
+                                            let displayCount = 0;
+                                            for (let sku of sortedSkus) {
+                                                if (displayCount >= 5) {
+                                                    insights.push(`  ... dan ${sortedSkus.length - 5} SKU lainnya`);
+                                                    break;
+                                                }
+                                                let m = skuData[sku];
+                                                if (m.in === 0 && m.out === 0) continue;
+                                                
+                                                let text = `  ▪ ${sku}:`;
+                                                if (m.in > 0) text += ` IN +${new Intl.NumberFormat('id-ID').format(m.in)}`;
+                                                if (m.out > 0) text += `${m.in > 0 ? ' |' : ''} OUT -${new Intl.NumberFormat('id-ID').format(m.out)}`;
+                                                insights.push(text);
+                                                displayCount++;
+                                            }
+                                            if(displayCount === 0) insights.push('  Tidak ada transaksi signifikan');
+                                        }
+                                        
+                                        return insights;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { 
+                                grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false, borderDash: [5, 5] }, 
+                                ticks: { color: '#B8C0D9', font: {size: 10, family: 'JetBrains Mono'} },
+                                title: { display: true, text: `Timeline Bulan Berjalan`, color: '#B8C0D9', font: {size: 10, weight: 'bold'} }
+                            },
+                            yVolume: { 
+                                type: 'linear', display: true, position: 'left', 
+                                grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false, borderDash: [5, 5] }, 
+                                ticks: { color: '#B8C0D9', font: {size: 10, family: 'JetBrains Mono'} }, 
+                                title: {display: true, text: 'Volume (ZAK)', color: '#B8C0D9', font: {size: 10, weight: 'bold'}} 
+                            },
+                            yStock: { 
+                                type: 'linear', display: true, position: 'right', 
+                                grid: { drawOnChartArea: false }, 
+                                ticks: { color: '#00D084', font: {size: 10, family: 'JetBrains Mono'} }, 
+                                title: {display: true, text: 'Total Stok (ZAK)', color: '#00D084', font: {size: 10, weight: 'bold'}} 
+                            }
+                        }
+                    }
+                });
+            }
+
+            // -- COMPARISON DONUT CHART --
+            const ctxDonutCmp = document.getElementById('comparisonDonutChart');
+            if(ctxDonutCmp) {
+                if(comparisonDonutChartInstance) comparisonDonutChartInstance.destroy();
+                
+                // Avoid rendering empty donut if no data yet for the month
+                const hasData = totalMonthIn > 0 || totalMonthOut > 0;
+                const ctxD = ctxDonutCmp.getContext('2d');
+
+                // Create 3D-like linear gradients for slices
+                let gradIn3D = ctxD.createLinearGradient(0, 0, 0, 300);
+                gradIn3D.addColorStop(0, '#00E5FF');
+                gradIn3D.addColorStop(1, '#007A88');
+
+                let gradOut3D = ctxD.createLinearGradient(0, 0, 0, 300);
+                gradOut3D.addColorStop(0, '#FF4D6D');
+                gradOut3D.addColorStop(1, '#990022');
+
+                comparisonDonutChartInstance = new Chart(ctxD, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Output Produksi', 'Delivery'],
+                        datasets: [{
+                            data: hasData ? [totalMonthIn, totalMonthOut] : [1, 1],
+                            backgroundColor: hasData ? [gradIn3D, gradOut3D] : ['rgba(255,255,255,0.05)', 'rgba(255,255,255,0.05)'],
+                            borderColor: '#070B14', // Background color for gap effect
+                            borderWidth: 5,
+                            borderRadius: 12, // Creates a 3D pill/capsule shape for slices
+                            hoverBackgroundColor: hasData ? ['#00FFFF', '#FF6680'] : [],
+                            hoverBorderColor: ['#00E5FF', '#FF4D6D'],
+                            hoverBorderWidth: 2,
+                            hoverOffset: hasData ? 15 : 0 // Pop-out 3D effect on hover
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '72%',
+                        layout: { padding: 15 },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true,
+                            duration: 2500,
+                            easing: 'easeOutElastic'
+                        },
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: '#B8C0D9', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }, usePointStyle: true, padding: 15 } },
+                            tooltip: {
+                                backgroundColor: 'rgba(17, 28, 51, 0.95)',
+                                titleColor: '#00E5FF',
+                                bodyColor: '#FFFFFF',
+                                borderColor: 'rgba(255,255,255,0.15)',
+                                borderWidth: 1,
+                                padding: 12,
+                                callbacks: {
+                                    label: function(context) {
+                                        if(!hasData) return 'Belum ada data';
+                                        let label = context.label || '';
+                                        let val = context.raw;
+                                        let total = totalMonthIn + totalMonthOut;
+                                        let pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                                        return ` ${label}: ${new Intl.NumberFormat('id-ID').format(val)} ZAK (${pct}%)`;
+                                    },
+                                    afterLabel: function(context) {
+                                        // Smart Analytical Tooltip
+                                        if(!hasData) return '';
+                                        let label = context.label;
+                                        let diff = totalMonthIn - totalMonthOut;
+                                        let absDiff = new Intl.NumberFormat('id-ID').format(Math.abs(diff));
+                                        
+                                        if (label.includes('Output')) {
+                                            if (diff > 0) return `\n⚡ INSIGHT DIGITAL:\nOutput melebihi target Delivery sebesar ${absDiff} ZAK.\nTrend stok menunjukkan akumulasi positif.`;
+                                            else if (diff < 0) return `\n⚡ INSIGHT DIGITAL:\nDefisit Output sebesar ${absDiff} ZAK vs Delivery.\nMembutuhkan eskalasi produksi segera.`;
+                                            else return `\n⚡ INSIGHT DIGITAL:\nKeseimbangan tercapai (Produksi = Delivery).`;
+                                        } else {
+                                            if (diff < 0) return `\n⚡ INSIGHT DIGITAL:\nAgresivitas Delivery tinggi (Outflow > Inflow).\nBuffer stok gudang mengalami penurunan.`;
+                                            else if (diff > 0) return `\n⚡ INSIGHT DIGITAL:\nSerapan Delivery melambat.\nWaspada potensi over-capacity di area Staging.`;
+                                            else return `\n⚡ INSIGHT DIGITAL:\nRasio distribusi stabil mengimbangi laju pasokan.`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // -- Calculate Center Percentage --
+                const startStock = dailyStock[1] || currentLiveStock; 
+                const netChange = totalMonthIn - totalMonthOut;
+                let pctChange = 0;
+                
+                if (startStock > 0 && hasData) {
+                    pctChange = (netChange / startStock) * 100;
+                }
+
+                const pctEl = document.getElementById('donutCenterPct');
+                const labelEl = document.getElementById('donutCenterLabel');
+                if (pctEl && labelEl) {
+                    if (!hasData) {
+                        pctEl.innerText = '-';
+                        pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-textSecondary';
+                        labelEl.innerText = 'Data Kosong';
+                    } else {
+                        const prefix = pctChange > 0 ? '+' : '';
+                        pctEl.innerText = `${prefix}${pctChange.toFixed(1)}%`;
+                        
+                        if (pctChange > 0) {
+                            pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-statusSuccess drop-shadow-[0_0_10px_rgba(0,208,132,0.3)] transform transition-transform duration-500 hover:scale-110';
+                            labelEl.innerText = 'Kenaikan Stok';
+                        } else if (pctChange < 0) {
+                            pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-statusDanger drop-shadow-[0_0_10px_rgba(255,77,109,0.3)] transform transition-transform duration-500 hover:scale-110';
+                            labelEl.innerText = 'Penurunan Stok';
+                        } else {
+                            pctEl.className = 'text-2xl md:text-4xl font-black font-mono text-white transform transition-transform duration-500 hover:scale-110';
+                            labelEl.innerText = 'Stok Stabil';
+                        }
+                    }
+                }
             }
         }
 
