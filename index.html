@@ -758,6 +758,85 @@
                     
                     <div class="flex-1 overflow-y-auto bg-bgPrimary/30 w-full p-2 md:p-4 flex flex-col gap-4">
                         
+                        <!-- NEW: STOK SIG EXECUTIVE KPI CARDS -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 w-full">
+                            
+                            <!-- KPI 1: Balance Stok (Tersedia) -->
+                            <div class="neon-card cyan-top glass-panel p-4 md:p-5 flex flex-col justify-between group relative overflow-hidden">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <p class="text-[9px] md:text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Balance Stok (Tersedia)</p>
+                                        <h3 class="text-xl md:text-2xl font-black text-white font-mono" id="sigKpiBalTon">0 Ton</h3>
+                                    </div>
+                                    <div class="p-2 md:p-2.5 bg-accentCyan/10 border border-accentCyan/20 rounded-lg text-accentCyan flex-shrink-0 shadow-[0_0_15px_rgba(0,229,255,0.15)]">
+                                        <i class="ph-fill ph-database text-lg md:text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="flex justify-between text-[9px] md:text-[10px] text-textSecondary mb-1.5">
+                                        <span>Sisa Kapasitas vs Awal</span>
+                                        <span class="font-bold text-accentCyan" id="sigKpiBalPct">0%</span>
+                                    </div>
+                                    <div class="w-full bg-bgPrimary/80 h-1.5 md:h-2 rounded-full overflow-hidden border border-borderMain/60">
+                                        <div id="sigKpiBalBar" class="h-full bg-gradient-to-r from-accentCyan to-blue-500 rounded-full transition-all duration-700" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <!-- Hover Insight Overlay -->
+                                <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-accentCyan/30">
+                                    <i class="ph-fill ph-check-circle text-2xl text-accentCyan mb-1"></i>
+                                    <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Ketersediaan Barang</h4>
+                                    <p class="text-[9px] md:text-[10px] text-textSecondary leading-relaxed">Total tonase bersih yang belum dirilis/diambil berdasarkan perhitungan mutasi Sheet Makloon.</p>
+                                </div>
+                            </div>
+
+                            <!-- KPI 2: Total Rilis MD (Outflow) -->
+                            <div class="neon-card purple-top glass-panel p-4 md:p-5 flex flex-col justify-between group relative overflow-hidden">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <p class="text-[9px] md:text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Rilis MD (Outflow)</p>
+                                        <h3 class="text-xl md:text-2xl font-black text-white font-mono" id="sigKpiRelTon">0 Ton</h3>
+                                    </div>
+                                    <div class="p-2 md:p-2.5 bg-accentPurple/10 border border-accentPurple/20 rounded-lg text-accentPurple flex-shrink-0 shadow-[0_0_15px_rgba(109,93,246,0.15)]">
+                                        <i class="ph-fill ph-truck text-lg md:text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-3 pt-2 border-t border-borderMain/50 flex items-center justify-between">
+                                    <span class="text-[9px] md:text-[10px] text-textSecondary">Serapan dari Stok Awal</span>
+                                    <span class="px-2 py-0.5 rounded-md border border-accentPurple/30 bg-accentPurple/10 text-accentPurple text-[10px] md:text-xs font-bold font-mono" id="sigKpiRelPct">0%</span>
+                                </div>
+                                <!-- Hover Insight Overlay -->
+                                <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-accentPurple/30">
+                                    <i class="ph-fill ph-chart-line-down text-2xl text-accentPurple mb-1"></i>
+                                    <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Pergerakan Keluar</h4>
+                                    <p class="text-[9px] md:text-[10px] text-textSecondary leading-relaxed">Total akumulasi Delivery/Rilis yang telah disetujui (dikeluarkan) dari sistem.</p>
+                                </div>
+                            </div>
+
+                            <!-- KPI 3: Stok Awal & Valuasi/Status -->
+                            <div class="neon-card green-top glass-panel p-4 md:p-5 flex flex-col justify-between group relative overflow-hidden">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <p class="text-[9px] md:text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Stok Awal (Opening)</p>
+                                        <h3 class="text-xl md:text-2xl font-black text-white font-mono" id="sigKpiOpTon">0 Ton</h3>
+                                    </div>
+                                    <div class="p-2 md:p-2.5 bg-statusSuccess/10 border border-statusSuccess/20 rounded-lg text-statusSuccess flex-shrink-0 shadow-[0_0_15px_rgba(0,208,132,0.15)]">
+                                        <i class="ph-fill ph-archive text-lg md:text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-3 pt-2 border-t border-borderMain/50 flex flex-col">
+                                    <span class="text-[8px] md:text-[9px] text-textSecondary uppercase tracking-widest font-bold mb-0.5" id="sigKpiValTitle">Estimasi Valuasi Sisa Stok</span>
+                                    <span class="text-sm md:text-base font-black text-statusSuccess font-mono truncate" id="sigKpiValValue">Rp 0</span>
+                                </div>
+                                <!-- Hover Insight Overlay -->
+                                <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-statusSuccess/30">
+                                    <i class="ph-fill ph-currency-circle-dollar text-2xl text-statusSuccess mb-1"></i>
+                                    <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Analisis Eksekutif</h4>
+                                    <p class="text-[9px] md:text-[10px] text-textSecondary leading-relaxed">Menampilkan nilai/status dari sisa Balance Stok berdasarkan harga satuan (Amount) di dalam data Master Makloon.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
                         <!-- NEW: Balance Stock Depletion Chart -->
                         <div class="bg-bgCard border border-borderMain rounded-lg md:rounded-xl shadow-lg w-full flex flex-col p-4">
                             <div class="flex justify-between items-center mb-4">
@@ -1147,6 +1226,7 @@
                     renderStokSigMakloonTable();
                     renderStokSigDetailTable();
                     renderStokDepletionChart();
+                    updateStokSigKPIs();
 
                     setTimeout(() => { const overlay = document.getElementById('loadingOverlay'); overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 500); }, 400);
                     if(manual) showToast('Sync Complete', 'Data berhasil diperbarui dari Google Sheets.');
@@ -1246,7 +1326,10 @@
                     // Capture Initial Opening Stock (Ton) from Total Row if present
                     if (rowData[1] && rowData[1].toString().toUpperCase() === 'TOTAL') {
                         // Find the index of "Opening Ton"
-                        const openingTonIdx = cleanedHeaders.findIndex(h => h.toLowerCase().includes('opening ton'));
+                        const openingTonIdx = cleanedHeaders.findIndex(h => {
+                            const lh = h.toLowerCase();
+                            return lh.includes('opening') && (lh.includes('ton') || lh.includes('berat'));
+                        });
                         if (openingTonIdx !== -1) {
                             initialOpeningStock = cleanNum(rowData[openingTonIdx]);
                         }
@@ -1256,13 +1339,30 @@
             
             // Fallback for opening stock if Total row not found
             if(initialOpeningStock === 0 && validRows.length > 0) {
-                 const openingTonIdx = cleanedHeaders.findIndex(h => h.toLowerCase().includes('opening ton'));
+                 const openingTonIdx = cleanedHeaders.findIndex(h => {
+                     const lh = h.toLowerCase();
+                     return lh.includes('opening') && (lh.includes('ton') || lh.includes('berat'));
+                 });
                  if (openingTonIdx !== -1) {
                      validRows.forEach(r => {
                          if(r[1] && r[1].toString().toUpperCase() !== 'TOTAL') {
                              initialOpeningStock += cleanNum(r[openingTonIdx]);
                          }
                      })
+                 }
+                 // If STILL 0, try to find Opening Qty / Zak and convert
+                 if (initialOpeningStock === 0) {
+                     const openingZakIdx = cleanedHeaders.findIndex(h => {
+                         const lh = h.toLowerCase();
+                         return lh.includes('opening') && (lh.includes('qty') || lh.includes('zak'));
+                     });
+                     if (openingZakIdx !== -1) {
+                         validRows.forEach(r => {
+                             if(r[1] && r[1].toString().toUpperCase() !== 'TOTAL') {
+                                 initialOpeningStock += (cleanNum(r[openingZakIdx]) * 40) / 1000;
+                             }
+                         });
+                     }
                  }
             }
 
@@ -1662,6 +1762,112 @@
             if (icon) icon.style.transform = isHidden ? 'rotate(-90deg)' : 'rotate(0deg)';
         };
 
+        function updateStokSigKPIs() {
+            let openingTon = 0, balanceTon = 0, releaseTon = 0;
+            let balanceAmount = 0;
+
+            const headers = stokSigMakloonRaw.headers || [];
+            const rows = stokSigMakloonRaw.rows || [];
+
+            const idxOpTon = headers.findIndex(h => h.toLowerCase().includes('opening') && h.toLowerCase().includes('ton'));
+            const idxOpZak = headers.findIndex(h => h.toLowerCase().includes('opening') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
+            
+            const idxBalTon = headers.findIndex(h => h.toLowerCase().includes('balance') && h.toLowerCase().includes('ton'));
+            const idxBalZak = headers.findIndex(h => h.toLowerCase().includes('balance') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
+            
+            const idxRelTon = headers.findIndex(h => h.toLowerCase().includes('release') && h.toLowerCase().includes('ton'));
+            const idxRelZak = headers.findIndex(h => h.toLowerCase().includes('release') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
+
+            const idxAmt = headers.findIndex(h => h.toLowerCase().includes('amount') || h.toLowerCase().includes('harga'));
+            const idxWeight = headers.findIndex(h => h.toLowerCase().includes('weight') || h.toLowerCase().includes('berat'));
+
+            let calcOpTon = 0, calcBalTon = 0, calcRelTon = 0, calcBalAmt = 0;
+
+            rows.forEach(r => {
+                const isTotal = r[1] && r[1].toString().toUpperCase() === 'TOTAL';
+                if (!isTotal) {
+                    let w = idxWeight !== -1 ? cleanNum(r[idxWeight]) : 40;
+                    let price = idxAmt !== -1 ? cleanNum(r[idxAmt]) : 0;
+                    
+                    let bZak = idxBalZak !== -1 ? cleanNum(r[idxBalZak]) : 0;
+                    let oZak = idxOpZak !== -1 ? cleanNum(r[idxOpZak]) : 0;
+                    let rZak = idxRelZak !== -1 ? cleanNum(r[idxRelZak]) : 0;
+                    
+                    calcBalAmt += (bZak * price);
+                    
+                    if (idxOpTon === -1) calcOpTon += (oZak * w) / 1000; else calcOpTon += cleanNum(r[idxOpTon]);
+                    if (idxBalTon === -1) calcBalTon += (bZak * w) / 1000; else calcBalTon += cleanNum(r[idxBalTon]);
+                    if (idxRelTon === -1) calcRelTon += (rZak * w) / 1000; else calcRelTon += cleanNum(r[idxRelTon]);
+                } else {
+                    if (idxOpTon !== -1) openingTon = cleanNum(r[idxOpTon]);
+                    if (idxBalTon !== -1) balanceTon = cleanNum(r[idxBalTon]);
+                    if (idxRelTon !== -1) releaseTon = cleanNum(r[idxRelTon]);
+                }
+            });
+
+            if (openingTon === 0) openingTon = calcOpTon;
+            if (balanceTon === 0) balanceTon = calcBalTon;
+            if (releaseTon === 0) releaseTon = calcRelTon;
+            balanceAmount = calcBalAmt;
+
+            // Fallback for release from Detail if Makloon missing release data
+            if (releaseTon === 0 && stokSigDetailRaw.rows.length > 0) {
+                 const detailHeaders = stokSigDetailRaw.headers || [];
+                 const dTonIdx = detailHeaders.findIndex(h => h.toLowerCase().includes('ton'));
+                 const dZakIdx = detailHeaders.findIndex(h => h.toLowerCase().includes('qty') || h.toLowerCase().includes('zak'));
+                 
+                 stokSigDetailRaw.rows.forEach(r => {
+                     let t = dTonIdx !== -1 ? cleanNum(r[dTonIdx]) : 0;
+                     if (t === 0 && dZakIdx !== -1) t = (cleanNum(r[dZakIdx]) * 40) / 1000;
+                     releaseTon += t;
+                 });
+            }
+
+            let remainingPct = openingTon > 0 ? (balanceTon / openingTon) * 100 : 0;
+            let relPct = openingTon > 0 ? (releaseTon / openingTon) * 100 : 0;
+            
+            const balEl = document.getElementById('sigKpiBalTon');
+            if(balEl) {
+                balEl.innerText = fmtDec(balanceTon) + ' Ton';
+                document.getElementById('sigKpiBalPct').innerText = fmtDec(remainingPct) + '%';
+                
+                const bar = document.getElementById('sigKpiBalBar');
+                bar.style.width = Math.min(100, remainingPct) + '%';
+                
+                // Color mapping for balance criticality
+                if (remainingPct > 40) {
+                    bar.className = 'h-full bg-gradient-to-r from-accentCyan to-blue-500 rounded-full transition-all duration-700';
+                } else if (remainingPct > 15) {
+                    bar.className = 'h-full bg-statusWarning rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(255,184,0,0.6)]';
+                } else {
+                    bar.className = 'h-full bg-statusDanger rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(255,77,109,0.8)] animate-pulse';
+                }
+
+                document.getElementById('sigKpiRelTon').innerText = fmtDec(releaseTon) + ' Ton';
+                document.getElementById('sigKpiRelPct').innerText = fmtDec(relPct) + '%';
+                
+                document.getElementById('sigKpiOpTon').innerText = fmtDec(openingTon) + ' Ton';
+                
+                const valTitle = document.getElementById('sigKpiValTitle');
+                const valValue = document.getElementById('sigKpiValValue');
+                
+                if (balanceAmount > 0) {
+                    valTitle.innerText = 'Estimasi Valuasi Sisa Stok';
+                    valValue.innerText = 'Rp ' + fmtNum(balanceAmount);
+                    valValue.className = 'text-sm md:text-base font-black text-statusSuccess font-mono truncate';
+                } else {
+                    valTitle.innerText = 'Status Sisa Stok';
+                    if (remainingPct > 15) {
+                        valValue.innerHTML = '<i class="ph-bold ph-shield-check mr-1"></i> Aman';
+                        valValue.className = 'text-sm md:text-base font-black text-statusSuccess font-mono';
+                    } else {
+                        valValue.innerHTML = '<i class="ph-bold ph-warning-circle mr-1"></i> Kritis';
+                        valValue.className = 'text-sm md:text-base font-black text-statusDanger font-mono animate-pulse drop-shadow-[0_0_8px_rgba(255,77,109,0.5)]';
+                    }
+                }
+            }
+        }
+
         function renderStokSigMakloonTable() {
             const thead = document.getElementById('stokSigMakloonHeader');
             const tbody = document.getElementById('stokSigMakloonBody');
@@ -1839,32 +2045,66 @@
         function renderStokDepletionChart() {
             if (!stokSigDetailRaw.rows || stokSigDetailRaw.rows.length === 0) return;
 
-            // Date is in column R (Index 17). Qty Ton (example) in column I (Index 8) or find by header
             const rilisHeaders = stokSigDetailRaw.headers || [];
-            const dateColIdx = 17; // Kolom R
+            
+            // Cari Kolom Tanggal (Prioritaskan Kolom R (index 17) sesuai request, tapi fallback cari string "tanggal/date")
+            let dateColIdx = 17; 
+            if (!rilisHeaders[17] || !(rilisHeaders[17].toLowerCase().includes('tgl') || rilisHeaders[17].toLowerCase().includes('date') || rilisHeaders[17].toLowerCase().includes('tanggal'))) {
+                const potentialDateIdx = rilisHeaders.findIndex(h => h.toLowerCase().includes('tgl') || h.toLowerCase().includes('date') || h.toLowerCase().includes('tanggal'));
+                if(potentialDateIdx !== -1) dateColIdx = potentialDateIdx;
+            }
+
+            // Cari Kolom Tonase Out (Prioritaskan yg ada kata 'ton', atau fallback ke Qty/Zak)
             let tonColIdx = rilisHeaders.findIndex(h => h.toLowerCase().includes('ton'));
-            if(tonColIdx === -1) tonColIdx = 8; // Fallback to column I
+            let isZakColumn = false;
+            if(tonColIdx === -1) {
+                tonColIdx = rilisHeaders.findIndex(h => h.toLowerCase().includes('qty') || h.toLowerCase().includes('zak'));
+                if(tonColIdx !== -1) isZakColumn = true;
+                else tonColIdx = 8; // fallback ke kolom I
+            }
 
             // Aggregate Rilis MD Ton by Date
             const dateMap = {};
+            let totalRilisFound = 0;
+
             stokSigDetailRaw.rows.forEach(r => {
                 const rawDate = r[dateColIdx];
-                const tonVal = cleanNum(r[tonColIdx]);
-                if (rawDate && tonVal > 0) {
+                let tonVal = cleanNum(r[tonColIdx]);
+                
+                // Jika data yang diekstrak adalah ZAK, konversi ke Ton (asumsi 40kg/zak)
+                if (isZakColumn && tonVal > 0) {
+                    tonVal = (tonVal * 40) / 1000;
+                }
+
+                if (rawDate && rawDate.toString().trim() !== '' && tonVal > 0) {
                     const dateStr = rawDate.toString().trim();
-                    // Simple parsing, assuming format might vary, just use string as key for simplicity
-                    // Or attempt to parse to standard format if needed
-                    let parsedDate = new Date(dateStr);
+                    let parsedDate = new Date(NaN);
+                    
+                    // Custom Indo Date Parser (DD/MM/YYYY) agar chart point terurut & valid
+                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2})[:\.](\d{1,2})(?:[:\.](\d{1,2}))?)?/;
+                    const matchIndo = dateStr.match(regexIndo);
+                    if (matchIndo) {
+                        const p1 = parseInt(matchIndo[1], 10), p2 = parseInt(matchIndo[2], 10), year = parseInt(matchIndo[3], 10);
+                        // Coba parsing as DD/MM/YYYY atau MM/DD/YYYY
+                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) parsedDate = new Date(year, p2 - 1, p1);
+                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2);
+                    }
+                    if (isNaN(parsedDate.getTime())) parsedDate = new Date(dateStr);
+                    
                     let key = dateStr;
+                    let displayLabel = dateStr;
                     if (!isNaN(parsedDate.getTime())) {
                         key = parsedDate.toISOString().split('T')[0];
+                        displayLabel = parsedDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
                     }
-                    if(!dateMap[key]) dateMap[key] = { dateObj: parsedDate, tonOut: 0 };
+                    
+                    if(!dateMap[key]) dateMap[key] = { dateObj: parsedDate, tonOut: 0, label: displayLabel };
                     dateMap[key].tonOut += tonVal;
+                    totalRilisFound += tonVal;
                 }
             });
 
-            // Sort dates
+            // Sort dates secara berurutan
             const sortedDates = Object.keys(dateMap).sort((a, b) => {
                 const dA = dateMap[a].dateObj;
                 const dB = dateMap[b].dateObj;
@@ -1874,23 +2114,46 @@
 
             const labels = [];
             const dataStock = [];
+            
+            // Pastikan initialOpeningStock memiliki nilai
             let currentStock = initialOpeningStock;
+            
+            // Jika initialOpeningStock gagal didapat dari fungsi proses sheet, ambil secara agresif disini
+            if(currentStock === 0) {
+                 if (stokSigMakloonRaw.rows && stokSigMakloonRaw.rows.length > 0) {
+                     const headers = stokSigMakloonRaw.headers;
+                     let openingIdx = headers.findIndex(h => h.toLowerCase().includes('opening') && h.toLowerCase().includes('ton'));
+                     if(openingIdx !== -1) {
+                         stokSigMakloonRaw.rows.forEach(r => { if(r[1] && r[1].toString().toUpperCase() !== 'TOTAL') currentStock += cleanNum(r[openingIdx]); });
+                     } else {
+                         openingIdx = headers.findIndex(h => h.toLowerCase().includes('opening') && (h.toLowerCase().includes('qty') || h.toLowerCase().includes('zak')));
+                         if(openingIdx !== -1) {
+                             stokSigMakloonRaw.rows.forEach(r => { if(r[1] && r[1].toString().toUpperCase() !== 'TOTAL') currentStock += (cleanNum(r[openingIdx]) * 40) / 1000; });
+                         }
+                     }
+                 }
+            }
+
+            // Jika masih GAGAL karena sheet kosong/berbeda format, minimal setel di atas jumlah Rilis agar grafik turun tidak berada di bawah nol terus.
+            if (currentStock === 0 && totalRilisFound > 0) {
+                currentStock = totalRilisFound * 1.5; 
+            }
 
             // Generate depletion data
             if(sortedDates.length > 0) {
-                 // Add point 0 for initial stock
-                 labels.push('Awal');
+                 // Titik 0
+                 labels.push('Opening Stok');
                  dataStock.push(currentStock);
                  
                  sortedDates.forEach(dateKey => {
                      currentStock -= dateMap[dateKey].tonOut;
-                     if(currentStock < 0) currentStock = 0; // Prevent negative stock for display
-                     labels.push(dateKey);
+                     if(currentStock < 0) currentStock = 0; // Prevent negative graphic drop
+                     labels.push(dateMap[dateKey].label);
                      dataStock.push(currentStock);
                  });
             } else {
-                 labels.push('Data Kosong');
-                 dataStock.push(initialOpeningStock);
+                 labels.push('Belum Ada Rilis');
+                 dataStock.push(currentStock);
             }
 
             const ctx = document.getElementById('stockDepletionChart');
