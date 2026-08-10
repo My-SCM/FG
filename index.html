@@ -19,6 +19,7 @@
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <!-- XLSX Library Bundle (xlsx-js-style) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 
@@ -543,6 +544,25 @@
                 
                 <!-- TAB 1: STOCK MONITORING VIEW -->
                 <div id="view-stock" class="flex flex-col gap-4 md:gap-6 w-full">
+                    
+                    <!-- NEW AI INSIGHT BOX -->
+                    <div class="glass-panel rounded-2xl p-4 md:p-5 border border-accentPurple/30 flex flex-col relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform duration-500">
+                            <i class="ph-fill ph-sparkle text-8xl text-accentPurple"></i>
+                        </div>
+                        <div class="flex items-center gap-2 mb-2 relative z-10">
+                            <i class="ph-fill ph-magic-wand text-accentPurple text-lg"></i>
+                            <h3 class="font-bold text-white text-[10px] md:text-xs uppercase tracking-widest">AI Executive Insight</h3>
+                            <span class="bg-gradient-to-r from-accentPurple to-blue-500 text-white font-bold text-[8px] px-2 py-0.5 rounded-full shadow-glow-purple">Gemini Powered</span>
+                        </div>
+                        <p id="aiInsightText" class="text-xs md:text-sm text-textSecondary leading-relaxed relative z-10 pr-12 min-h-[40px]">
+                            Menunggu data logistik...
+                        </p>
+                        <button onclick="generateAIInsight()" class="absolute bottom-4 right-4 text-[10px] text-accentPurple hover:text-white transition-colors flex items-center gap-1 z-10 bg-bgPrimary/50 p-1.5 rounded-lg border border-accentPurple/20 backdrop-blur-sm shadow-sm hover:bg-accentPurple/20">
+                            <i class="ph-bold ph-arrows-clockwise"></i> Segarkan
+                        </button>
+                    </div>
+
                     <!-- Top Row: Table and Basic Side Charts -->
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 w-full">
                         <div class="xl:col-span-2 glass-panel rounded-2xl flex flex-col overflow-hidden h-[500px] md:h-[620px] border border-borderMain w-full">
@@ -743,7 +763,7 @@
                             <h3 class="font-bold text-white text-sm md:text-base flex items-center gap-1.5 md:gap-2 mb-1">
                                 <i class="ph-fill ph-buildings text-accentCyan text-lg md:text-xl"></i> Stok SIG (Sheet Makloon)
                             </h3>
-                            <p class="text-[10px] md:text-xs text-textSecondary">Data STO Makloon & Analisis Rilis MD</p>
+                            <p class="text-[10px] md:text-xs text-textSecondary">Data dari Sheet Makloon (Kolom Kosong Disembunyikan) & Analisis Rilis MD</p>
                         </div>
                         <div class="flex gap-2 w-full sm:w-auto">
                             <button onclick="fetchData(true)" class="w-full sm:w-auto justify-center p-2 md:p-2.5 bg-bgPrimary hover:bg-white/10 border border-borderMain rounded-lg md:rounded-xl text-textSecondary hover:text-white transition-all text-[10px] md:text-xs flex items-center gap-1.5 font-semibold">
@@ -1059,6 +1079,44 @@
         </div>
     </div>
 
+    <!-- AI CHAT FLOATING BUTTON -->
+    <button onclick="toggleAIChat()" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-accentPurple to-blue-600 rounded-full shadow-[0_0_20px_rgba(109,93,246,0.6)] flex items-center justify-center text-white z-50 hover:scale-110 transition-transform">
+        <i class="ph-fill ph-sparkle text-2xl"></i>
+    </button>
+
+    <!-- AI CHAT WINDOW -->
+    <div id="aiChatWindow" class="fixed bottom-24 right-6 md:bottom-28 md:right-8 w-80 md:w-96 h-[400px] md:h-[480px] glass-panel rounded-2xl border border-accentPurple/30 shadow-[0_20px_60px_rgba(0,0,0,0.8)] z-50 flex flex-col hidden transform scale-95 opacity-0 transition-all duration-300 origin-bottom-right">
+        <!-- Header -->
+        <div class="p-3 border-b border-borderMain bg-[#111C33]/90 rounded-t-2xl flex justify-between items-center z-10">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-accentCyan to-accentPurple flex items-center justify-center shadow-glow-purple text-white">
+                    <i class="ph-fill ph-robot text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="text-white text-xs md:text-sm font-bold tracking-wide">LMS Co-pilot</h4>
+                    <p class="text-[9px] text-statusSuccess flex items-center gap-1 font-mono"><span class="w-1.5 h-1.5 rounded-full bg-statusSuccess inline-block animate-pulse"></span> Online (Gemini AI)</p>
+                </div>
+            </div>
+            <button onclick="toggleAIChat()" class="text-textSecondary hover:text-white transition-colors p-1.5 hover:bg-white/10 rounded-lg"><i class="ph-bold ph-x text-lg"></i></button>
+        </div>
+        <!-- Messages -->
+        <div id="aiChatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 text-xs bg-bgPrimary/40 scroll-smooth">
+            <div class="flex items-start gap-2">
+                 <div class="w-6 h-6 rounded-full bg-accentPurple/20 flex-shrink-0 flex items-center justify-center text-accentPurple border border-accentPurple/30"><i class="ph-fill ph-robot text-[10px]"></i></div>
+                 <div class="bg-[#1C2B4A]/80 border border-borderMain p-2.5 rounded-xl rounded-tl-none text-white max-w-[85%] shadow-sm leading-relaxed">
+                     Halo! Saya asisten AI bertenaga Gemini. Saya siap menganalisa pergerakan stok logistik Anda. Apa yang ingin Anda ketahui?
+                 </div>
+            </div>
+        </div>
+        <!-- Input -->
+        <div class="p-3 border-t border-borderMain bg-[#111C33]/90 rounded-b-2xl z-10">
+            <form onsubmit="handleAIChatSubmit(event)" class="relative flex items-center">
+                <input type="text" id="aiChatInput" placeholder="Tanya seputar stok atau laporan..." class="w-full bg-[#070B14] border border-borderMain rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-white focus:outline-none focus:border-accentPurple transition-colors shadow-inner" autocomplete="off">
+                <button type="submit" class="absolute right-2 text-accentPurple hover:text-accentCyan transition-colors p-1.5 bg-[#111C33] rounded-lg border border-transparent hover:border-accentCyan/30"><i class="ph-bold ph-paper-plane-right text-base"></i></button>
+            </form>
+        </div>
+    </div>
+
     <script>
         const SHEET_ID = '1A2N2FnkESTgsffNDXQYTPRcrUURZIXdHKBbMeL3YjJI';
         const GID_MASTER = '1732584925';
@@ -1100,6 +1158,10 @@
         let chartAnimInterval = null;
         let isAuthenticated = false;
         let pendingTargetTab = null;
+
+        const GEMINI_API_KEY = "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"
+        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
+        let chatHistory = [];
 
         const SEC_U = 'YWRtaW4='; 
         const SEC_P = 'bWl0cmErMDA=';
@@ -1217,6 +1279,9 @@
                     renderSummaryTable(); 
                     renderExecReportPreview(); 
                     updateKPIs(); 
+                    
+                    updateStokSigKPIs(); 
+
                     renderCharts(); 
                     updateLastUpdateUI();
                     
@@ -1226,7 +1291,8 @@
                     renderStokSigMakloonTable();
                     renderStokSigDetailTable();
                     renderStokDepletionChart();
-                    updateStokSigKPIs();
+
+                    setTimeout(generateAIInsight, 1000);
 
                     setTimeout(() => { const overlay = document.getElementById('loadingOverlay'); overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 500); }, 400);
                     if(manual) showToast('Sync Complete', 'Data berhasil diperbarui dari Google Sheets.');
@@ -1479,7 +1545,6 @@
                     
                     if (!isNaN(parsedDate.getTime()) && parsedDate.getFullYear() > 2000) { 
                         trDateObj = parsedDate;
-                        if (parsedDate > latestDateObj) { latestDateObj = parsedDate; foundValidDate = true; } 
                     }
                 }
 
@@ -1501,6 +1566,17 @@
                     originalRow: r
                 });
             });
+
+            // Ambil Update Terakhir HANYA dari baris paling bawah (terbaru) di sheet DATA
+            if (transactionRecords.length > 0) {
+                for (let i = transactionRecords.length - 1; i >= 0; i--) {
+                    if (!isNaN(transactionRecords[i].dateObj.getTime())) {
+                        latestDateObj = transactionRecords[i].dateObj;
+                        foundValidDate = true;
+                        break;
+                    }
+                }
+            }
 
             if (foundValidDate) {
                 const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }, timeOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
@@ -1763,25 +1839,18 @@
         };
 
         function updateStokSigKPIs() {
-            let openingTon = 0, balanceTon = 0, releaseTon = 0;
-            let balanceAmount = 0;
-
             const headers = stokSigMakloonRaw.headers || [];
             const rows = stokSigMakloonRaw.rows || [];
 
-            const idxOpTon = headers.findIndex(h => h.toLowerCase().includes('opening') && h.toLowerCase().includes('ton'));
+            // Temukan indeks kolom dinamis tanpa berpatok keras pada nama spesifik
             const idxOpZak = headers.findIndex(h => h.toLowerCase().includes('opening') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
-            
-            const idxBalTon = headers.findIndex(h => h.toLowerCase().includes('balance') && h.toLowerCase().includes('ton'));
-            const idxBalZak = headers.findIndex(h => h.toLowerCase().includes('balance') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
-            
-            const idxRelTon = headers.findIndex(h => h.toLowerCase().includes('release') && h.toLowerCase().includes('ton'));
             const idxRelZak = headers.findIndex(h => h.toLowerCase().includes('release') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
+            const idxBalZak = headers.findIndex(h => h.toLowerCase().includes('balance') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
 
-            const idxAmt = headers.findIndex(h => h.toLowerCase().includes('amount') || h.toLowerCase().includes('harga'));
+            const idxAmt = headers.findIndex(h => h.toLowerCase().includes('amount') || h.toLowerCase().includes('harga') || h.toLowerCase().includes('price'));
             const idxWeight = headers.findIndex(h => h.toLowerCase().includes('weight') || h.toLowerCase().includes('berat'));
 
-            let calcOpTon = 0, calcBalTon = 0, calcRelTon = 0, calcBalAmt = 0;
+            let openingTon = 0, balanceTon = 0, releaseTon = 0, balanceAmount = 0;
 
             rows.forEach(r => {
                 const isTotal = r[1] && r[1].toString().toUpperCase() === 'TOTAL';
@@ -1789,39 +1858,16 @@
                     let w = idxWeight !== -1 ? cleanNum(r[idxWeight]) : 40;
                     let price = idxAmt !== -1 ? cleanNum(r[idxAmt]) : 0;
                     
-                    let bZak = idxBalZak !== -1 ? cleanNum(r[idxBalZak]) : 0;
                     let oZak = idxOpZak !== -1 ? cleanNum(r[idxOpZak]) : 0;
                     let rZak = idxRelZak !== -1 ? cleanNum(r[idxRelZak]) : 0;
+                    let bZak = idxBalZak !== -1 ? cleanNum(r[idxBalZak]) : 0;
                     
-                    calcBalAmt += (bZak * price);
-                    
-                    if (idxOpTon === -1) calcOpTon += (oZak * w) / 1000; else calcOpTon += cleanNum(r[idxOpTon]);
-                    if (idxBalTon === -1) calcBalTon += (bZak * w) / 1000; else calcBalTon += cleanNum(r[idxBalTon]);
-                    if (idxRelTon === -1) calcRelTon += (rZak * w) / 1000; else calcRelTon += cleanNum(r[idxRelTon]);
-                } else {
-                    if (idxOpTon !== -1) openingTon = cleanNum(r[idxOpTon]);
-                    if (idxBalTon !== -1) balanceTon = cleanNum(r[idxBalTon]);
-                    if (idxRelTon !== -1) releaseTon = cleanNum(r[idxRelTon]);
+                    balanceAmount += (bZak * price);
+                    openingTon += (oZak * w) / 1000;
+                    releaseTon += (rZak * w) / 1000;
+                    balanceTon += (bZak * w) / 1000;
                 }
             });
-
-            if (openingTon === 0) openingTon = calcOpTon;
-            if (balanceTon === 0) balanceTon = calcBalTon;
-            if (releaseTon === 0) releaseTon = calcRelTon;
-            balanceAmount = calcBalAmt;
-
-            // Fallback for release from Detail if Makloon missing release data
-            if (releaseTon === 0 && stokSigDetailRaw.rows.length > 0) {
-                 const detailHeaders = stokSigDetailRaw.headers || [];
-                 const dTonIdx = detailHeaders.findIndex(h => h.toLowerCase().includes('ton'));
-                 const dZakIdx = detailHeaders.findIndex(h => h.toLowerCase().includes('qty') || h.toLowerCase().includes('zak'));
-                 
-                 stokSigDetailRaw.rows.forEach(r => {
-                     let t = dTonIdx !== -1 ? cleanNum(r[dTonIdx]) : 0;
-                     if (t === 0 && dZakIdx !== -1) t = (cleanNum(r[dZakIdx]) * 40) / 1000;
-                     releaseTon += t;
-                 });
-            }
 
             let remainingPct = openingTon > 0 ? (balanceTon / openingTon) * 100 : 0;
             let relPct = openingTon > 0 ? (releaseTon / openingTon) * 100 : 0;
@@ -2045,51 +2091,43 @@
         function renderStokDepletionChart() {
             if (!stokSigDetailRaw.rows || stokSigDetailRaw.rows.length === 0) return;
 
-            const rilisHeaders = stokSigDetailRaw.headers || [];
-            
-            // Cari Kolom Tanggal (Prioritaskan Kolom R (index 17) sesuai request, tapi fallback cari string "tanggal/date")
-            let dateColIdx = 17; 
-            if (!rilisHeaders[17] || !(rilisHeaders[17].toLowerCase().includes('tgl') || rilisHeaders[17].toLowerCase().includes('date') || rilisHeaders[17].toLowerCase().includes('tanggal'))) {
-                const potentialDateIdx = rilisHeaders.findIndex(h => h.toLowerCase().includes('tgl') || h.toLowerCase().includes('date') || h.toLowerCase().includes('tanggal'));
-                if(potentialDateIdx !== -1) dateColIdx = potentialDateIdx;
-            }
+            // Target Spesifik Kolom berdasarkan instruksi
+            const dateColIdx = 17;   // Kolom R (Tanggal Rilis / Delivery)
+            const qtyZakColIdx = 9;  // Kolom J (Qty Bag / Zak)
 
-            // Cari Kolom Tonase Out (Prioritaskan yg ada kata 'ton', atau fallback ke Qty/Zak)
-            let tonColIdx = rilisHeaders.findIndex(h => h.toLowerCase().includes('ton'));
-            let isZakColumn = false;
-            if(tonColIdx === -1) {
-                tonColIdx = rilisHeaders.findIndex(h => h.toLowerCase().includes('qty') || h.toLowerCase().includes('zak'));
-                if(tonColIdx !== -1) isZakColumn = true;
-                else tonColIdx = 8; // fallback ke kolom I
-            }
-
-            // Aggregate Rilis MD Ton by Date
+            // Aggregate Rilis MD ZAK by Date (bukan Tonase statis 40kg)
             const dateMap = {};
-            let totalRilisFound = 0;
-
+            let totalRilisZak = 0;
+            
             stokSigDetailRaw.rows.forEach(r => {
                 const rawDate = r[dateColIdx];
-                let tonVal = cleanNum(r[tonColIdx]);
+                const qtyZak = cleanNum(r[qtyZakColIdx]);
                 
-                // Jika data yang diekstrak adalah ZAK, konversi ke Ton (asumsi 40kg/zak)
-                if (isZakColumn && tonVal > 0) {
-                    tonVal = (tonVal * 40) / 1000;
-                }
-
-                if (rawDate && rawDate.toString().trim() !== '' && tonVal > 0) {
+                if (rawDate && qtyZak > 0) {
                     const dateStr = rawDate.toString().trim();
                     let parsedDate = new Date(NaN);
                     
-                    // Custom Indo Date Parser (DD/MM/YYYY) agar chart point terurut & valid
-                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2})[:\.](\d{1,2})(?:[:\.](\d{1,2}))?)?/;
+                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/;
                     const matchIndo = dateStr.match(regexIndo);
+                    
                     if (matchIndo) {
-                        const p1 = parseInt(matchIndo[1], 10), p2 = parseInt(matchIndo[2], 10), year = parseInt(matchIndo[3], 10);
-                        // Coba parsing as DD/MM/YYYY atau MM/DD/YYYY
-                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) parsedDate = new Date(year, p2 - 1, p1);
-                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2);
+                        const p1 = parseInt(matchIndo[1], 10); 
+                        const p2 = parseInt(matchIndo[2], 10); 
+                        const year = parseInt(matchIndo[3], 10);
+                        
+                        // Prioritaskan DD/MM/YYYY
+                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) {
+                            parsedDate = new Date(year, p2 - 1, p1); 
+                        } 
+                        // Fallback ke MM/DD/YYYY
+                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) {
+                            parsedDate = new Date(year, p1 - 1, p2);
+                        }
                     }
-                    if (isNaN(parsedDate.getTime())) parsedDate = new Date(dateStr);
+                    
+                    if (isNaN(parsedDate.getTime())) {
+                        parsedDate = new Date(dateStr); 
+                    }
                     
                     let key = dateStr;
                     let displayLabel = dateStr;
@@ -2098,13 +2136,56 @@
                         displayLabel = parsedDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
                     }
                     
-                    if(!dateMap[key]) dateMap[key] = { dateObj: parsedDate, tonOut: 0, label: displayLabel };
-                    dateMap[key].tonOut += tonVal;
-                    totalRilisFound += tonVal;
+                    if(!dateMap[key]) dateMap[key] = { dateObj: parsedDate, zakOut: 0, label: displayLabel };
+                    dateMap[key].zakOut += qtyZak;
+                    totalRilisZak += qtyZak;
                 }
             });
 
-            // Sort dates secara berurutan
+            // Hitung Opening & Balance yang akurat dan presisi dari tabel "Semua Data Makloon"
+            let currentStock = 0;
+            let finalBalanceTon = 0;
+            
+            const makloonHeaders = stokSigMakloonRaw.headers || [];
+            let idxOpZak = 4;
+            let idxBalZak = 6;
+            let weightIdx = -1;
+
+            if (makloonHeaders.length > 0) {
+                const foundOp = makloonHeaders.findIndex(h => h.toLowerCase().includes('opening') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
+                if (foundOp !== -1) idxOpZak = foundOp;
+                
+                const foundBal = makloonHeaders.findIndex(h => h.toLowerCase().includes('balance') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
+                if (foundBal !== -1) idxBalZak = foundBal;
+
+                weightIdx = makloonHeaders.findIndex(h => h.toLowerCase().includes('weight') || h.toLowerCase().includes('berat'));
+            }
+
+            if (stokSigMakloonRaw.rows && stokSigMakloonRaw.rows.length > 0) {
+                let calcOp = 0;
+                let calcBal = 0;
+                stokSigMakloonRaw.rows.forEach(r => {
+                    const isTotal = r[1] && r[1].toString().toUpperCase() === 'TOTAL';
+                    if (!isTotal) {
+                        let w = weightIdx !== -1 ? cleanNum(r[weightIdx]) : 40;
+                        let oZak = cleanNum(r[idxOpZak]);
+                        let bZak = cleanNum(r[idxBalZak]);
+                        calcOp += (oZak * w) / 1000;
+                        calcBal += (bZak * w) / 1000;
+                    }
+                });
+                
+                currentStock = calcOp;
+                finalBalanceTon = calcBal;
+            }
+
+            if (currentStock === 0 && initialOpeningStock > 0) currentStock = initialOpeningStock;
+            
+            // Selisih aktual (Ton) antara awal dan akhir berdasarkan Makloon
+            let trueTotalReleaseTon = currentStock - finalBalanceTon;
+            if (trueTotalReleaseTon < 0) trueTotalReleaseTon = 0; // Fallback jika data ganjil
+
+            // Sort dates secara kronologis
             const sortedDates = Object.keys(dateMap).sort((a, b) => {
                 const dA = dateMap[a].dateObj;
                 const dB = dateMap[b].dateObj;
@@ -2115,44 +2196,37 @@
             const labels = [];
             const dataStock = [];
             
-            // Pastikan initialOpeningStock memiliki nilai
-            let currentStock = initialOpeningStock;
-            
-            // Jika initialOpeningStock gagal didapat dari fungsi proses sheet, ambil secara agresif disini
-            if(currentStock === 0) {
-                 if (stokSigMakloonRaw.rows && stokSigMakloonRaw.rows.length > 0) {
-                     const headers = stokSigMakloonRaw.headers;
-                     let openingIdx = headers.findIndex(h => h.toLowerCase().includes('opening') && h.toLowerCase().includes('ton'));
-                     if(openingIdx !== -1) {
-                         stokSigMakloonRaw.rows.forEach(r => { if(r[1] && r[1].toString().toUpperCase() !== 'TOTAL') currentStock += cleanNum(r[openingIdx]); });
-                     } else {
-                         openingIdx = headers.findIndex(h => h.toLowerCase().includes('opening') && (h.toLowerCase().includes('qty') || h.toLowerCase().includes('zak')));
-                         if(openingIdx !== -1) {
-                             stokSigMakloonRaw.rows.forEach(r => { if(r[1] && r[1].toString().toUpperCase() !== 'TOTAL') currentStock += (cleanNum(r[openingIdx]) * 40) / 1000; });
-                         }
-                     }
-                 }
-            }
-
-            // Jika masih GAGAL karena sheet kosong/berbeda format, minimal setel di atas jumlah Rilis agar grafik turun tidak berada di bawah nol terus.
-            if (currentStock === 0 && totalRilisFound > 0) {
-                currentStock = totalRilisFound * 1.5; 
-            }
-
-            // Generate depletion data
+            // Generate depletion data dengan mendistribusikan penurunan proporsional
             if(sortedDates.length > 0) {
-                 // Titik 0
                  labels.push('Opening Stok');
                  dataStock.push(currentStock);
                  
-                 sortedDates.forEach(dateKey => {
-                     currentStock -= dateMap[dateKey].tonOut;
-                     if(currentStock < 0) currentStock = 0; // Prevent negative graphic drop
-                     labels.push(dateMap[dateKey].label);
-                     dataStock.push(currentStock);
+                 let runningStock = currentStock;
+                 sortedDates.forEach((dateKey, index) => {
+                     let zakForDay = dateMap[dateKey].zakOut;
+                     let tonOutForDay = 0;
+                     
+                     if (totalRilisZak > 0) {
+                         // Proporsikan True Release Tonase sesuai bobot hari ini
+                         tonOutForDay = (zakForDay / totalRilisZak) * trueTotalReleaseTon;
+                     } else {
+                         // Fallback statis jika ada kesalahan logika
+                         tonOutForDay = (zakForDay * 40) / 1000; 
+                     }
+
+                     runningStock -= tonOutForDay;
+                     
+                     // Force Absolute Sync: Titik terakhir WAJIB PERSIS SAMA dengan Makloon Balance
+                     if (index === sortedDates.length - 1) {
+                         runningStock = finalBalanceTon;
+                     }
+                     
+                     if(runningStock < 0) runningStock = 0; 
+                     labels.push(dateMap[dateKey].label || dateKey);
+                     dataStock.push(runningStock);
                  });
             } else {
-                 labels.push('Belum Ada Rilis');
+                 labels.push('Data Kosong');
                  dataStock.push(currentStock);
             }
 
@@ -2187,7 +2261,25 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        layout: {
+                            padding: { top: 25, right: 15, left: 10 }
+                        },
                         plugins: {
+                            datalabels: {
+                                display: true,
+                                color: '#FFFFFF',
+                                backgroundColor: 'rgba(255, 77, 109, 0.15)',
+                                borderColor: 'rgba(255, 77, 109, 0.5)',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                align: 'top',
+                                offset: 6,
+                                padding: { top: 2, bottom: 2, left: 4, right: 4 },
+                                font: { family: 'JetBrains Mono', size: 9, weight: 'bold' },
+                                formatter: function(value) {
+                                    return new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value);
+                                }
+                            },
                             legend: { display: false },
                             tooltip: {
                                 backgroundColor: 'rgba(17, 28, 51, 0.95)',
@@ -2788,12 +2880,12 @@
                 if (rawTimestamp) {
                     const str = rawTimestamp.toString().trim();
                     let parsedDate = new Date(NaN);
-                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2})[:\.](\d{1,2})(?:[:\.](\d{1,2}))?)?/;
-                    const matchIndo = str.match(regexIndo);
-                    if (matchIndo) {
-                        const p1 = parseInt(matchIndo[1], 10), p2 = parseInt(matchIndo[2], 10), year = parseInt(matchIndo[3], 10), hour = matchIndo[4] ? parseInt(matchIndo[4], 10) : 0, min = matchIndo[5] ? parseInt(matchIndo[5], 10) : 0, sec = matchIndo[6] ? parseInt(matchIndo[6], 10) : 0;
-                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) parsedDate = new Date(year, p2 - 1, p1, hour, min, sec);
-                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2, hour, min, sec);
+                    const regexDate = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2})[:\.](\d{1,2})(?:[:\.](\d{1,2}))?)?/;
+                    const matchDate = str.match(regexDate);
+                    if (matchDate) {
+                        const p1 = parseInt(matchDate[1], 10), p2 = parseInt(matchDate[2], 10), year = parseInt(matchDate[3], 10), hour = matchDate[4] ? parseInt(matchDate[4], 10) : 0, min = matchDate[5] ? parseInt(matchDate[5], 10) : 0, sec = matchDate[6] ? parseInt(matchDate[6], 10) : 0;
+                        if (p1 <= 12 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2, hour, min, sec);
+                        else if (p1 > 12 && p1 <= 31 && p2 <= 12) parsedDate = new Date(year, p2 - 1, p1, hour, min, sec);
                     }
                     if (isNaN(parsedDate.getTime())) parsedDate = new Date(str);
                     if (!isNaN(parsedDate.getTime()) && parsedDate.getFullYear() > 2000) trDateObj = parsedDate;
@@ -3204,12 +3296,12 @@
                 if (rawTimestamp) {
                     const str = rawTimestamp.toString().trim();
                     let parsedDate = new Date(NaN);
-                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2})[:\.](\d{1,2})(?:[:\.](\d{1,2}))?)?/;
-                    const matchIndo = str.match(regexIndo);
-                    if (matchIndo) {
-                        const p1 = parseInt(matchIndo[1], 10), p2 = parseInt(matchIndo[2], 10), year = parseInt(matchIndo[3], 10), hour = matchIndo[4] ? parseInt(matchIndo[4], 10) : 0, min = matchIndo[5] ? parseInt(matchIndo[5], 10) : 0, sec = matchIndo[6] ? parseInt(matchIndo[6], 10) : 0;
-                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) parsedDate = new Date(year, p2 - 1, p1, hour, min, sec);
-                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2, hour, min, sec);
+                    const regexDate = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2})[:\.](\d{1,2})(?:[:\.](\d{1,2}))?)?/;
+                    const matchDate = str.match(regexDate);
+                    if (matchDate) {
+                        const p1 = parseInt(matchDate[1], 10), p2 = parseInt(matchDate[2], 10), year = parseInt(matchDate[3], 10), hour = matchDate[4] ? parseInt(matchDate[4], 10) : 0, min = matchDate[5] ? parseInt(matchDate[5], 10) : 0, sec = matchDate[6] ? parseInt(matchDate[6], 10) : 0;
+                        if (p1 <= 12 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2, hour, min, sec);
+                        else if (p1 > 12 && p1 <= 31 && p2 <= 12) parsedDate = new Date(year, p2 - 1, p1, hour, min, sec);
                     }
                     if (isNaN(parsedDate.getTime())) parsedDate = new Date(str);
                     if (!isNaN(parsedDate.getTime()) && parsedDate.getFullYear() > 2000) trDateObj = parsedDate;
@@ -3498,6 +3590,179 @@
 
             XLSX.writeFile(wb, `Stok_SIG_Report_${now.getFullYear()}${String(now.getMonth()+1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}.xlsx`);
             setTimeout(() => showToast('Export Success', 'File Stok SIG berhasil diunduh.', 'success'), 500);
+        }
+
+        async function fetchWithBackoff(url, options, maxRetries = 3) {
+            let delay = 1000;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        if (response.status === 429) throw new Error("Throttled");
+                    }
+                    return response;
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        function buildDataContext() {
+            let kpiSpacePercent = document.getElementById('kpiSpacePercent') ? document.getElementById('kpiSpacePercent').innerText : '0%';
+            let kpiSpaceCurrent = document.getElementById('kpiSpaceCurrent') ? document.getElementById('kpiSpaceCurrent').innerText : '0 Ton';
+            let monthIn = document.getElementById('kpiMonthIn') ? document.getElementById('kpiMonthIn').innerText : '0';
+            let monthOut = document.getElementById('kpiMonthOut') ? document.getElementById('kpiMonthOut').innerText : '0';
+            let totalTon = document.getElementById('kpiTon') ? document.getElementById('kpiTon').innerText.replace(/\n/g, ' ') : '0';
+            
+            let topSkus = summaryData.sort((a,b) => b.qtyTon - a.qtyTon).slice(0,3).map(s => `${s.sku}: ${fmtDec(s.qtyTon)} Ton`).join(', ');
+
+            return `CURRENT WAREHOUSE STATUS:
+Total Current Stock: ${totalTon}
+Warehouse Capacity Used: ${kpiSpacePercent} (${kpiSpaceCurrent})
+Monthly Inbound (Produksi/Retur): ${monthIn} ZAK
+Monthly Outbound (Delivery/Pemakaian): ${monthOut} ZAK
+Top 3 Items by Tonase: ${topSkus}`;
+        }
+
+        function formatChatText(text) {
+            return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>').replace(/\n/g, '<br>');
+        }
+
+        async function generateAIInsight() {
+            const insightBox = document.getElementById('aiInsightText');
+            if(!insightBox) return;
+            
+            insightBox.innerHTML = `Menganalisa data logistik secara real-time... <span class="loader-ring w-3 h-3 border-2 inline-block align-middle ml-2"></span>`;
+            
+            const context = buildDataContext();
+            const systemPrompt = `You are an expert logistics data analyst viewing the live dashboard for 'Mortar Indonesia'.
+Your task is to provide a brief (2-3 sentences max) executive summary of the warehouse condition based on the data provided. 
+Highlight critical alerts (e.g. high capacity usage > 80%, or outflow > inflow) or state general stability. 
+Write your response in professional Indonesian. Use markdown bold text for emphasis. DO NOT use headers (#).`;
+
+            const payload = {
+                contents: [{ parts: [{ text: `Here is the current live data:\n${context}\nPlease write the executive insight.` }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+            
+            try {
+                const response = await fetchWithBackoff(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0) {
+                    let aiText = result.candidates[0].content.parts[0].text;
+                    insightBox.innerHTML = formatChatText(aiText);
+                } else {
+                    insightBox.innerHTML = "Insights AI belum tersedia saat ini.";
+                }
+            } catch(err) {
+                insightBox.innerHTML = "Terjadi gangguan saat menghubungkan ke mesin AI.";
+            }
+        }
+
+        function toggleAIChat() {
+            const w = document.getElementById('aiChatWindow');
+            if (w.classList.contains('hidden')) {
+                w.classList.remove('hidden');
+                setTimeout(() => {
+                    w.classList.remove('scale-95', 'opacity-0');
+                }, 10);
+                
+                if(chatHistory.length === 0) {
+                    chatHistory.push({
+                        role: "user",
+                        parts: [{text: `Sistem: Sesi dimulai. Anda adalah 'LMS Co-pilot', asisten AI cerdas untuk dashboard logistik Mortar Indonesia. 
+Gunakan konteks data logistik live berikut untuk menjawab pertanyaan user dengan ringkas dan profesional:\n\n${buildDataContext()}`}]
+                    });
+                    chatHistory.push({
+                        role: "model",
+                        parts: [{text: "Baik, saya siap membantu. Silakan tanyakan apapun mengenai stok logistik saat ini."}]
+                    });
+                } else {
+                     chatHistory.push({
+                        role: "user",
+                        parts: [{text: `System update (do not reply to this): Latest data context is now: ${buildDataContext()}`}]
+                    });
+                     chatHistory.push({
+                        role: "model",
+                        parts: [{text: "Noted."}]
+                    });
+                }
+                document.getElementById('aiChatInput').focus();
+            } else {
+                w.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    w.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        async function handleAIChatSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('aiChatInput');
+            const msg = input.value.trim();
+            if(!msg) return;
+            
+            appendChatMessage('user', msg);
+            input.value = '';
+            
+            const typingId = 'typing-' + Date.now();
+            appendChatMessage('model', `<span class="loader-ring w-3 h-3 border-2 border-t-accentPurple border-r-transparent border-b-transparent border-l-transparent inline-block align-middle"></span> <span class="align-middle ml-1">Memproses...</span>`, typingId);
+            
+            chatHistory.push({ role: "user", parts: [{ text: msg }] });
+            
+            const payload = {
+                contents: chatHistory,
+                systemInstruction: { parts: [{ text: "You are 'LMS Co-pilot', a highly capable AI assistant for Mortar Indonesia's logistics dashboard. You help users analyze their stock, understand trends, and monitor KPIs. Always keep your answers concise, professional, and strictly in Indonesian." }] }
+            };
+            
+            try {
+                const response = await fetchWithBackoff(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                const typingEl = document.getElementById(typingId);
+                if(typingEl) typingEl.remove();
+
+                if (result.candidates && result.candidates.length > 0) {
+                    const aiText = result.candidates[0].content.parts[0].text;
+                    chatHistory.push(result.candidates[0].content);
+                    appendChatMessage('model', formatChatText(aiText));
+                } else {
+                    appendChatMessage('model', "Maaf, saya tidak dapat merespon saat ini.");
+                }
+            } catch(err) {
+                const typingEl = document.getElementById(typingId);
+                if(typingEl) typingEl.remove();
+                appendChatMessage('model', "Error jaringan saat menghubungi layanan AI.");
+            }
+        }
+
+        function appendChatMessage(role, html, id = '') {
+            const container = document.getElementById('aiChatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = "flex items-start gap-2 " + (role === 'user' ? "flex-row-reverse" : "");
+            if(id) msgDiv.id = id;
+            
+            const avatar = role === 'user' 
+                ? `<div class="w-6 h-6 rounded-full bg-accentCyan/20 flex-shrink-0 flex items-center justify-center text-accentCyan border border-accentCyan/30"><i class="ph-bold ph-user text-[10px]"></i></div>`
+                : `<div class="w-6 h-6 rounded-full bg-accentPurple/20 flex-shrink-0 flex items-center justify-center text-accentPurple border border-accentPurple/30"><i class="ph-fill ph-robot text-[10px]"></i></div>`;
+                
+            const bubble = role === 'user'
+                ? `<div class="bg-accentCyan/10 border border-accentCyan/30 p-2.5 rounded-xl rounded-tr-none text-white max-w-[85%] shadow-sm leading-relaxed">${html}</div>`
+                : `<div class="bg-[#1C2B4A]/80 border border-borderMain p-2.5 rounded-xl rounded-tl-none text-white max-w-[85%] shadow-sm leading-relaxed">${html}</div>`;
+                
+            msgDiv.innerHTML = avatar + bubble;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
         }
     </script>
 </body>
