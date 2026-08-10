@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
+    <!-- Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -18,6 +19,7 @@
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- XLSX Library Bundle (xlsx-js-style) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 
     <script>
@@ -161,6 +163,7 @@
             cursor: pointer;
         }
         
+        /* Mobile Sidebar Toggle Styles */
         .sidebar-open { transform: translateX(0); }
         .sidebar-closed { transform: translateX(-100%); }
         @media (min-width: 1024px) {
@@ -172,7 +175,9 @@
 
     <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
+    <!-- LEFT SIDEBAR -->
     <aside id="sidebar" class="w-64 bg-bgSecondary border-r border-borderMain flex flex-col flex-shrink-0 z-40 fixed h-full transition-transform duration-300 ease-in-out lg:relative sidebar-closed lg:sidebar-open">
+        <!-- Brand Logo -->
         <div class="h-20 flex items-center justify-between px-6 border-b border-borderMain">
             <div class="flex items-center">
                 <div class="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-tr from-accentCyan to-accentPurple shadow-glow-cyan mr-3 flex-shrink-0">
@@ -183,11 +188,13 @@
                     <p class="text-[10px] text-accentCyan uppercase tracking-widest font-semibold mt-1">Logistics Monitoring</p>
                 </div>
             </div>
+            <!-- Mobile Close Button -->
             <button onclick="toggleSidebar()" class="lg:hidden text-textSecondary hover:text-white">
                 <i class="ph-bold ph-x text-2xl"></i>
             </button>
         </div>
 
+        <!-- Navigation Menu -->
         <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-7">
             <div>
                 <p class="text-[10px] font-bold text-textSecondary/50 uppercase tracking-widest mb-3 px-3">Main Menu</p>
@@ -210,6 +217,7 @@
                             <span class="flex-1">Stock Summary Overview</span>
                         </button>
                     </li>
+                    <!-- Report Menu (Private) -->
                     <li>
                         <button id="nav-btn-exec-report" onclick="handleTabClick('exec-report')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-file-pdf text-xl group-hover:text-statusSuccess transition-colors"></i>
@@ -217,12 +225,14 @@
                             <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Private Access"></i>
                         </button>
                     </li>
+                    <!-- Stok SIG Menu -->
                     <li>
                         <button id="nav-btn-stok-sig" onclick="handleTabClick('stok-sig')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-buildings text-xl group-hover:text-accentCyan transition-colors"></i>
                             <span class="flex-1">Stok SIG</span>
                         </button>
                     </li>
+                    <!-- Offtake Menu (Private) -->
                     <li>
                         <button id="nav-btn-offtake" onclick="handleTabClick('offtake')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-truck text-xl group-hover:text-accentCyan transition-colors"></i>
@@ -230,6 +240,7 @@
                             <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Private Access"></i>
                         </button>
                     </li>
+                    <!-- Pallet Menu (Private) -->
                     <li>
                         <button id="nav-btn-pallet" onclick="handleTabClick('pallet')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-stack text-xl group-hover:text-accentCyan transition-colors"></i>
@@ -239,6 +250,8 @@
                     </li>
                 </ul>
             </div>
+
+            <!-- Transactions (DATA) Menu Group (Private) -->
             <div>
                 <p class="text-[10px] font-bold text-textSecondary/50 uppercase tracking-widest mb-3 px-3">Transactions (DATA)</p>
                 <ul class="space-y-1.5">
@@ -260,6 +273,7 @@
             </div>
         </nav>
 
+        <!-- System Status Box -->
         <div class="p-4 border-t border-borderMain bg-bgPrimary/40">
             <div class="glass-panel rounded-2xl p-4">
                 <p class="text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-2">Live Cloud Health</p>
@@ -277,24 +291,34 @@
         </div>
     </aside>
 
+    <!-- MAIN CONTENT CONTAINER -->
     <main class="flex-1 flex flex-col relative overflow-hidden bg-bgPrimary w-full">
+
+        <!-- Top Header Navigation -->
         <header class="h-auto md:h-20 glass-header w-full flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-3 md:py-0 z-20 gap-3 md:gap-0">
+            <!-- Mobile Sidebar Toggle -->
             <div class="flex items-center w-full md:w-auto justify-between md:justify-start">
                 <button onclick="toggleSidebar()" class="lg:hidden text-textSecondary hover:text-white mr-4">
                     <i class="ph-bold ph-list text-2xl"></i>
                 </button>
+                
+                <!-- Global Search -->
                 <div class="relative w-full md:w-96">
                     <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-textSecondary text-lg"></i>
                     <input type="text" id="globalSearchInput" oninput="handleSearch(this.value)" placeholder="Cari SKU, Segment, atau Keyword..." class="w-full bg-bgCard/80 border border-borderMain text-white rounded-xl pl-11 pr-12 py-2.5 focus:outline-none focus:border-accentCyan focus:ring-1 focus:ring-accentCyan transition-all text-sm placeholder:text-textSecondary/50">
                 </div>
             </div>
 
+            <!-- Top Right Action Controls -->
             <div class="flex items-center justify-end gap-3 md:gap-5 w-full md:w-auto">
                 <div class="flex items-center gap-2 text-[10px] md:text-xs text-textSecondary bg-bgCard border border-borderMain px-2 md:px-3 py-1.5 md:py-2 rounded-xl hidden sm:flex">
                     <i class="ph-bold ph-clock-counter-clockwise text-accentCyan"></i>
                     <span id="syncTimestamp">Data Time: --:-- WIB</span>
                 </div>
+
                 <div class="h-6 w-px bg-borderMain hidden sm:block"></div>
+
+                <!-- User Profile -->
                 <div class="relative group">
                     <div class="flex items-center gap-2 md:gap-3 pl-1 md:pl-2 cursor-pointer bg-bgCard/60 border border-borderMain p-1 md:p-1.5 pr-2 md:pr-3 rounded-xl hover:bg-white/5 transition-all">
                         <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-accentCyan to-accentPurple flex items-center justify-center text-bgPrimary font-extrabold text-xs md:text-sm shadow-glow-cyan flex-shrink-0">
@@ -318,13 +342,17 @@
             </div>
         </header>
 
+        <!-- SCROLLABLE CONTENT AREA -->
         <div class="flex-1 overflow-y-auto p-4 md:p-8 relative w-full" id="scrollArea">
+
+            <!-- Global Loading Screen -->
             <div id="loadingOverlay" class="absolute inset-0 bg-bgPrimary/90 backdrop-blur-md z-50 flex flex-col items-center justify-center transition-all duration-500">
                 <div class="loader-ring mb-4"></div>
                 <h3 class="text-base md:text-lg font-bold text-white tracking-wide text-center px-4">Menghubungkan ke Google Sheets...</h3>
                 <p class="text-[10px] md:text-xs text-textSecondary mt-1 text-center px-4">Mengambil data Master, Summary, & Jam Terakhir</p>
             </div>
 
+            <!-- PAGE TITLE BAR -->
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 md:mb-8 gap-4" id="pageHeaderBar">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-4 w-full lg:w-auto">
                     <div class="p-2.5 md:p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-xl md:rounded-2xl shadow-glow-purple flex-shrink-0" id="pageTitleIconContainer">
@@ -338,17 +366,22 @@
                         <p class="text-[10px] md:text-xs text-textSecondary mt-1" id="pageSubTitle">Real-time FG Analytics & Stock Monitoring Report</p>
                     </div>
                 </div>
+
+                <!-- General Filters & Export -->
                 <div class="flex flex-wrap items-center gap-2 md:gap-3 w-full lg:w-auto" id="generalActionControls">
                     <div class="flex items-center bg-bgCard border border-borderMain rounded-lg md:rounded-xl px-2.5 md:px-3.5 py-1.5 md:py-2 text-[10px] md:text-xs flex-1 sm:flex-none justify-center" title="Hari ini">
                         <i class="ph-bold ph-calendar-blank text-accentCyan mr-1.5 md:mr-2"></i>
                         <span id="currentDateDisplay" class="text-white font-medium whitespace-nowrap">-- --- ----</span>
                     </div>
+
+                    <!-- Filter Dropdown -->
                     <select id="segmentFilterSelect" onchange="filterBySegment(this.value)" class="bg-bgCard border border-borderMain text-white rounded-lg md:rounded-xl px-2.5 md:px-3.5 py-1.5 md:py-2 text-[10px] md:text-xs focus:outline-none focus:border-accentCyan transition-all cursor-pointer flex-1 sm:flex-none">
                         <option value="ALL">Semua Segment</option>
                         <option value="RETAIL">Segment: RETAIL</option>
                         <option value="PROJECT">Segment: PROJECT</option>
                         <option value="GENERAL">Segment: GENERAL</option>
                     </select>
+
                     <button onclick="exportData()" class="w-full sm:w-auto justify-center bg-gradient-to-r from-accentCyan to-blue-500 hover:from-blue-400 hover:to-accentCyan text-bgPrimary font-bold px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl shadow-glow-cyan transition-all flex items-center gap-2 text-[10px] md:text-xs transform hover:scale-105 active:scale-95 mt-2 sm:mt-0">
                         <i class="ph-bold ph-microsoft-excel-logo text-sm md:text-base"></i>
                         Export Excel
@@ -356,7 +389,10 @@
                 </div>
             </div>
 
+            <!-- KPI CARDS GRID -->
             <div id="kpiContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-6 md:mb-8">
+                
+                <!-- KPI 1: Space Gudang + Pallet Management -->
                 <div class="neon-card cyan-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full group relative overflow-hidden">
                     <div>
                         <div class="flex flex-wrap justify-between items-start mb-1 gap-2">
@@ -389,6 +425,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-borderMain/50">
                         <div class="flex justify-between items-start mb-2 md:mb-3">
                             <div>
@@ -416,6 +453,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Hover Insight Overlay -->
                     <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-accentCyan/30">
                         <i class="ph-fill ph-brain text-3xl text-accentCyan mb-1"></i>
                         <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Analisa Kapasitas Gudang</h4>
@@ -423,6 +462,7 @@
                     </div>
                 </div>
 
+                <!-- KPI 2: Total Quantity (ZAK) + IN/OUT Summary + TON + Active SKU -->
                 <div class="neon-card purple-top p-4 md:p-5 flex flex-col justify-between min-h-[150px] glass-panel w-full group relative overflow-hidden">
                     <div class="flex justify-between items-start mb-2">
                         <div>
@@ -435,6 +475,7 @@
                             <i class="ph-fill ph-package text-lg md:text-xl"></i>
                         </div>
                     </div>
+                    
                     <div class="flex flex-col gap-1.5 md:gap-2 mb-2">
                         <div class="flex flex-col sm:flex-row justify-between sm:items-center text-[9px] md:text-[10px] bg-bgPrimary/50 rounded-lg p-1.5 md:p-2 border border-borderMain gap-1.5 sm:gap-0">
                             <div class="flex flex-col">
@@ -450,6 +491,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="grid grid-cols-2 gap-2 md:gap-4 border-t border-borderMain/50 pt-2 md:pt-3">
                         <div>
                             <p class="text-[9px] md:text-[10px] font-bold text-textSecondary uppercase tracking-widest mb-1">Total Qty (TON)</p>
@@ -464,6 +506,8 @@
                             </h3>
                         </div>
                     </div>
+
+                    <!-- Hover Insight Overlay -->
                     <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-accentPurple/30">
                         <i class="ph-fill ph-chart-line-up text-3xl text-accentPurple mb-1"></i>
                         <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Analisa Pergerakan Stok</h4>
@@ -471,6 +515,7 @@
                     </div>
                 </div>
 
+                <!-- KPI 3: DATA LAST UPDATE -->
                 <div class="glass-panel p-4 md:p-5 rounded-2xl flex flex-col justify-center min-h-[150px] border-l-4 border-l-statusWarning relative overflow-hidden w-full group">
                     <div class="absolute right-[-10px] md:right-[-20px] top-[-10px] md:top-[-20px] opacity-10 pointer-events-none">
                         <i class="ph-fill ph-clock text-7xl md:text-9xl text-statusWarning"></i>
@@ -483,6 +528,8 @@
                         <p class="text-[10px] md:text-xs font-mono text-statusWarning font-bold mt-0.5" id="kpiClockDisplay">--:-- WIB</p>
                         <p class="text-[8px] md:text-[9px] text-textSecondary mt-1.5 md:mt-2">Source: G-Sheets (Cloud Sync)</p>
                     </div>
+
+                    <!-- Hover Insight Overlay -->
                     <div class="absolute inset-0 bg-bgPrimary/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 p-4 flex flex-col justify-center items-center text-center pointer-events-none border border-statusWarning/30">
                         <i class="ph-fill ph-cloud-check text-3xl text-statusWarning mb-1"></i>
                         <h4 class="text-white font-bold text-xs mb-1 uppercase tracking-wider">Status Sistem Cloud</h4>
@@ -491,10 +538,12 @@
                 </div>
             </div>
 
+            <!-- MAIN TAB CONTENT AREA -->
             <div id="mainViewContainer" class="w-full">
                 
                 <!-- TAB 1: STOCK MONITORING VIEW -->
                 <div id="view-stock" class="flex flex-col gap-4 md:gap-6 w-full">
+                    <!-- Top Row: Table and Basic Side Charts -->
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 w-full">
                         <div class="xl:col-span-2 glass-panel rounded-2xl flex flex-col overflow-hidden h-[500px] md:h-[620px] border border-borderMain w-full">
                             <div class="p-3 md:p-5 border-b border-borderMain bg-bgCard/90 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
@@ -562,6 +611,7 @@
                             </h3>
                             <div class="flex-1 relative w-full h-full flex items-center justify-center">
                                 <canvas id="comparisonDonutChart"></canvas>
+                                <!-- Custom Center Text for 3D Donut -->
                                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-6">
                                     <span id="donutCenterPct" class="text-2xl md:text-4xl font-black font-mono">0%</span>
                                     <span id="donutCenterLabel" class="text-[9px] md:text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-1">Perubahan Stok</span>
@@ -708,10 +758,11 @@
                     
                     <div class="flex-1 overflow-y-auto bg-bgPrimary/30 w-full p-2 md:p-4 flex flex-col gap-4">
                         
+                        <!-- NEW: Balance Stock Depletion Chart -->
                         <div class="bg-bgCard border border-borderMain rounded-lg md:rounded-xl shadow-lg w-full flex flex-col p-4">
                             <div class="flex justify-between items-center mb-4">
                                 <h4 class="text-[10px] md:text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                                    <i class="ph-fill ph-chart-line-down text-statusDanger text-base"></i> TREN BALANCE STOK
+                                    <i class="ph-fill ph-chart-line-down text-statusDanger text-base"></i> Tren Pengurangan Balance Stok
                                 </h4>
                                 <span class="text-[9px] md:text-[10px] bg-bgPrimary px-2 py-1 rounded text-textSecondary border border-borderMain">Opening Stok - Rilis MD (Kolom R)</span>
                             </div>
@@ -720,7 +771,7 @@
                             </div>
                         </div>
 
-                        <!-- Table: Makloon Summary with Dropdown -->
+                        <!-- Table: Makloon Summary -->
                         <div class="bg-bgCard border border-borderMain rounded-lg md:rounded-xl shadow-lg w-full flex flex-col">
                             <div class="bg-[#14213d] px-3 md:px-4 py-2 border-b border-borderMain flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 z-10">
                                 <span class="text-[10px] md:text-xs font-bold text-textSecondary uppercase tracking-widest"><i class="ph-bold ph-table mr-1 text-accentCyan"></i> Semua Data Makloon</span>
@@ -745,30 +796,12 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- Makloon Notes Section -->
                             <div id="makloonNotes" class="bg-[#14213d] px-3 md:px-4 py-2.5 border-t border-borderMain text-[9px] md:text-[10px] text-textSecondary font-mono flex flex-col gap-1 hidden">
                             </div>
                         </div>
 
-                        <!-- NEW: Makloon Executive Charts -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full mt-2">
-                            <div class="bg-bgCard border border-borderMain rounded-lg md:rounded-xl shadow-lg p-4 flex flex-col w-full">
-                                <h4 class="text-[10px] md:text-xs font-bold text-white uppercase tracking-widest mb-3 flex items-center gap-2">
-                                    <i class="ph-fill ph-chart-pie-slice text-accentCyan text-base"></i> Proporsi Sisa Stok (Balance) Produk
-                                </h4>
-                                <div class="w-full h-[250px] relative flex items-center justify-center">
-                                    <canvas id="makloonBalanceDonutChart"></canvas>
-                                </div>
-                            </div>
-                            <div class="bg-bgCard border border-borderMain rounded-lg md:rounded-xl shadow-lg p-4 flex flex-col w-full">
-                                <h4 class="text-[10px] md:text-xs font-bold text-white uppercase tracking-widest mb-3 flex items-center gap-2">
-                                    <i class="ph-fill ph-chart-bar text-accentPurple text-base"></i> Analisis Pergerakan Stok (Top Produk)
-                                </h4>
-                                <div class="w-full h-[250px] relative flex items-center justify-center">
-                                    <canvas id="makloonMovementBarChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-
+                        <!-- Table: Rilis MD Semua Detail -->
                         <div class="bg-bgCard border border-borderMain rounded-lg md:rounded-xl overflow-hidden shadow-lg w-full flex flex-col mt-2">
                             <div class="bg-[#14213d] px-3 md:px-4 py-2 border-b border-borderMain flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 z-10">
                                 <span class="text-[10px] md:text-xs font-bold text-textSecondary uppercase tracking-widest"><i class="ph-bold ph-list-dashes mr-1 text-accentPurple"></i> Detail Transaksi (Rilis MD Kolom A-AJ)</span>
@@ -778,9 +811,11 @@
                                 <table class="w-full text-left border-collapse whitespace-nowrap text-xs md:text-sm">
                                     <thead class="bg-[#1a2b4c] border-b border-borderMain shadow-sm sticky top-0 z-20">
                                         <tr id="stokSigDetailHeader" class="text-[9px] md:text-[11px] font-bold text-white uppercase tracking-wider">
+                                            <!-- Headers populated dynamically -->
                                         </tr>
                                     </thead>
                                     <tbody id="stokSigDetailBody" class="divide-y divide-borderMain/40 font-mono text-[10px] md:text-xs">
+                                        <!-- Rows populated dynamically -->
                                     </tbody>
                                 </table>
                             </div>
@@ -864,6 +899,7 @@
                     </div>
                 </div>
 
+                <!-- TABS: OFFTAKE & PALLET -->
                 <div id="view-offtake" class="hidden glass-panel rounded-2xl p-8 md:p-16 text-center border border-borderMain flex flex-col items-center justify-center h-[500px] md:h-[650px] w-full">
                     <div class="p-4 md:p-6 bg-gradient-to-br from-accentPurple/20 to-accentCyan/20 border border-accentPurple/30 rounded-full shadow-glow-purple mb-4 md:mb-6">
                         <i class="ph-fill ph-cone text-4xl md:text-6xl text-accentPurple animate-pulse"></i>
@@ -933,6 +969,7 @@
         </div>
     </div>
 
+    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="toast-box max-w-[calc(100vw-32px)]">
         <div class="flex items-center gap-2 md:gap-3">
             <i id="toastIcon" class="ph-fill ph-check-circle text-statusSuccess text-xl md:text-2xl flex-shrink-0"></i>
@@ -981,8 +1018,6 @@
         let trendLineChartInstance = null;
         let comparisonDonutChartInstance = null;
         let stockDepletionChartInstance = null;
-        let makloonBalanceDonutChartInstance = null;
-        let makloonMovementBarChartInstance = null;
         let chartAnimInterval = null;
         let isAuthenticated = false;
         let pendingTargetTab = null;
@@ -1015,6 +1050,7 @@
             return isNaN(parsed) ? 0 : parsed;
         }
 
+        // Sidebar Toggle for Mobile
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('mobileSidebarOverlay');
@@ -1095,6 +1131,7 @@
             parseCSV(URL_MAKLOON_EXPORT, () => { makloonParsed = true; checkComplete(); }, (rows) => { processStokSigMakloonRows(rows); makloonParsed = true; checkComplete(); });
             parseCSV(URL_RILIS_EXPORT, () => { rilisParsed = true; checkComplete(); }, (rows) => { processStokSigDetailRows(rows); rilisParsed = true; checkComplete(); });
 
+            
             function checkComplete() {
                 if(masterParsed && updateParsed && makloonParsed && rilisParsed) {
                     generateExecReportData(); 
@@ -1121,7 +1158,7 @@
             if (!matrix || matrix.length === 0) return;
             
             let subHeaderIdx = -1;
-            for(let i = 0; i < Math.min(matrix.length, 10); i++) {
+            for(let i=0; i<Math.min(matrix.length, 10); i++) {
                 const rowStr = matrix[i].join('').toLowerCase();
                 if(rowStr.includes('produk') && rowStr.includes('weight')) {
                     subHeaderIdx = i;
@@ -1130,7 +1167,7 @@
             }
 
             if(subHeaderIdx === -1) {
-                for(let i = 0; i < Math.min(matrix.length, 5); i++) {
+                for(let i=0; i<Math.min(matrix.length, 5); i++) {
                     if(matrix[i] && matrix[i].filter(c => c && c.toString().trim() !== '').length > 2) {
                         subHeaderIdx = i;
                         break;
@@ -1139,6 +1176,7 @@
                 if (subHeaderIdx === -1) subHeaderIdx = 0;
             }
             
+            // Extract notes from rows above header
             let notes = [];
             for (let i = 0; i < subHeaderIdx; i++) {
                 let firstCell = matrix[i].find(c => c && c.toString().trim() !== '');
@@ -1156,17 +1194,18 @@
             let cleanedHeaders = [];
             let groupName = "";
             
+            // Indices to remove: Kolom 8 to 16 (Index 7 to 15)
             const indicesToRemove = [7, 8, 9, 10, 11, 12, 13, 14, 15];
             
             for (let c = 0; c < rawHeaders.length; c++) {
-                if (indicesToRemove.includes(c)) continue;
+                if (indicesToRemove.includes(c)) continue; // Skip removed columns
 
                 let sub = rawHeaders[c] ? rawHeaders[c].toString().trim() : "";
                 let grp = subHeaderIdx > 0 && matrix[subHeaderIdx - 1][c] ? matrix[subHeaderIdx - 1][c].toString().trim() : "";
                 
-                if (grp) groupName = grp.split('\n')[0]; 
+                if (grp) groupName = grp.split('\n')[0]; // Set active group
                 
-                if (!sub && !groupName && c > 13) continue;
+                if (!sub && !groupName && c > 13) continue; // Cut off empty trailing columns
                 
                 let finalName = sub;
                 if (sub === "Qty (Zak)" || sub === "Amount" || sub === "Ton") {
@@ -1184,38 +1223,46 @@
             for (let i = subHeaderIdx + 1; i < matrix.length; i++) {
                 const r = matrix[i];
                 if (!r || r.length === 0) continue;
-                if (r.join('').trim() === '') continue; 
+                if (r.join('').trim() === '') continue; // Skip empty row
                 
                 const rowData = [];
                 for (let c = 0; c < r.length; c++) {
-                    if (indicesToRemove.includes(c)) continue;
+                    if (indicesToRemove.includes(c)) continue; // Skip removed columns
+                    
+                    // Stop if we reach beyond original columns and there's no data to prevent filling blanks
                     if(c >= rawHeaders.length && (!r[c] || r[c].toString().trim() === '')) continue;
+
                     rowData.push(r[c] !== undefined && r[c] !== null ? r[c].toString().trim() : '');
                 }
 
+                // If row data is shorter than headers, pad it
                 while(rowData.length < cleanedHeaders.length) {
                     rowData.push('');
                 }
                 
                 if (rowData.some(cell => cell !== '')) {
                     validRows.push(rowData);
+                    
+                    // Capture Initial Opening Stock (Ton) from Total Row if present
                     if (rowData[1] && rowData[1].toString().toUpperCase() === 'TOTAL') {
-                        const openingZakIdx = cleanedHeaders.findIndex(h => h.toLowerCase().includes('opening') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
-                        if (openingZakIdx !== -1) {
-                            initialOpeningStock = cleanNum(rowData[openingZakIdx]);
+                        // Find the index of "Opening Ton"
+                        const openingTonIdx = cleanedHeaders.findIndex(h => h.toLowerCase().includes('opening ton'));
+                        if (openingTonIdx !== -1) {
+                            initialOpeningStock = cleanNum(rowData[openingTonIdx]);
                         }
                     }
                 }
             }
             
+            // Fallback for opening stock if Total row not found
             if(initialOpeningStock === 0 && validRows.length > 0) {
-                 const openingZakIdx = cleanedHeaders.findIndex(h => h.toLowerCase().includes('opening') && (h.toLowerCase().includes('zak') || h.toLowerCase().includes('qty')));
-                 if (openingZakIdx !== -1) {
+                 const openingTonIdx = cleanedHeaders.findIndex(h => h.toLowerCase().includes('opening ton'));
+                 if (openingTonIdx !== -1) {
                      validRows.forEach(r => {
                          if(r[1] && r[1].toString().toUpperCase() !== 'TOTAL') {
-                             initialOpeningStock += cleanNum(r[openingZakIdx]);
+                             initialOpeningStock += cleanNum(r[openingTonIdx]);
                          }
-                     });
+                     })
                  }
             }
 
@@ -1227,22 +1274,24 @@
             if (!matrix || matrix.length === 0) return;
             
             let headerIdx = 0;
-            for(let i = 0; i < Math.min(matrix.length, 10); i++) {
+            for(let i=0; i<Math.min(matrix.length, 10); i++) {
                 if(matrix[i] && matrix[i].filter(c => c && c.toString().trim() !== '').length > 5) {
                     headerIdx = i;
                     break;
                 }
             }
 
+            // A-AJ is 36 columns (0 to 35)
             const MAX_COL = 36;
             let rawHeaders = matrix[headerIdx].slice(0, MAX_COL).map(h => h ? h.toString().replace(/[\r\n]+/g, ' ').trim() : '');
             
+            // Pad headers if they are shorter than 36
             while(rawHeaders.length < MAX_COL) rawHeaders.push(`Kolom ${rawHeaders.length + 1}`);
 
             const cleanedHeaders = rawHeaders;
+            
             const rawRows = matrix.slice(headerIdx + 1);
             const validRows = [];
-            
             rawRows.forEach(r => {
                 if (!r || r.length === 0) return;
                 const rowStr = r.join('').trim(); if (!rowStr) return;
@@ -1455,6 +1504,7 @@
             const currentYear = todayObj.getFullYear();
             
             let todayZakDelta = 0;
+            
             let monthInZak = 0;
             let monthOutZak = 0;
             let validDaysInMonth = new Set();
@@ -1542,6 +1592,7 @@
                 document.getElementById('kpiTonProject').innerText = `${fmtDec(totalTonProject)} Ton`;
             }
 
+            // Update Hover Insight Texts for KPIs
             let insight1 = '';
             if (spacePct > 90) insight1 = `Kritis! Gudang melebihi 90% kapasitas maksimal (${fmtNum(WAREHOUSE_CAPACITY_TON)} Ton). Segera aktifkan Staging Area tambahan dan percepat proses Delivery (Sisa: ${fmtDec(remainingTon)} Ton).`;
             else if (spacePct > 75) insight1 = `Waspada! Utilisasi gudang mencapai ${fmtDec(spacePct)}%. Manajemen ruang pallet perlu dioptimalkan untuk menampung antrean produksi.`;
@@ -1614,9 +1665,7 @@
         function renderStokSigMakloonTable() {
             const thead = document.getElementById('stokSigMakloonHeader');
             const tbody = document.getElementById('stokSigMakloonBody');
-            
-            const displayModeSelector = document.getElementById('makloonDisplayMode');
-            const displayMode = displayModeSelector ? displayModeSelector.value : 'ZAK';
+            const displayMode = document.getElementById('makloonDisplayMode') ? document.getElementById('makloonDisplayMode').value : 'ZAK';
             
             if (!stokSigMakloonRaw.headers || stokSigMakloonRaw.headers.length === 0) {
                 thead.innerHTML = `<th class="px-3 md:px-6 py-3 md:py-4">Data Sheet Makloon</th>`;
@@ -1648,7 +1697,8 @@
                     else if (displayMode === 'AMOUNT') displayHeader = displayHeader.replace(/qty|zak/gi, 'Amount').replace(/\(zak\)/gi, '(Rp)');
                 }
 
-                return `<th class="px-3 md:px-5 py-3 md:py-4 ${isNum ? 'text-right' : 'text-left'} border-r border-borderMain/50 font-extrabold text-white tracking-wider sticky top-0 bg-[#1a2b4c] z-20 whitespace-normal min-w-[120px] shadow-sm">${displayHeader}</th>`;
+                // FIX APPLIED HERE: Changed whitespace-normal to whitespace-nowrap and removed min-w-[120px] for professional auto-fit
+                return `<th class="px-3 md:px-5 py-3 md:py-4 ${isNum ? 'text-right' : 'text-left'} border-r border-borderMain/50 font-extrabold text-white tracking-wider sticky top-0 bg-[#1a2b4c] z-20 whitespace-nowrap shadow-sm">${displayHeader}</th>`;
             }).join('');
 
             if (stokSigMakloonRaw.rows.length === 0) {
@@ -1730,163 +1780,6 @@
                 notesContainer.innerHTML = stokSigMakloonRaw.notes.map(n => `<span><i class="ph-bold ph-info text-accentCyan mr-1.5"></i>${n}</span>`).join('');
                 notesContainer.classList.remove('hidden');
             }
-
-            // Render Executive Charts below the table
-            renderMakloonExecutiveCharts();
-        }
-
-        function renderMakloonExecutiveCharts() {
-            if (!stokSigMakloonRaw.rows || stokSigMakloonRaw.rows.length === 0) return;
-            
-            const displayModeSelector = document.getElementById('makloonDisplayMode');
-            const displayMode = displayModeSelector ? displayModeSelector.value : 'ZAK';
-            
-            const headers = stokSigMakloonRaw.headers;
-            let skuIdx = -1, weightIdx = -1, priceIdx = -1, openIdx = -1, relIdx = -1, balIdx = -1;
-            
-            headers.forEach((h, i) => {
-                const lh = (h||'').toLowerCase();
-                if (lh === 'produk' || lh === 'sku' || lh === 'item' || lh.includes('nama barang') || lh.includes('material')) skuIdx = i;
-                if (lh.includes('weight') || lh.includes('berat')) weightIdx = i;
-                if (lh.includes('price') || lh.includes('harga')) priceIdx = i;
-                if (lh.includes('opening')) openIdx = i;
-                if (lh.includes('release') || lh.includes('rilis')) relIdx = i;
-                if (lh.includes('balance') || lh.includes('sisa')) balIdx = i;
-            });
-
-            if (skuIdx === -1) skuIdx = 0;
-
-            let chartData = [];
-            
-            stokSigMakloonRaw.rows.forEach(row => {
-                if (row[1] && row[1].toString().toUpperCase() === 'TOTAL') return;
-                
-                let sku = row[skuIdx] ? row[skuIdx].toString().trim() : 'Unknown SKU';
-                if(!sku || sku === '-') return;
-
-                let weight = weightIdx !== -1 ? cleanNum(row[weightIdx]) : 40;
-                let price = priceIdx !== -1 ? cleanNum(row[priceIdx]) : 0;
-                
-                let rawOpen = openIdx !== -1 ? cleanNum(row[openIdx]) : 0;
-                let rawRel = relIdx !== -1 ? cleanNum(row[relIdx]) : 0;
-                let rawBal = balIdx !== -1 ? cleanNum(row[balIdx]) : 0;
-                
-                if(rawOpen === 0 && rawRel === 0 && rawBal === 0) return;
-
-                const convert = (val) => {
-                    if (displayMode === 'TON') return (val * weight) / 1000;
-                    if (displayMode === 'AMOUNT') return (val * price);
-                    return val;
-                };
-
-                chartData.push({
-                    sku: sku.length > 22 ? sku.substring(0, 22) + '...' : sku,
-                    opening: convert(rawOpen),
-                    release: convert(rawRel),
-                    balance: convert(rawBal)
-                });
-            });
-
-            // Urutkan berdasarkan Sisa (Balance) tertinggi
-            chartData.sort((a,b) => b.balance - a.balance);
-
-            // ================= DONUT CHART LOGIC =================
-            let donutLabels = [];
-            let donutData = [];
-            let otherBalance = 0;
-            
-            chartData.forEach((item, index) => {
-                if(index < 5) { // Ambil Top 5
-                    donutLabels.push(item.sku);
-                    donutData.push(item.balance);
-                } else { // Sisanya digabung
-                    otherBalance += item.balance;
-                }
-            });
-            if (otherBalance > 0) {
-                donutLabels.push('Produk Lainnya');
-                donutData.push(otherBalance);
-            }
-
-            const chartColors = ['#00E5FF', '#6D5DF6', '#00D084', '#FFB800', '#FF4D6D', '#B8C0D9'];
-            let labelSuffix = displayMode === 'TON' ? ' Ton' : (displayMode === 'AMOUNT' ? '' : ' ZAK');
-            let prefix = displayMode === 'AMOUNT' ? 'Rp ' : '';
-
-            const ctxDonut = document.getElementById('makloonBalanceDonutChart');
-            const isMobile = window.innerWidth < 768;
-
-            if(ctxDonut) {
-                if(makloonBalanceDonutChartInstance) makloonBalanceDonutChartInstance.destroy();
-                makloonBalanceDonutChartInstance = new Chart(ctxDonut.getContext('2d'), {
-                    type: 'doughnut',
-                    data: { labels: donutLabels, datasets: [{ data: donutData, backgroundColor: chartColors.slice(0, donutLabels.length), borderWidth: 0 }] },
-                    options: {
-                        responsive: true, maintainAspectRatio: false, cutout: '70%',
-                        plugins: {
-                            legend: { position: isMobile ? 'bottom' : 'right', labels: { color: '#B8C0D9', font: { size: 9 }, usePointStyle: true, padding: 12 } },
-                            tooltip: {
-                                backgroundColor: 'rgba(17, 28, 51, 0.95)', titleColor: '#FFFFFF', bodyColor: '#FFFFFF', borderColor: 'rgba(0, 229, 255, 0.3)', borderWidth: 1,
-                                callbacks: {
-                                    label: function(context) {
-                                        let val = context.raw;
-                                        let formatted = displayMode === 'AMOUNT' || displayMode === 'ZAK' ? new Intl.NumberFormat('id-ID').format(val) : new Intl.NumberFormat('id-ID', {minimumFractionDigits:1, maximumFractionDigits:1}).format(val);
-                                        return ' ' + context.label + ': ' + prefix + formatted + labelSuffix;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // ================= BAR CHART LOGIC =================
-            const top5 = chartData.slice(0, 5); // Hanya tampilkan Top 5 SKU
-            const barLabels = top5.map(d => d.sku);
-            const dataOpening = top5.map(d => d.opening);
-            const dataRelease = top5.map(d => d.release);
-            const dataBalance = top5.map(d => d.balance);
-
-            const ctxBar = document.getElementById('makloonMovementBarChart');
-            if(ctxBar) {
-                if(makloonMovementBarChartInstance) makloonMovementBarChartInstance.destroy();
-                
-                const ctx2d = ctxBar.getContext('2d');
-                let gradOp = ctx2d.createLinearGradient(0, 0, 0, 200); gradOp.addColorStop(0, '#6D5DF6'); gradOp.addColorStop(1, 'rgba(109, 93, 246, 0.2)');
-                let gradRel = ctx2d.createLinearGradient(0, 0, 0, 200); gradRel.addColorStop(0, '#FF4D6D'); gradRel.addColorStop(1, 'rgba(255, 77, 109, 0.2)');
-                let gradBal = ctx2d.createLinearGradient(0, 0, 0, 200); gradBal.addColorStop(0, '#00E5FF'); gradBal.addColorStop(1, 'rgba(0, 229, 255, 0.2)');
-
-                makloonMovementBarChartInstance = new Chart(ctx2d, {
-                    type: 'bar',
-                    data: {
-                        labels: barLabels,
-                        datasets: [
-                            { label: 'Opening', data: dataOpening, backgroundColor: gradOp, borderColor: '#6D5DF6', borderWidth: 1, borderRadius: 4 },
-                            { label: 'Release (Out)', data: dataRelease, backgroundColor: gradRel, borderColor: '#FF4D6D', borderWidth: 1, borderRadius: 4 },
-                            { label: 'Balance', data: dataBalance, backgroundColor: gradBal, borderColor: '#00E5FF', borderWidth: 1, borderRadius: 4 }
-                        ]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'top', labels: { color: '#B8C0D9', font: { size: 9 }, usePointStyle: true, boxWidth: 8 } },
-                            tooltip: {
-                                backgroundColor: 'rgba(17, 28, 51, 0.95)', titleColor: '#FFFFFF', borderColor: 'rgba(255, 255, 255, 0.1)', borderWidth: 1,
-                                callbacks: {
-                                    label: function(context) {
-                                        let val = context.raw;
-                                        let formatted = displayMode === 'AMOUNT' || displayMode === 'ZAK' ? new Intl.NumberFormat('id-ID').format(val) : new Intl.NumberFormat('id-ID', {minimumFractionDigits:1, maximumFractionDigits:1}).format(val);
-                                        return context.dataset.label + ': ' + prefix + formatted + labelSuffix;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#B8C0D9', font: {size: 8}, maxRotation: 45, minRotation: 45 } },
-                            y: { grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5,5] }, ticks: { color: '#B8C0D9', font: {size: 9} } }
-                        }
-                    }
-                });
-            }
         }
 
         function renderStokSigDetailTable(query = '') {
@@ -1901,6 +1794,7 @@
 
             const headers = stokSigDetailRaw.headers;
             thead.innerHTML = headers.map((h, idx) => {
+                // Konversi index kolom (0-35) ke huruf Excel (A-AJ)
                 const colLetter = String.fromCharCode(65 + (idx % 26));
                 const colName = idx < 26 ? colLetter : `A${String.fromCharCode(65 + (idx - 26))}`;
                 
@@ -1945,41 +1839,32 @@
         function renderStokDepletionChart() {
             if (!stokSigDetailRaw.rows || stokSigDetailRaw.rows.length === 0) return;
 
+            // Date is in column R (Index 17). Qty Ton (example) in column I (Index 8) or find by header
+            const rilisHeaders = stokSigDetailRaw.headers || [];
             const dateColIdx = 17; // Kolom R
-            const qtyColIdx = 9;   // Kolom J (Qty. Bag)
-            const skuColIdx = 18;  // Kolom S (SKU)
+            let tonColIdx = rilisHeaders.findIndex(h => h.toLowerCase().includes('ton'));
+            if(tonColIdx === -1) tonColIdx = 8; // Fallback to column I
 
+            // Aggregate Rilis MD Ton by Date
             const dateMap = {};
             stokSigDetailRaw.rows.forEach(r => {
                 const rawDate = r[dateColIdx];
-                const qtyVal = cleanNum(r[qtyColIdx]);
-                const skuVal = r[skuColIdx] && r[skuColIdx].toString().trim() !== '' ? r[skuColIdx].toString().trim() : 'Unknown SKU';
-
-                if (rawDate && qtyVal > 0) {
+                const tonVal = cleanNum(r[tonColIdx]);
+                if (rawDate && tonVal > 0) {
                     const dateStr = rawDate.toString().trim();
+                    // Simple parsing, assuming format might vary, just use string as key for simplicity
+                    // Or attempt to parse to standard format if needed
                     let parsedDate = new Date(dateStr);
-                    
-                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/;
-                    const matchIndo = dateStr.match(regexIndo);
-                    if (matchIndo) {
-                        const p1 = parseInt(matchIndo[1], 10), p2 = parseInt(matchIndo[2], 10), year = parseInt(matchIndo[3], 10);
-                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) parsedDate = new Date(year, p2 - 1, p1);
-                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2);
-                    }
-                    
                     let key = dateStr;
                     if (!isNaN(parsedDate.getTime())) {
                         key = parsedDate.toISOString().split('T')[0];
                     }
-                    
-                    if(!dateMap[key]) dateMap[key] = { dateObj: parsedDate, dateRaw: dateStr, qtyOut: 0, details: {} };
-                    dateMap[key].qtyOut += qtyVal;
-                    
-                    if (!dateMap[key].details[skuVal]) dateMap[key].details[skuVal] = 0;
-                    dateMap[key].details[skuVal] += qtyVal;
+                    if(!dateMap[key]) dateMap[key] = { dateObj: parsedDate, tonOut: 0 };
+                    dateMap[key].tonOut += tonVal;
                 }
             });
 
+            // Sort dates
             const sortedDates = Object.keys(dateMap).sort((a, b) => {
                 const dA = dateMap[a].dateObj;
                 const dB = dateMap[b].dateObj;
@@ -1991,33 +1876,21 @@
             const dataStock = [];
             let currentStock = initialOpeningStock;
 
-            const tooltipDetails = [];
-
+            // Generate depletion data
             if(sortedDates.length > 0) {
+                 // Add point 0 for initial stock
                  labels.push('Awal');
                  dataStock.push(currentStock);
-                 tooltipDetails.push(null); 
                  
                  sortedDates.forEach(dateKey => {
-                     currentStock -= dateMap[dateKey].qtyOut;
-                     if(currentStock < 0) currentStock = 0; 
-                     
-                     let labelStr = dateMap[dateKey].dateRaw;
-                     if (!isNaN(dateMap[dateKey].dateObj)) {
-                         labelStr = dateMap[dateKey].dateObj.toLocaleDateString('id-ID', {day: '2-digit', month: 'short'});
-                     }
-                     
-                     labels.push(labelStr);
+                     currentStock -= dateMap[dateKey].tonOut;
+                     if(currentStock < 0) currentStock = 0; // Prevent negative stock for display
+                     labels.push(dateKey);
                      dataStock.push(currentStock);
-                     tooltipDetails.push({
-                         totalOut: dateMap[dateKey].qtyOut,
-                         skus: dateMap[dateKey].details
-                     });
                  });
             } else {
                  labels.push('Data Kosong');
                  dataStock.push(initialOpeningStock);
-                 tooltipDetails.push(null);
             }
 
             const ctx = document.getElementById('stockDepletionChart');
@@ -2025,9 +1898,8 @@
                 if(stockDepletionChartInstance) stockDepletionChartInstance.destroy();
                 
                 const ctx2d = ctx.getContext('2d');
-                let gradient = ctx2d.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(255, 77, 109, 0.7)');
-                gradient.addColorStop(0.5, 'rgba(255, 77, 109, 0.2)');
+                let gradient = ctx2d.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(255, 77, 109, 0.4)');
                 gradient.addColorStop(1, 'rgba(255, 77, 109, 0.0)');
 
                 stockDepletionChartInstance = new Chart(ctx2d, {
@@ -2035,559 +1907,48 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Balance Stock (ZAK)',
+                            label: 'Balance Stock (Ton)',
                             data: dataStock,
                             borderColor: '#FF4D6D',
                             backgroundColor: gradient,
-                            borderWidth: 4,
-                            tension: 0.4, // Kurva melengkung elegan
+                            borderWidth: 3,
+                            tension: 0.3,
                             fill: true,
                             pointBackgroundColor: '#070B14',
                             pointBorderColor: '#FF4D6D',
-                            pointBorderWidth: 3,
-                            pointRadius: 5,
-                            pointHoverRadius: 8,
-                            pointHoverBackgroundColor: '#FFFFFF'
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
                         }]
                     },
-                    plugins: [{
-                        id: 'shadowPluginLine',
-                        beforeDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'rgba(255, 77, 109, 0.5)';
-                            chart.ctx.shadowBlur = 15;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 8;
-                        },
-                        afterDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'transparent';
-                            chart.ctx.shadowBlur = 0;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 0;
-                        }
-                    }],
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        interaction: {
-                            mode: 'index',
-                            intersect: false,
-                        },
                         plugins: {
                             legend: { display: false },
                             tooltip: {
                                 backgroundColor: 'rgba(17, 28, 51, 0.95)',
                                 titleColor: '#FFFFFF',
-                                titleFont: { size: 14, family: 'JetBrains Mono', weight: 'bold' },
                                 bodyColor: '#FF4D6D',
-                                bodyFont: { size: 12, family: 'Plus Jakarta Sans' },
-                                borderColor: 'rgba(255, 77, 109, 0.4)',
+                                borderColor: 'rgba(255, 77, 109, 0.3)',
                                 borderWidth: 1,
-                                padding: 14,
-                                boxPadding: 6,
                                 callbacks: {
                                     label: function(context) {
-                                        return '📊 Sisa Stok: ' + new Intl.NumberFormat('id-ID').format(context.parsed.y) + ' ZAK';
-                                    },
-                                    afterBody: function(context) {
-                                        const idx = context[0].dataIndex;
-                                        const details = tooltipDetails[idx];
-                                        if (!details) return [];
-                                        
-                                        let lines = ['──────────────────────────'];
-                                        lines.push(`📉 Rilis Hari Ini : -${new Intl.NumberFormat('id-ID').format(details.totalOut)} ZAK`);
-                                        lines.push('');
-                                        lines.push('📦 DETAIL SKU (Kolom S):');
-                                        
-                                        const skuKeys = Object.keys(details.skus).sort((a,b) => details.skus[b] - details.skus[a]);
-                                        skuKeys.forEach(sku => {
-                                            lines.push(` ▪ ${sku}: ${new Intl.NumberFormat('id-ID').format(details.skus[sku])} ZAK`);
-                                        });
-                                        
-                                        return lines;
+                                        return 'Sisa Stok: ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(context.parsed.y) + ' Ton';
                                     }
                                 }
                             }
                         },
                         scales: {
                             x: { 
-                                grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false },
-                                ticks: { color: '#B8C0D9', font: {size: 10, family: 'JetBrains Mono'} }
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#B8C0D9', font: {size: 9} }
                             },
                             y: { 
-                                beginAtZero: false,
-                                grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5, 5], drawBorder: false },
-                                ticks: { color: '#FF4D6D', font: {size: 11, family: 'JetBrains Mono', weight: 'bold'} },
-                                title: { display: true, text: 'Kuantitas Balance (ZAK)', color: '#B8C0D9', font: {size: 11, weight: 'bold'} }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function renderMakloonExecutiveCharts() {
-            if (!stokSigMakloonRaw.rows || stokSigMakloonRaw.rows.length === 0) return;
-            
-            const displayModeSelector = document.getElementById('makloonDisplayMode');
-            const displayMode = displayModeSelector ? displayModeSelector.value : 'ZAK';
-            
-            const headers = stokSigMakloonRaw.headers;
-            let skuIdx = -1, weightIdx = -1, priceIdx = -1, openIdx = -1, relIdx = -1, balIdx = -1;
-            
-            headers.forEach((h, i) => {
-                const lh = (h||'').toLowerCase();
-                if (lh === 'produk' || lh === 'sku' || lh === 'item' || lh.includes('nama barang') || lh.includes('material')) skuIdx = i;
-                if (lh.includes('weight') || lh.includes('berat')) weightIdx = i;
-                if (lh.includes('price') || lh.includes('harga')) priceIdx = i;
-                if (lh.includes('opening')) openIdx = i;
-                if (lh.includes('release') || lh.includes('rilis')) relIdx = i;
-                if (lh.includes('balance') || lh.includes('sisa')) balIdx = i;
-            });
-
-            if (skuIdx === -1) skuIdx = 0;
-
-            let chartData = [];
-            
-            stokSigMakloonRaw.rows.forEach(row => {
-                if (row[1] && row[1].toString().toUpperCase() === 'TOTAL') return;
-                
-                let sku = row[skuIdx] ? row[skuIdx].toString().trim() : 'Unknown SKU';
-                if(!sku || sku === '-') return;
-
-                let weight = weightIdx !== -1 ? cleanNum(row[weightIdx]) : 40;
-                let price = priceIdx !== -1 ? cleanNum(row[priceIdx]) : 0;
-                
-                let rawOpen = openIdx !== -1 ? cleanNum(row[openIdx]) : 0;
-                let rawRel = relIdx !== -1 ? cleanNum(row[relIdx]) : 0;
-                let rawBal = balIdx !== -1 ? cleanNum(row[balIdx]) : 0;
-                
-                if(rawOpen === 0 && rawRel === 0 && rawBal === 0) return;
-
-                const convert = (val) => {
-                    if (displayMode === 'TON') return (val * weight) / 1000;
-                    if (displayMode === 'AMOUNT') return (val * price);
-                    return val;
-                };
-
-                chartData.push({
-                    sku: sku.length > 22 ? sku.substring(0, 22) + '...' : sku,
-                    opening: convert(rawOpen),
-                    release: convert(rawRel),
-                    balance: convert(rawBal)
-                });
-            });
-
-            chartData.sort((a,b) => b.balance - a.balance);
-
-            let donutLabels = [];
-            let donutData = [];
-            let otherBalance = 0;
-            
-            chartData.forEach((item, index) => {
-                if(index < 5) {
-                    donutLabels.push(item.sku);
-                    donutData.push(item.balance);
-                } else {
-                    otherBalance += item.balance;
-                }
-            });
-            if (otherBalance > 0) {
-                donutLabels.push('Produk Lainnya');
-                donutData.push(otherBalance);
-            }
-
-            let labelSuffix = displayMode === 'TON' ? ' Ton' : (displayMode === 'AMOUNT' ? '' : ' ZAK');
-            let prefix = displayMode === 'AMOUNT' ? 'Rp ' : '';
-
-            const ctxDonut = document.getElementById('makloonBalanceDonutChart');
-            const isMobile = window.innerWidth < 768;
-
-            if(ctxDonut) {
-                if(makloonBalanceDonutChartInstance) makloonBalanceDonutChartInstance.destroy();
-                
-                const ctx2dDonut = ctxDonut.getContext('2d');
-                
-                const createDonutGrad = (c1, c2) => {
-                    let g = ctx2dDonut.createLinearGradient(0, 0, 0, 300);
-                    g.addColorStop(0, c1);
-                    g.addColorStop(1, c2);
-                    return g;
-                };
-                const donutGradients = [
-                    createDonutGrad('#00E5FF', '#006B78'), 
-                    createDonutGrad('#6D5DF6', '#2A2173'), 
-                    createDonutGrad('#00D084', '#005E3B'), 
-                    createDonutGrad('#FFB800', '#7A5800'), 
-                    createDonutGrad('#FF4D6D', '#80001B'), 
-                    createDonutGrad('#B8C0D9', '#444A59')  
-                ];
-
-                makloonBalanceDonutChartInstance = new Chart(ctx2dDonut, {
-                    type: 'doughnut',
-                    data: { 
-                        labels: donutLabels, 
-                        datasets: [{ 
-                            data: donutData, 
-                            backgroundColor: donutGradients.slice(0, donutLabels.length), 
-                            borderColor: '#070B14', 
-                            borderWidth: 4,
-                            hoverOffset: 15,
-                            borderRadius: 4
-                        }] 
-                    },
-                    plugins: [{
-                        id: 'shadowPluginDonut',
-                        beforeDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                            chart.ctx.shadowBlur = 20;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 10;
-                        },
-                        afterDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'transparent';
-                            chart.ctx.shadowBlur = 0;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 0;
-                        }
-                    }],
-                    options: {
-                        responsive: true, maintainAspectRatio: false, cutout: '72%',
-                        layout: { padding: 15 },
-                        plugins: {
-                            legend: { position: isMobile ? 'bottom' : 'right', labels: { color: '#B8C0D9', font: { size: 10, family: 'Plus Jakarta Sans', weight: 'bold' }, usePointStyle: true, padding: 14 } },
-                            tooltip: {
-                                backgroundColor: 'rgba(17, 28, 51, 0.95)', titleColor: '#FFFFFF', titleFont: { size: 13 }, bodyColor: '#FFFFFF', bodyFont: { size: 12, family: 'JetBrains Mono' }, borderColor: 'rgba(0, 229, 255, 0.4)', borderWidth: 1, padding: 12, boxPadding: 6, usePointStyle: true,
-                                callbacks: {
-                                    label: function(context) {
-                                        let val = context.raw;
-                                        let formatted = displayMode === 'AMOUNT' || displayMode === 'ZAK' ? new Intl.NumberFormat('id-ID').format(val) : new Intl.NumberFormat('id-ID', {minimumFractionDigits:1, maximumFractionDigits:1}).format(val);
-                                        return ' ' + context.label + ': ' + prefix + formatted + labelSuffix;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            const top5 = chartData.slice(0, 5); 
-            const barLabels = top5.map(d => d.sku);
-            const dataOpening = top5.map(d => d.opening);
-            const dataRelease = top5.map(d => d.release);
-            const dataBalance = top5.map(d => d.balance);
-
-            const ctxBar = document.getElementById('makloonMovementBarChart');
-            if(ctxBar) {
-                if(makloonMovementBarChartInstance) makloonMovementBarChartInstance.destroy();
-                
-                const ctx2dBar = ctxBar.getContext('2d');
-                
-                let gradOp = ctx2dBar.createLinearGradient(0, 0, 0, 300); 
-                gradOp.addColorStop(0, '#887DF8'); gradOp.addColorStop(1, '#251D63');
-                
-                let gradRel = ctx2dBar.createLinearGradient(0, 0, 0, 300); 
-                gradRel.addColorStop(0, '#FF6680'); gradRel.addColorStop(1, '#660016');
-                
-                let gradBal = ctx2dBar.createLinearGradient(0, 0, 0, 300); 
-                gradBal.addColorStop(0, '#33EAFF'); gradBal.addColorStop(1, '#004C56');
-
-                makloonMovementBarChartInstance = new Chart(ctx2dBar, {
-                    type: 'bar',
-                    data: {
-                        labels: barLabels,
-                        datasets: [
-                            { 
-                                label: 'Opening', data: dataOpening, 
-                                backgroundColor: gradOp, 
-                                borderColor: '#A59BFF', 
-                                borderWidth: { top: 2, right: 0, bottom: 0, left: 0 }, 
-                                borderRadius: {topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0}
-                            },
-                            { 
-                                label: 'Release (Out)', data: dataRelease, 
-                                backgroundColor: gradRel, 
-                                borderColor: '#FF99A8', 
-                                borderWidth: { top: 2, right: 0, bottom: 0, left: 0 }, 
-                                borderRadius: {topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0} 
-                            },
-                            { 
-                                label: 'Balance', data: dataBalance, 
-                                backgroundColor: gradBal, 
-                                borderColor: '#80F3FF', 
-                                borderWidth: { top: 2, right: 0, bottom: 0, left: 0 }, 
-                                borderRadius: {topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0} 
-                            }
-                        ]
-                    },
-                    plugins: [{
-                        id: 'shadowPluginBar',
-                        beforeDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-                            chart.ctx.shadowBlur = 8;
-                            chart.ctx.shadowOffsetX = 4;
-                            chart.ctx.shadowOffsetY = 4;
-                        },
-                        afterDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'transparent';
-                            chart.ctx.shadowBlur = 0;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 0;
-                        }
-                    }],
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        interaction: { mode: 'index', intersect: false },
-                        plugins: {
-                            legend: { position: 'top', labels: { color: '#B8C0D9', font: { size: 10, family: 'Plus Jakarta Sans', weight: 'bold' }, usePointStyle: true, padding: 15 } },
-                            tooltip: {
-                                backgroundColor: 'rgba(17, 28, 51, 0.95)', titleColor: '#FFFFFF', titleFont: { size: 13 }, bodyFont: { family: 'JetBrains Mono' }, borderColor: 'rgba(255, 255, 255, 0.15)', borderWidth: 1, padding: 12, boxPadding: 6, usePointStyle: true,
-                                callbacks: {
-                                    label: function(context) {
-                                        let val = context.raw;
-                                        let formatted = displayMode === 'AMOUNT' || displayMode === 'ZAK' ? new Intl.NumberFormat('id-ID').format(val) : new Intl.NumberFormat('id-ID', {minimumFractionDigits:1, maximumFractionDigits:1}).format(val);
-                                        return context.dataset.label + ': ' + prefix + formatted + labelSuffix;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false }, ticks: { color: '#B8C0D9', font: {size: 9, family: 'Plus Jakarta Sans'} } },
-                            y: { grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5,5], drawBorder: false }, ticks: { color: '#B8C0D9', font: {size: 10, family: 'JetBrains Mono'} } }
-                        }
-                    }
-                });
-            }
-        }
-
-        function renderStokSigDetailTable(query = '') {
-            const thead = document.getElementById('stokSigDetailHeader');
-            const tbody = document.getElementById('stokSigDetailBody');
-            
-            if (!stokSigDetailRaw.headers || stokSigDetailRaw.headers.length === 0) {
-                thead.innerHTML = `<th class="px-3 md:px-6 py-3 md:py-4">Data Rilis MD</th>`;
-                tbody.innerHTML = `<tr><td class="p-4 md:p-6 text-center text-textSecondary text-[10px] md:text-xs">Data belum dimuat atau kosong.</td></tr>`;
-                return;
-            }
-
-            const headers = stokSigDetailRaw.headers;
-            thead.innerHTML = headers.map((h, idx) => {
-                const colLetter = String.fromCharCode(65 + (idx % 26));
-                const colName = idx < 26 ? colLetter : `A${String.fromCharCode(65 + (idx - 26))}`;
-                
-                const lowerH = (h||'').toLowerCase();
-                const isNum = lowerH.includes('qty') || lowerH.includes('zak') || lowerH.includes('ton') || lowerH.includes('berat') || lowerH.includes('jumlah') || lowerH.includes('stok') || lowerH.includes('harga') || lowerH.includes('total');
-                return `<th class="px-3 md:px-5 py-3 md:py-4 ${isNum ? 'text-right' : 'text-left'} border-r border-borderMain/50 font-extrabold text-white tracking-wider sticky top-0 bg-[#1a2b4c] z-20 whitespace-nowrap shadow-sm"><span class="text-[9px] text-accentPurple mr-1.5 font-mono bg-accentPurple/20 px-1 py-0.5 rounded">[${colName}]</span> ${h || '-'}</th>`;
-            }).join('');
-
-            const filteredRows = stokSigDetailRaw.rows.filter(r => !query || r.join(' ').toLowerCase().includes(query.toLowerCase()));
-
-            if (filteredRows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${headers.length}" class="px-3 md:px-6 py-6 md:py-12 text-center text-textSecondary italic text-[10px] md:text-xs">Tidak ada data yang cocok.</td></tr>`;
-                return;
-            }
-
-            const rowsToRender = filteredRows.slice(0, 200);
-            
-            tbody.innerHTML = rowsToRender.map((row, idx) => {
-                const bgClass = idx % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]';
-                const cellsHtml = headers.map((h, colIdx) => {
-                    const val = row[colIdx] !== undefined ? row[colIdx] : '-';
-                    const lowerH = (h||'').toLowerCase();
-                    const isNumCol = lowerH.includes('qty') || lowerH.includes('zak') || lowerH.includes('ton') || lowerH.includes('berat') || lowerH.includes('jumlah') || lowerH.includes('stok') || lowerH.includes('harga') || lowerH.includes('total');
-                    
-                    if (isNumCol && cleanNum(val) !== 0 && val !== '-') {
-                        const num = cleanNum(val);
-                        const isDec = lowerH.includes('ton') || lowerH.includes('berat');
-                        return `<td class="px-3 md:px-5 py-2.5 md:py-3 text-right border-r border-borderMain/30 font-mono text-[10px] md:text-xs text-accentPurple font-bold whitespace-nowrap">${isDec ? fmtDec(num) : fmtNum(num)}</td>`;
-                    }
-                    
-                    const displayVal = val.length > 50 ? val.substring(0, 50) + '...' : val;
-                    return `<td class="px-3 md:px-5 py-2.5 md:py-3 text-left border-r border-borderMain/30 text-textSecondary text-[10px] md:text-xs font-medium whitespace-nowrap" title="${val}">${displayVal}</td>`;
-                }).join('');
-                return `<tr class="${bgClass} table-row-hover border-b border-borderMain/30 transition-colors hover:bg-accentPurple/10">${cellsHtml}</tr>`;
-            }).join('');
-            
-            if(filteredRows.length > 200) {
-                tbody.innerHTML += `<tr><td colspan="${headers.length}" class="px-4 py-4 text-center text-accentCyan font-bold text-[10px] md:text-xs italic bg-[#14213d]/80 border-t border-accentCyan/30">Menampilkan 200 baris pertama dari ${fmtNum(filteredRows.length)} data. Gunakan kolom pencarian untuk menemukan baris lainnya.</td></tr>`;
-            }
-        }
-
-        function renderStokDepletionChart() {
-            if (!stokSigDetailRaw.rows || stokSigDetailRaw.rows.length === 0) return;
-
-            const dateColIdx = 17; 
-            const qtyColIdx = 9;   
-            const skuColIdx = 18;  
-
-            const dateMap = {};
-            stokSigDetailRaw.rows.forEach(r => {
-                const rawDate = r[dateColIdx];
-                const qtyVal = cleanNum(r[qtyColIdx]);
-                const skuVal = r[skuColIdx] && r[skuColIdx].toString().trim() !== '' ? r[skuColIdx].toString().trim() : 'Unknown SKU';
-
-                if (rawDate && qtyVal > 0) {
-                    const dateStr = rawDate.toString().trim();
-                    let parsedDate = new Date(dateStr);
-                    
-                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/;
-                    const matchIndo = dateStr.match(regexIndo);
-                    if (matchIndo) {
-                        const p1 = parseInt(matchIndo[1], 10), p2 = parseInt(matchIndo[2], 10), year = parseInt(matchIndo[3], 10);
-                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) parsedDate = new Date(year, p2 - 1, p1);
-                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2);
-                    }
-                    
-                    let key = dateStr;
-                    if (!isNaN(parsedDate.getTime())) {
-                        key = parsedDate.toISOString().split('T')[0];
-                    }
-                    
-                    if(!dateMap[key]) dateMap[key] = { dateObj: parsedDate, dateRaw: dateStr, qtyOut: 0, details: {} };
-                    dateMap[key].qtyOut += qtyVal;
-                    
-                    if (!dateMap[key].details[skuVal]) dateMap[key].details[skuVal] = 0;
-                    dateMap[key].details[skuVal] += qtyVal;
-                }
-            });
-
-            const sortedDates = Object.keys(dateMap).sort((a, b) => {
-                const dA = dateMap[a].dateObj;
-                const dB = dateMap[b].dateObj;
-                if(!isNaN(dA) && !isNaN(dB)) return dA - dB;
-                return a.localeCompare(b);
-            });
-
-            const labels = [];
-            const dataStock = [];
-            let currentStock = initialOpeningStock;
-
-            const tooltipDetails = [];
-
-            if(sortedDates.length > 0) {
-                 labels.push('Awal');
-                 dataStock.push(currentStock);
-                 tooltipDetails.push(null); 
-                 
-                 sortedDates.forEach(dateKey => {
-                     currentStock -= dateMap[dateKey].qtyOut;
-                     if(currentStock < 0) currentStock = 0; 
-                     
-                     let labelStr = dateMap[dateKey].dateRaw;
-                     if (!isNaN(dateMap[dateKey].dateObj)) {
-                         labelStr = dateMap[dateKey].dateObj.toLocaleDateString('id-ID', {day: '2-digit', month: 'short'});
-                     }
-                     
-                     labels.push(labelStr);
-                     dataStock.push(currentStock);
-                     tooltipDetails.push({
-                         totalOut: dateMap[dateKey].qtyOut,
-                         skus: dateMap[dateKey].details
-                     });
-                 });
-            } else {
-                 labels.push('Data Kosong');
-                 dataStock.push(initialOpeningStock);
-                 tooltipDetails.push(null);
-            }
-
-            const ctx = document.getElementById('stockDepletionChart');
-            if(ctx) {
-                if(stockDepletionChartInstance) stockDepletionChartInstance.destroy();
-                
-                const ctx2d = ctx.getContext('2d');
-                let gradient = ctx2d.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(255, 77, 109, 0.7)');
-                gradient.addColorStop(0.5, 'rgba(255, 77, 109, 0.2)');
-                gradient.addColorStop(1, 'rgba(255, 77, 109, 0.0)');
-
-                stockDepletionChartInstance = new Chart(ctx2d, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Balance Stock (ZAK)',
-                            data: dataStock,
-                            borderColor: '#FF4D6D',
-                            backgroundColor: gradient,
-                            borderWidth: 4,
-                            tension: 0.4, 
-                            fill: true,
-                            pointBackgroundColor: '#070B14',
-                            pointBorderColor: '#FF4D6D',
-                            pointBorderWidth: 3,
-                            pointRadius: 5,
-                            pointHoverRadius: 8,
-                            pointHoverBackgroundColor: '#FFFFFF'
-                        }]
-                    },
-                    plugins: [{
-                        id: 'shadowPluginLine',
-                        beforeDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'rgba(255, 77, 109, 0.5)';
-                            chart.ctx.shadowBlur = 15;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 8;
-                        },
-                        afterDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'transparent';
-                            chart.ctx.shadowBlur = 0;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 0;
-                        }
-                    }],
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: {
-                            mode: 'index',
-                            intersect: false,
-                        },
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                backgroundColor: 'rgba(17, 28, 51, 0.95)',
-                                titleColor: '#FFFFFF',
-                                titleFont: { size: 14, family: 'JetBrains Mono', weight: 'bold' },
-                                bodyColor: '#FF4D6D',
-                                bodyFont: { size: 12, family: 'Plus Jakarta Sans' },
-                                borderColor: 'rgba(255, 77, 109, 0.4)',
-                                borderWidth: 1,
-                                padding: 14,
-                                boxPadding: 6,
-                                callbacks: {
-                                    label: function(context) {
-                                        return '📊 Sisa Stok: ' + new Intl.NumberFormat('id-ID').format(context.parsed.y) + ' ZAK';
-                                    },
-                                    afterBody: function(context) {
-                                        const idx = context[0].dataIndex;
-                                        const details = tooltipDetails[idx];
-                                        if (!details) return [];
-                                        
-                                        let lines = ['──────────────────────────'];
-                                        lines.push(`📉 Rilis Hari Ini : -${new Intl.NumberFormat('id-ID').format(details.totalOut)} ZAK`);
-                                        lines.push('');
-                                        lines.push('📦 DETAIL SKU (Kolom S):');
-                                        
-                                        const skuKeys = Object.keys(details.skus).sort((a,b) => details.skus[b] - details.skus[a]);
-                                        skuKeys.forEach(sku => {
-                                            lines.push(` ▪ ${sku}: ${new Intl.NumberFormat('id-ID').format(details.skus[sku])} ZAK`);
-                                        });
-                                        
-                                        return lines;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: { 
-                                grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false },
-                                ticks: { color: '#B8C0D9', font: {size: 10, family: 'JetBrains Mono'} }
-                            },
-                            y: { 
-                                beginAtZero: false,
-                                grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5, 5], drawBorder: false },
-                                ticks: { color: '#FF4D6D', font: {size: 11, family: 'JetBrains Mono', weight: 'bold'} },
-                                title: { display: true, text: 'Kuantitas Balance (ZAK)', color: '#B8C0D9', font: {size: 11, weight: 'bold'} }
+                                beginAtZero: true,
+                                grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5, 5] },
+                                ticks: { color: '#FF4D6D', font: {size: 10} },
+                                title: { display: true, text: 'Tonase', color: '#B8C0D9', font: {size: 10} }
                             }
                         }
                     }
@@ -2615,6 +1976,7 @@
         }
 
         function renderCharts() {
+            // Segment Donut
             const segMap = {}; summaryData.forEach(item => { if(!segMap[item.segment]) segMap[item.segment] = 0; segMap[item.segment] += item.qtyTon; });
             const customOrder = ['RETAIL', 'PROJECT', 'GENERAL'], labels = Object.keys(segMap).sort((a, b) => { let idxA = customOrder.indexOf(a.toUpperCase()), idxB = customOrder.indexOf(b.toUpperCase()); return (idxA !== idxB) ? idxA - idxB : a.localeCompare(b); });
             const dataVals = labels.map(l => segMap[l]), chartColors = ['#00E5FF', '#6D5DF6', '#00D084', '#FFB800'];
@@ -2639,6 +2001,7 @@
                 });
             }
 
+            // Top SKU Distribution
             const skuMap = {}; summaryData.forEach(item => { if(item.sku && item.sku !== '-') { if(!skuMap[item.sku]) skuMap[item.sku] = 0; skuMap[item.sku] += item.qtyTon; } });
             const sortedSKUs = Object.keys(skuMap).map(k => ({ sku: k, ton: skuMap[k] })).sort((a, b) => b.ton - a.ton).slice(0, 5);
             const maxVal = sortedSKUs.length > 0 ? sortedSKUs[0].ton : 1, container = document.getElementById('topSkuRankingContainer');
@@ -2649,6 +2012,7 @@
                 });
             }
 
+            // Render Trend & 3D Donut Comparison with Progressive Animation Loop
             renderTrendAndComparisonCharts();
         }
 
@@ -2734,6 +2098,7 @@
 
             const startStock = dailyStock[1] || currentLiveStock; 
 
+            // -- TREND LINE CHART --
             const ctxTrend = document.getElementById('trendLineChart');
             if(ctxTrend) {
                 if(trendLineChartInstance) trendLineChartInstance.destroy();
@@ -2818,21 +2183,6 @@
                             }
                         ]
                     },
-                    plugins: [{
-                        id: 'shadowPluginLineTrend',
-                        beforeDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'rgba(0, 208, 132, 0.5)';
-                            chart.ctx.shadowBlur = 10;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 6;
-                        },
-                        afterDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'transparent';
-                            chart.ctx.shadowBlur = 0;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 0;
-                        }
-                    }],
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
@@ -2949,6 +2299,7 @@
                 });
             }
 
+            // -- COMPARISON 3D DONUT CHART --
             const ctxDonutCmp = document.getElementById('comparisonDonutChart');
             if(ctxDonutCmp) {
                 if(comparisonDonutChartInstance) comparisonDonutChartInstance.destroy();
@@ -2979,21 +2330,6 @@
                             hoverOffset: 15
                         }]
                     },
-                    plugins: [{
-                        id: 'shadowPluginDonutCmp',
-                        beforeDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-                            chart.ctx.shadowBlur = 15;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 8;
-                        },
-                        afterDatasetsDraw: function(chart) {
-                            chart.ctx.shadowColor = 'transparent';
-                            chart.ctx.shadowBlur = 0;
-                            chart.ctx.shadowOffsetX = 0;
-                            chart.ctx.shadowOffsetY = 0;
-                        }
-                    }],
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
@@ -3076,6 +2412,7 @@
                 }
             };
 
+            // PROGRESSIVE ANIMATION LOOP (Runs from Day 1 to todayDate with pause & tooltip display at each date step)
             let currentDayIndex = 1;
             let accIn = 0;
             let accOut = 0;
@@ -3083,11 +2420,13 @@
             updateCenterLabel(0, 0);
 
             chartAnimInterval = setInterval(() => {
+                // Update Line Chart dataset up to currentDayIndex
                 trendLineChartInstance.data.datasets[0].data = fullPlotStock.slice(0, currentDayIndex);
                 trendLineChartInstance.data.datasets[1].data = fullPlotIn.slice(0, currentDayIndex);
                 trendLineChartInstance.data.datasets[2].data = fullPlotOut.slice(0, currentDayIndex);
                 trendLineChartInstance.update();
                 
+                // Update Donut accumulated values
                 accIn += dailyIn[currentDayIndex];
                 accOut += dailyOut[currentDayIndex];
                 
@@ -3096,6 +2435,7 @@
                 
                 updateCenterLabel(accIn, accOut);
                 
+                // Trigger Tooltip popup at the active step point
                 const pointIdx = currentDayIndex - 1;
                 setTimeout(() => {
                     if (trendLineChartInstance && trendLineChartInstance.tooltip) {
@@ -3127,9 +2467,9 @@
                             trendLineChartInstance.tooltip.setActiveElements([], {x:0, y:0});
                             trendLineChartInstance.update('none');
                         }
-                    }, 4000); 
+                    }, 4000); // Keep final tooltip visible for 4s before closing
                 }
-            }, 2200); 
+            }, 2200); // 2.2 seconds interval per date step for executive presentation
         }
 
         window.addEventListener('resize', () => {
@@ -3318,6 +2658,7 @@
             if(tabName === 'stok-sig') {
                 renderStokSigMakloonTable();
                 renderStokSigDetailTable();
+                // Ensure chart renders properly when tab is shown
                 setTimeout(renderStokDepletionChart, 100);
             }
             if(tabName === 'stock') {
