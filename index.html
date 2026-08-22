@@ -304,11 +304,22 @@
                     </li>
                     <!-- Create Berita Acara (Private) -->
                     <li>
-                        <button id="nav-btn-create-ba" onclick="handleTabClick('create-ba')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
+                        <button id="nav-btn-create-ba" onclick="toggleBeritaAcaraMenu()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group">
                             <i class="ph-bold ph-file-doc text-xl group-hover:text-statusSuccess transition-colors"></i>
                             <span class="flex-1">Create Berita Acara</span>
+                            <i id="baMenuCaret" class="ph-bold ph-caret-down text-statusWarning transition-transform"></i>
                             <i class="ph-bold ph-lock-key text-statusWarning private-lock-icon" title="Private Access"></i>
                         </button>
+                        <div id="beritaAcaraSubmenu" class="hidden ml-3 mt-1 pl-3 border-l border-borderMain/60 space-y-1">
+                            <button id="nav-btn-create-ba-offtake" onclick="handleTabClick('create-ba')" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left text-[11px]">
+                                <i class="ph-bold ph-handshake text-accentCyan"></i>
+                                <span class="flex-1">Offtake</span>
+                            </button>
+                            <button id="nav-btn-create-ba-makloon" onclick="handleTabClick('create-ba-makloon')" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left text-[11px]">
+                                <i class="ph-bold ph-factory text-accentPurple"></i>
+                                <span class="flex-1">Makloon</span>
+                            </button>
+                        </div>
                     </li>
                     <!-- Stok SIG Menu -->
                     <li>
@@ -1017,6 +1028,41 @@
                         <div class="xl:col-span-2 glass-panel rounded-2xl border border-borderMain overflow-hidden">
                             <div class="p-4 border-b border-borderMain bg-bgCard/80 flex items-center justify-between"><div><h4 class="text-xs font-black text-white uppercase tracking-widest">BA Table Preview</h4><p id="baPreviewLabel" class="text-[9px] text-textSecondary mt-1">Preview dari tanggal STO yang dipilih.</p></div><span class="text-[8px] px-2 py-1 rounded-full bg-statusSuccess/10 text-statusSuccess border border-statusSuccess/20 font-black">TEMPLATE DOCX</span></div>
                             <div class="p-4 md:p-6 bg-white rounded-b-2xl overflow-auto"><canvas id="baTableCanvas" width="1400" height="1180" class="w-full h-auto border border-gray-200"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: CREATE BERITA ACARA - MAKLOON -->
+                <div id="view-create-ba-makloon" class="hidden glass-panel rounded-2xl border border-borderMain overflow-hidden flex flex-col w-full">
+                    <div class="p-4 md:p-6 border-b border-borderMain bg-bgCard/90 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
+                        <div>
+                            <h3 class="font-black text-white text-lg md:text-xl flex items-center gap-2"><i class="ph-fill ph-factory text-accentPurple"></i> Create Berita Acara — Makloon</h3>
+                            <p class="text-[10px] md:text-xs text-textSecondary mt-1">Generate Berita Acara Stock Opname menggunakan template Makloon terlampir.</p>
+                        </div>
+                        <button onclick="downloadBeritaAcaraMakloonDOCX()" class="justify-center bg-gradient-to-r from-accentPurple to-indigo-600 hover:from-indigo-500 hover:to-accentPurple text-white font-black px-4 py-2 rounded-xl shadow-glow-purple flex items-center gap-2 text-[10px] md:text-xs">
+                            <i class="ph-bold ph-download-simple"></i> Download DOCX
+                        </button>
+                    </div>
+                    <div class="p-4 md:p-6 grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
+                        <div class="xl:col-span-1 space-y-4">
+                            <div class="glass-panel rounded-2xl p-4 border border-borderMain">
+                                <h4 class="text-xs font-black text-white uppercase tracking-widest mb-3">Makloon Document Setup</h4>
+                                <div class="space-y-3">
+                                    <div><label class="block text-[9px] text-textSecondary uppercase tracking-widest mb-1">BA Number</label><input id="makBaNoInput" value="01/BA/FG-MKI/VIII/2026" class="w-full bg-bgPrimary border border-borderMain text-white rounded-lg px-3 py-2 text-xs"></div>
+                                    <div><label class="block text-[9px] text-textSecondary uppercase tracking-widest mb-1">PO Number</label><input id="makPoInput" value="5371000722" class="w-full bg-bgPrimary border border-borderMain text-white rounded-lg px-3 py-2 text-xs"></div>
+                                    <div><label class="block text-[9px] text-textSecondary uppercase tracking-widest mb-1">Tanggal STO</label><input type="date" id="makDateInput" class="w-full bg-bgPrimary border border-borderMain text-white rounded-lg px-3 py-2 text-xs"></div>
+                                    <div><label class="block text-[9px] text-textSecondary uppercase tracking-widest mb-1">Waktu</label><input id="makTimeInput" value="15.00 – 17.00 WIB" class="w-full bg-bgPrimary border border-borderMain text-white rounded-lg px-3 py-2 text-xs"></div>
+                                    <div><label class="block text-[9px] text-textSecondary uppercase tracking-widest mb-1">Nomor SIG</label><input id="makSigInput" value="016810/PM.03/DP/50070880/2000/06.2026" class="w-full bg-bgPrimary border border-borderMain text-white rounded-lg px-3 py-2 text-xs"></div>
+                                    <div><label class="block text-[9px] text-textSecondary uppercase tracking-widest mb-1">Nomor MKI</label><input id="makMkiInput" value="010/PKS/MKI-SIG/VI/2026" class="w-full bg-bgPrimary border border-borderMain text-white rounded-lg px-3 py-2 text-xs"></div>
+                                </div>
+                            </div>
+                            <div class="rounded-xl border border-accentPurple/20 bg-accentPurple/5 p-3 text-[10px] text-textSecondary leading-relaxed">
+                                <b class="text-white">Template Makloon:</b> format mengikuti dokumen lampiran 01_08_BA_Maklon INV FG MKI-SIG, termasuk halaman BA, tanda tangan dan lampiran. Header identitas dapat diubah dari panel ini.
+                            </div>
+                        </div>
+                        <div class="xl:col-span-2 glass-panel rounded-2xl border border-borderMain overflow-hidden">
+                            <div class="p-4 border-b border-borderMain bg-bgCard/80 flex items-center justify-between"><div><h4 class="text-xs font-black text-white uppercase tracking-widest">Makloon Template Preview</h4><p id="makBaPreviewLabel" class="text-[9px] text-textSecondary mt-1">Template asli terlampir.</p></div><span class="text-[8px] px-2 py-1 rounded-full bg-accentPurple/10 text-accentPurple border border-accentPurple/20 font-black">MAKLOON TEMPLATE</span></div>
+                            <div class="p-4 md:p-6 bg-white rounded-b-2xl overflow-auto"><img src="" id="makBaTemplatePreview" alt="Makloon template preview" class="w-full h-auto border border-gray-200"></div>
                         </div>
                     </div>
                 </div>
@@ -4448,6 +4494,33 @@ ${JSON.stringify(payload)}`;
             }
         }
 
+        function toggleBeritaAcaraMenu() {
+            const menu = document.getElementById('beritaAcaraSubmenu');
+            const caret = document.getElementById('baMenuCaret');
+            if (!menu) return;
+            const willOpen = menu.classList.contains('hidden');
+            menu.classList.toggle('hidden', !willOpen);
+            if (caret) caret.style.transform = willOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        function initMakloonPreview(){
+            const img=document.getElementById('makBaTemplatePreview');
+            if(img && !img.src) {
+                img.src='data:image/png;base64,${base64png}';
+            }
+            const d=document.getElementById('makDateInput');
+            if(d && !d.value) d.value=document.getElementById('execDateFilter')?.value || new Date().toISOString().split('T')[0];
+            const lbl=document.getElementById('makBaPreviewLabel');
+            if(lbl) lbl.innerText='Template asli Makloon • 01/BA/FG-MKI/VIII/2026';
+            ['makDateInput','makPoInput','makBaNoInput','makTimeInput','makSigInput','makMkiInput'].forEach(id=>{
+                const el=document.getElementById(id);
+                if(el && !el.dataset.makBound){ el.dataset.makBound='1'; el.addEventListener('input',()=>{
+                    const label=document.getElementById('makBaPreviewLabel');
+                    if(label) label.innerText=`Template Makloon • ${el.value}`;
+                });}
+            });
+        }
+
         function toggleReportMenu() {
             const menu = document.getElementById('reportSubmenu');
             const caret = document.getElementById('reportMenuCaret');
@@ -4462,7 +4535,7 @@ ${JSON.stringify(payload)}`;
                 toggleSidebar();
             }
 
-            const privateTabs = ['exec-report', 'exec-report-detail', 'create-ba', 'offtake', 'pallet', 'trans-detail', 'trans-summary']; 
+            const privateTabs = ['exec-report', 'exec-report-detail', 'create-ba', 'create-ba-makloon', 'offtake', 'pallet', 'trans-detail', 'trans-summary']; 
             if (privateTabs.includes(tabName)) { 
                 if (isAuthenticated) switchMainTab(tabName); 
                 else { pendingTargetTab = tabName; openAuthModal(); } 
@@ -4473,24 +4546,24 @@ ${JSON.stringify(payload)}`;
             activeMainTab = tabName;
             const kpiContainer = document.getElementById('kpiContainer'), actionControls = document.getElementById('generalActionControls');
             
-            if (['detail', 'summary-only', 'offtake', 'pallet', 'exec-report', 'exec-report-detail', 'create-ba', 'trans-detail', 'trans-summary', 'stok-sig', 'ai-analyst'].includes(tabName)) { 
+            if (['detail', 'summary-only', 'offtake', 'pallet', 'exec-report', 'exec-report-detail', 'create-ba', 'create-ba-makloon', 'trans-detail', 'trans-summary', 'stok-sig', 'ai-analyst'].includes(tabName)) { 
                 if(kpiContainer) kpiContainer.classList.add('hidden'); 
             } else { 
                 if(kpiContainer) kpiContainer.classList.remove('hidden'); 
             }
             
-            if(['exec-report', 'exec-report-detail', 'create-ba', 'trans-detail', 'trans-summary', 'stok-sig'].includes(tabName)) { 
+            if(['exec-report', 'exec-report-detail', 'create-ba', 'create-ba-makloon', 'trans-detail', 'trans-summary', 'stok-sig'].includes(tabName)) { 
                 if(actionControls) actionControls.classList.add('hidden'); 
             } else { 
                 if(actionControls) actionControls.classList.remove('hidden'); 
             }
             
-            const allTabs = ['stock', 'ai-analyst', 'detail', 'summary-only', 'exec-report', 'exec-report-detail', 'create-ba', 'offtake', 'pallet', 'trans-detail', 'trans-summary', 'stok-sig'];
+            const allTabs = ['stock', 'ai-analyst', 'detail', 'summary-only', 'exec-report', 'exec-report-detail', 'create-ba', 'create-ba-makloon', 'offtake', 'pallet', 'trans-detail', 'trans-summary', 'stok-sig'];
             allTabs.forEach(t => {
                 const view = document.getElementById(`view-${t}`), btn = document.getElementById(`nav-btn-${t}`);
                 if(t === tabName) {
                     if (view) view.classList.remove('hidden');
-                    if(btn) btn.className = (t === 'exec-report' || t === 'exec-report-detail' || t === 'create-ba' || t === 'trans-summary') ? "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-statusSuccess/20 to-transparent text-statusSuccess font-semibold border border-statusSuccess/30 shadow-glow-green transition-all text-left" : "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-accentCyan/20 to-transparent text-accentCyan font-semibold border border-accentCyan/30 shadow-glow-cyan transition-all text-left";
+                    if(btn) btn.className = (t === 'exec-report' || t === 'exec-report-detail' || t === 'create-ba' || t === 'create-ba-makloon' || t === 'trans-summary') ? "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-statusSuccess/20 to-transparent text-statusSuccess font-semibold border border-statusSuccess/30 shadow-glow-green transition-all text-left" : "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-accentCyan/20 to-transparent text-accentCyan font-semibold border border-accentCyan/30 shadow-glow-cyan transition-all text-left";
                 } else {
                     if (view) view.classList.add('hidden'); 
                     if(btn) btn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-textSecondary hover:text-white hover:bg-white/5 transition-all text-left group";
@@ -4504,7 +4577,8 @@ ${JSON.stringify(payload)}`;
                 renderExecReportDetail();
                 setTimeout(renderExecReportDetail, 50);
             }
-            if(tabName === 'create-ba') { renderBeritaAcaraPreview(); }
+            if(tabName === 'create-ba') { initBeritaAcara(); renderBeritaAcaraPreview(); }
+            if(tabName === 'create-ba-makloon') { initMakloonPreview(); }
             if(tabName === 'stok-sig') {
                 renderStokSigMakloonTable();
                 renderStokSigDetailTable();
@@ -4529,7 +4603,8 @@ ${JSON.stringify(payload)}`;
             else if(tabName === 'summary-only') { pTitle.innerText = 'Ringkasan Stok Overview'; pSub.innerText = 'Tabel Ringkasan Stok Finished Goods'; icon.className = 'ph-fill ph-table text-2xl md:text-3xl text-accentCyan'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-xl md:rounded-2xl shadow-glow-purple'; }
             else if(tabName === 'exec-report') { pTitle.innerText = 'Report — Summary'; pSub.innerText = 'Ringkasan laporan eksekutif berdasarkan tanggal dan data transaksi'; icon.className = 'ph-fill ph-table text-2xl md:text-3xl text-statusSuccess'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-statusSuccess/20 to-emerald-600/10 border border-statusSuccess/30 rounded-xl md:rounded-2xl shadow-glow-green'; }
             else if(tabName === 'exec-report-detail') { pTitle.innerText = 'Report — Detail'; pSub.innerText = 'Opening Balance, IN dan OUT per SKU berdasarkan sheet DATA'; icon.className = 'ph-fill ph-list-dashes text-2xl md:text-3xl text-accentPurple'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-accentPurple/20 to-accentCyan/10 border border-accentPurple/30 rounded-xl md:rounded-2xl shadow-glow-purple'; }
-            else if(tabName === 'create-ba') { pTitle.innerText = 'Create Berita Acara'; pSub.innerText = 'Generate Berita Acara Stock Opname sesuai template DOCX'; icon.className = 'ph-fill ph-file-doc text-2xl md:text-3xl text-statusSuccess'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-statusSuccess/20 to-emerald-600/10 border border-statusSuccess/30 rounded-xl md:rounded-2xl shadow-glow-green'; }
+            else if(tabName === 'create-ba') { pTitle.innerText = 'Create Berita Acara — Offtake'; pSub.innerText = 'Generate Berita Acara Stock Opname sesuai template DOCX Offtake'; icon.className = 'ph-fill ph-handshake text-2xl md:text-3xl text-statusSuccess'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-statusSuccess/20 to-emerald-600/10 border border-statusSuccess/30 rounded-xl md:rounded-2xl shadow-glow-green'; }
+            else if(tabName === 'create-ba-makloon') { pTitle.innerText = 'Create Berita Acara — Makloon'; pSub.innerText = 'Generate Berita Acara Stock Opname sesuai template DOCX Makloon'; icon.className = 'ph-fill ph-factory text-2xl md:text-3xl text-accentPurple'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-accentPurple/20 to-indigo-600/10 border border-accentPurple/30 rounded-xl md:rounded-2xl shadow-glow-purple'; }
             else if(tabName === 'trans-detail') { pTitle.innerText = 'Detail Transaksi (DATA)'; pSub.innerText = 'Tampilan data persis sesuai sheet DATA dengan filter tanggal'; icon.className = 'ph-fill ph-list-dashes text-2xl md:text-3xl text-accentCyan'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-accentCyan/20 to-blue-500/10 border border-accentCyan/30 rounded-xl md:rounded-2xl shadow-glow-cyan'; }
             else if(tabName === 'trans-summary') { pTitle.innerText = 'Summary Transaksi (DATA)'; pSub.innerText = 'Agregasi terurut dari Tanggal Posting, SKU, Jenis Transaksi'; icon.className = 'ph-fill ph-sigma text-2xl md:text-3xl text-accentPurple'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-accentPurple/20 to-pink-500/10 border border-accentPurple/30 rounded-xl md:rounded-2xl shadow-glow-purple'; }
             if(tabName === 'stok-sig') { pTitle.innerText = 'Stok SIG'; pSub.innerText = 'Data Makloon & Analisis Rilis MD'; icon.className = 'ph-fill ph-buildings text-2xl md:text-3xl text-accentCyan'; iconContainer.className = 'p-2.5 md:p-3.5 bg-gradient-to-br from-accentCyan/20 to-blue-500/10 border border-accentCyan/30 rounded-xl md:rounded-2xl shadow-glow-cyan'; }
@@ -4563,7 +4638,7 @@ ${JSON.stringify(payload)}`;
             isAuthenticated = false; 
             updateAuthUI(); 
             showToast('Sesi Terkunci', 'Anda telah kembali ke mode Publik.', 'info'); 
-            if (['exec-report', 'exec-report-detail', 'create-ba', 'offtake', 'pallet', 'trans-detail', 'trans-summary'].includes(activeMainTab)) switchMainTab('stock'); 
+            if (['exec-report', 'exec-report-detail', 'create-ba', 'create-ba-makloon', 'offtake', 'pallet', 'trans-detail', 'trans-summary'].includes(activeMainTab)) switchMainTab('stock'); 
         }
         
         function updateAuthUI() { 
@@ -4698,6 +4773,36 @@ ${JSON.stringify(payload)}`;
             const d=document.getElementById('baDateInput'); if(d && !d.value) d.value=document.getElementById('execDateFilter')?.value || new Date().toISOString().split('T')[0];
             ['baDateInput','baPoInput','baNoInput','baTimeInput','baSigInput','baMkiInput','baNoteInput'].forEach(id=>{ const el=document.getElementById(id); if(el && !el.dataset.baBound){ el.dataset.baBound='1'; el.addEventListener(id==='baDateInput'?'change':'input', renderBeritaAcaraPreview); }});
             renderBeritaAcaraPreview();
+        }
+
+        const BA_MAKLOON_TEMPLATE_BASE64 = '${mak_b64}';
+
+        async function downloadBeritaAcaraMakloonDOCX(){
+            try{
+                if(typeof JSZip==='undefined'){ showToast('Error','Library DOCX belum tersedia. Periksa koneksi internet.','error'); return; }
+                const baNo=document.getElementById('makBaNoInput')?.value.trim()||'01/BA/FG-MKI/VIII/2026';
+                const po=document.getElementById('makPoInput')?.value.trim()||'5371000722';
+                const date=document.getElementById('makDateInput')?.value || document.getElementById('execDateFilter')?.value || '2026-08-05';
+                const dateText=baDateIdToText(date);
+                const time=document.getElementById('makTimeInput')?.value||'15.00 – 17.00 WIB';
+                const sig=document.getElementById('makSigInput')?.value||'016810/PM.03/DP/50070880/2000/06.2026';
+                const mki=document.getElementById('makMkiInput')?.value||'010/PKS/MKI-SIG/VI/2026';
+                const zip=await JSZip.loadAsync(bytesFromBase64(BA_MAKLOON_TEMPLATE_BASE64));
+                let xml=await zip.file('word/document.xml').async('string');
+                xml=baPatchParagraphs(xml,[
+                    ['No: 01/BA/FG-MKI/VIII/2026',`No: ${baNo}`],
+                    ['5371000722',po],
+                    ['5 Agustus 2026',dateText],
+                    ['5 Agustus 2026',dateText],
+                    ['15.00 – 17.00 WIB',time],
+                    ['016810/PM.03/DP/50070880/2000/06.2026',sig],
+                    ['010/PKS/MKI-SIG/VI/2026',mki]
+                ]);
+                zip.file('word/document.xml',xml);
+                const out=await zip.generateAsync({type:'blob'});
+                const a=document.createElement('a'); a.href=URL.createObjectURL(out); a.download=`BA_MAKLOON_STO_MKI_SIG_${date.replace(/-/g,'')}.docx`; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},1000);
+                showToast('Download Success','Berita Acara Makloon DOCX berhasil dibuat menggunakan template lampiran.','success');
+            }catch(err){ console.error(err); showToast('DOCX Error',String(err.message||err).slice(0,160),'error'); }
         }
 
         function exportExecutiveReport() {
