@@ -22,7 +22,7 @@
     <!-- XLSX Library Bundle (xlsx-js-style) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <!-- PowerPoint Export -->
-    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@latest/dist/pptxgen.bundle.js"></script>
 
     <script>
         tailwind.config = {
@@ -4012,15 +4012,53 @@
         }
 
 
-        function exportAIExecutivePPT(event) {
+        async function exportAIExecutivePPT(event) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
 
-            if (typeof pptxgen === 'undefined') {
-                showToast('PowerPoint', 'Library PowerPoint belum termuat. Periksa koneksi internet lalu coba lagi.', 'warning');
+            const btn = document.getElementById('aiPptBtn');
+
+            const ensurePptxGenLoaded = () => new Promise((resolve, reject) => {
+                // Official browser bundle exposes PptxGenJS on window.
+                if (typeof window.PptxGenJS === 'function') {
+                    resolve(window.PptxGenJS);
+                    return;
+                }
+
+                // Backward compatibility for older bundles.
+                if (typeof window.pptxgen === 'function') {
+                    resolve(window.pptxgen);
+                    return;
+                }
+
+                const existing = document.querySelector('script[data-pptxgen-loader="1"]');
+                if (existing) {
+                    existing.addEventListener('load', () => {
+                        const Ctor = window.PptxGenJS || window.pptxgen;
+                        Ctor ? resolve(Ctor) : reject(new Error('PptxGenJS termuat tetapi constructor tidak ditemukan.'));
+                    }, {once:true});
+                    existing.addEventListener('error', () => reject(new Error('CDN PowerPoint gagal dimuat.')), {once:true});
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@latest/dist/pptxgen.bundle.js';
+                script.async = true;
+                script.dataset.pptxgenLoader = '1';
+                script.onload = () => {
+                    const Ctor = window.PptxGenJS || window.pptxgen;
+                    Ctor ? resolve(Ctor) : reject(new Error('PptxGenJS termuat tetapi constructor tidak ditemukan.'));
+                };
+                script.onerror = () => reject(new Error('CDN PowerPoint gagal dimuat. Pastikan browser dapat mengakses jsDelivr/GitHub.'));
+                document.head.appendChild(script);
+            });
+
+            let PptxGenJS;
+            try {
+                PptxGenJS = await ensurePptxGenLoaded();
+            } catch (loadErr) {
+                showToast('PowerPoint', loadErr.message, 'warning');
                 return;
             }
-
-            const btn = document.getElementById('aiPptBtn');
             const original = btn ? btn.innerHTML : '';
             try {
                 if (btn) {
@@ -4031,7 +4069,7 @@
                 // Pastikan visual dashboard dan KPI terbaru sudah tersedia.
                 try { updateAIVisuals(); } catch (e) { console.warn('PPT visual refresh:', e); }
 
-                const pptx = new pptxgen();
+                const pptx = new PptxGenJS();
                 pptx.layout = 'LAYOUT_WIDE'; // 13.333 x 7.5
                 pptx.author = 'Mortar Indonesia';
                 pptx.company = 'Mortar Indonesia';
@@ -4210,7 +4248,7 @@
                 }
 
                 const fileDate = new Date().toISOString().slice(0,10).replace(/-/g,'');
-                pptx.writeFile({ fileName:`AI_Stock_Intelligence_Executive_Review_${fileDate}.pptx` });
+                await pptx.writeFile({ fileName:`AI_Stock_Intelligence_Executive_Review_${fileDate}.pptx` });
 
                 setTimeout(() => showToast('PowerPoint Ready','Executive PowerPoint berhasil dibuat dan siap dipresentasikan.','success'), 500);
             } catch (err) {
