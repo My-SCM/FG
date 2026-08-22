@@ -1568,9 +1568,11 @@
 
         function processUpdateRows(matrix) {
             if (!matrix || matrix.length === 0) return;
+
             let latestDateObj = new Date(0), foundValidDate = false;
             transactionRecords = [];
-            
+
+            // Detect header row.
             let bestHeaderIdx = -1, maxScore = -1;
             const keywords = ['tanggal', 'date', 'segment', 'type', 'tipe', 'produk', 'sku', 'zak', 'qty', 'ton', 'project', 'delivery'];
             for (let i = 0; i < Math.min(matrix.length, 15); i++) {
@@ -1578,111 +1580,123 @@
                 if (!row) continue;
                 let score = 0;
                 row.forEach(cell => {
-                    if (cell) {
-                        const str = cell.toString().toLowerCase();
-                        keywords.forEach(kw => { if (str.includes(kw)) score++; });
-                    }
+                    const s = String(cell || '').toLowerCase();
+                    if (s) keywords.forEach(kw => { if (s.includes(kw)) score++; });
                 });
                 if (score > maxScore) { maxScore = score; bestHeaderIdx = i; }
             }
+            if (bestHeaderIdx < 0) bestHeaderIdx = 0;
 
-            if (bestHeaderIdx === -1) bestHeaderIdx = 0;
-            const rawHeaders = matrix[bestHeaderIdx].map(h => h ? h.toString().replace(/[\r\n]+/g, ' ').trim() : '');
+            const rawHeaders = (matrix[bestHeaderIdx] || []).map(h =>
+                String(h || '').replace(/[\r\n]+/g, ' ').trim()
+            );
+            const rawRows = matrix.slice(bestHeaderIdx + 1);
             let maxCols = rawHeaders.length;
-            const rawMatrixRows = matrix.slice(bestHeaderIdx + 1);
-            rawMatrixRows.forEach(r => { if (r.length > maxCols) maxCols = r.length; });
+            rawRows.forEach(r => { if (r && r.length > maxCols) maxCols = r.length; });
 
             const cleanedHeaders = [];
             for (let c = 0; c < maxCols; c++) {
-                let hName = rawHeaders[c] || '';
-                if (!hName && rawMatrixRows.some(r => r[c] && r[c].toString().trim() !== '')) hName = `Kolom ${c + 1}`;
-                cleanedHeaders.push(hName);
+                let h = rawHeaders[c] || '';
+                if (!h && rawRows.some(r => r && String(r[c] || '').trim() !== '')) h = `Kolom ${c + 1}`;
+                cleanedHeaders.push(h);
             }
-            while (cleanedHeaders.length > 0 && !cleanedHeaders[cleanedHeaders.length - 1]) cleanedHeaders.pop();
+            while (cleanedHeaders.length && !cleanedHeaders[cleanedHeaders.length - 1]) cleanedHeaders.pop();
+
+            const normalizeHeader = h => String(h || '')
+                .toLowerCase()
+                .replace(/[\r\n]+/g, ' ')
+                .replace(/[^a-z0-9]+/g, ' ')
+                .trim();
+
+            const findHeaderIndex = patterns => {
+                const p = patterns.map(x => String(x).toLowerCase());
+                for (let c = 0; c < cleanedHeaders.length; c++) {
+                    const h = normalizeHeader(cleanedHeaders[c]);
+                    if (p.some(x => h === x || h.includes(x))) return c;
+                }
+                return -1;
+            };
+
+            /*
+             * IMPORTANT:
+             * DATA column B (index 1) is the primary transaction-date source.
+             * Header-based date is used when available; otherwise column B is used.
+             * This prevents column A timestamp/other fields from shifting the report date.
+             */
+            let idxDate = findHeaderIndex(['tanggal', 'tanggal transaksi', 'transaction date', 'date']);
+            if (idxDate < 0) idxDate = 1; // DATA column B
+
+            let idxSegment = findHeaderIndex(['segment', 'segmen']);
+            let idxType = findHeaderIndex(['type', 'tipe', 'jenis transaksi', 'transaction type']);
+            let idxProduk = findHeaderIndex(['produk', 'product', 'sku', 'sku code', 'material', 'item']);
+            let idxZak = findHeaderIndex(['qty zak', 'quantity zak', 'qty', 'quantity', 'zak']);
+            let idxTon = findHeaderIndex(['qty ton', 'quantity ton', 'ton']);
+            let idxProjectDelivery = findHeaderIndex(['project delivery', 'project del', 'delivery']);
+
+            // Safe fallback positions for legacy DATA layout.
+            if (idxSegment < 0) idxSegment = 1;
+            if (idxType < 0) idxType = 2;
+            if (idxProduk < 0) idxProduk = 3;
+            if (idxZak < 0) idxZak = 8;
+            if (idxTon < 0) idxTon = 9;
+            if (idxProjectDelivery < 0) idxProjectDelivery = cleanedHeaders.length - 1;
 
             const validTransRows = [];
-            rawMatrixRows.forEach(r => {
-                if (!r || r.length === 0) return;
-                const rowStr = r.join('').trim(); if (!rowStr) return;
-                const rowCells = [];
+            rawRows.forEach(r => {
+                if (!r || !r.length) return;
+                const cells = [];
                 for (let c = 0; c < cleanedHeaders.length; c++) {
-                    rowCells.push(r[c] !== undefined && r[c] !== null ? r[c].toString().trim() : '');
+                    cells.push(r[c] !== undefined && r[c] !== null ? String(r[c]).trim() : '');
                 }
-                if (rowCells.some(cell => cell !== '')) validTransRows.push(rowCells);
+                if (cells.some(Boolean)) validTransRows.push(cells);
             });
 
             transactionRawData.headers = cleanedHeaders;
             transactionRawData.rows = validTransRows;
 
             validTransRows.forEach(r => {
-                let rowTimestamp = r[0] !== undefined ? r[0] : '';
-                let rowSeg = r[1] !== undefined && r[1] !== '' ? r[1] : 'GENERAL';
-                let rowType = r[2] !== undefined && r[2] !== '' ? r[2] : 'STANDARD';
-                let rowProd = r[3] !== undefined ? r[3] : '-';
-                
-                let rowZak = r[8] !== undefined ? r[8] : 0;
-                let rowTon = r[9] !== undefined ? r[9] : 0;
-                let rowProjDel = r[r.length - 1] !== undefined ? r[r.length - 1] : '-';
+                const rowTimestamp = r[idxDate] !== undefined ? r[idxDate] : '';
+                const rowSeg = r[idxSegment] || 'GENERAL';
+                const rowType = r[idxType] || 'STANDARD';
+                const rowProd = r[idxProduk] || '-';
+                const rowProjDel = r[idxProjectDelivery] || '-';
 
                 let trDateObj = new Date(NaN);
-                if (rowTimestamp && rowTimestamp.toString().trim() !== '') {
-                    const str = rowTimestamp.toString().trim();
-                    let parsedDate = new Date(NaN);
-                    const regexIndo = /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2})[:\.](\d{1,2})(?:[:\.](\d{1,2}))?)?/;
-                    const matchIndo = str.match(regexIndo);
-                    if (matchIndo) {
-                        const p1 = parseInt(matchIndo[1], 10), p2 = parseInt(matchIndo[2], 10), year = parseInt(matchIndo[3], 10), hour = matchIndo[4] ? parseInt(matchIndo[4], 10) : 0, min = matchIndo[5] ? parseInt(matchIndo[5], 10) : 0, sec = matchIndo[6] ? parseInt(matchIndo[6], 10) : 0;
-                        if (p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) parsedDate = new Date(year, p2 - 1, p1, hour, min, sec);
-                        else if (p1 >= 1 && p1 <= 12 && p2 >= 1 && p2 <= 31) parsedDate = new Date(year, p1 - 1, p2, hour, min, sec);
-                    }
-                    if (isNaN(parsedDate.getTime())) parsedDate = new Date(str);
-                    
-                    if (!isNaN(parsedDate.getTime()) && parsedDate.getFullYear() > 2000) { 
-                        trDateObj = parsedDate;
-                        if (parsedDate > latestDateObj) { latestDateObj = parsedDate; foundValidDate = true; } 
+                if (String(rowTimestamp).trim()) {
+                    trDateObj = parseReportDate(rowTimestamp);
+                    if (!isNaN(trDateObj.getTime()) && trDateObj.getFullYear() > 2000) {
+                        if (trDateObj > latestDateObj) {
+                            latestDateObj = trDateObj;
+                            foundValidDate = true;
+                        }
+                    } else {
+                        trDateObj = new Date(NaN);
                     }
                 }
 
-                // Header-aware fallback: DATA tidak selalu memiliki Qty ZAK di kolom ke-9.
-                const normalizeHeader = h => String(h || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-                const findHeaderIndex = patterns => {
-                    for (let c = 0; c < cleanedHeaders.length; c++) {
-                        const h = normalizeHeader(cleanedHeaders[c]);
-                        if (patterns.some(p => h.includes(p))) return c;
-                    }
-                    return -1;
-                };
-
-                const idxZak = findHeaderIndex(['qty zak', 'quantity zak', 'total qty zak']);
-                const idxTon = findHeaderIndex(['qty ton', 'quantity ton', 'total qty ton']);
-                const idxProjectDelivery = findHeaderIndex(['project delivery', 'project del']);
-
-                if (idxZak >= 0) rowZak = r[idxZak];
-                if (idxTon >= 0) rowTon = r[idxTon];
-                if (idxProjectDelivery >= 0) rowProjDel = r[idxProjectDelivery];
-
-                const cleanZak = cleanNum(rowZak);
-                let cleanT = cleanNum(rowTon);
-                if (cleanT === 0 && cleanZak > 0) {
-                    cleanT = (cleanZak * 40) / 1000;
+                const cleanZak = cleanNum(r[idxZak]);
+                let cleanT = cleanNum(r[idxTon]);
+                if (cleanT === 0 && cleanZak !== 0) {
+                    cleanT = (Math.abs(cleanZak) * 40) / 1000;
                 }
 
                 transactionRecords.push({
-                    rawDate: rowTimestamp ? rowTimestamp.toString().trim() : '-',
+                    rawDate: String(rowTimestamp || '').trim() || '-',
                     dateObj: trDateObj,
-                    segment: rowSeg ? rowSeg.toString().trim() : 'GENERAL',
-                    type: rowType ? rowType.toString().trim() : 'STANDARD',
-                    produk: rowProd ? rowProd.toString().trim() : '-',
+                    segment: String(rowSeg || 'GENERAL').trim(),
+                    type: String(rowType || 'STANDARD').trim(),
+                    produk: String(rowProd || '-').trim(),
                     zak: cleanZak,
                     ton: cleanT,
-                    projectDelivery: rowProjDel ? rowProjDel.toString().trim() : '-',
+                    projectDelivery: String(rowProjDel || '-').trim(),
                     originalRow: r
                 });
             });
 
             if (foundValidDate) {
-                const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }, timeOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
-                lastUpdateDateStr = latestDateObj.toLocaleDateString('en-GB', dateOptions); 
+                const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+                const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
+                lastUpdateDateStr = latestDateObj.toLocaleDateString('en-GB', dateOptions);
                 lastUpdateTimeStr = latestDateObj.toLocaleTimeString('en-GB', timeOptions);
             }
         }
@@ -1775,6 +1789,7 @@
         function getExecMovementBySku(selectedDate) {
             const movement = {};
             const targetKey = reportDateKey(selectedDate);
+            if (!targetKey) return movement;
 
             const addMove = (skuRaw, direction, qty) => {
                 const sku = String(skuRaw || '').trim().toUpperCase();
@@ -1786,16 +1801,13 @@
 
             (Array.isArray(transactionRecords) ? transactionRecords : []).forEach(r => {
                 const key = reportDateKey(r.dateObj || r.rawDate);
+
+                // STRICT DATE FILTER: only transactions on the selected date.
                 if (!key || key !== targetKey) return;
 
                 const type = String(r.type || '').trim().toUpperCase();
                 const qty = Number(r.zak) || 0;
-
-                // SKU bisa berada di Produk atau Project Delivery.
-                const aliases = [r.produk, r.projectDelivery]
-                    .filter(v => v !== undefined && v !== null && String(v).trim() && String(v).trim() !== '-');
-
-                if (!aliases.length) return;
+                if (!qty) return;
 
                 const isOutputProduction =
                     type === 'OUTPUT PRODUCTION' ||
@@ -1807,14 +1819,25 @@
                     type.includes('DELIVERY');
 
                 let direction = '';
-                if (isOutputProduction) direction = 'in';
-                else if (isDelivery) direction = 'out';
-                else if (qty > 0) direction = 'in';
-                else if (qty < 0) direction = 'out';
+                let sku = '';
 
-                if (!direction) return;
+                if (isOutputProduction) {
+                    direction = 'in';
+                    // Output Produksi uses Produk/SKU as the inbound SKU.
+                    sku = r.produk || r.projectDelivery;
+                } else if (isDelivery) {
+                    direction = 'out';
+                    // Delivery uses Project Delivery first to avoid double counting.
+                    sku = r.projectDelivery || r.produk;
+                } else if (qty > 0) {
+                    direction = 'in';
+                    sku = r.produk || r.projectDelivery;
+                } else if (qty < 0) {
+                    direction = 'out';
+                    sku = r.projectDelivery || r.produk;
+                }
 
-                aliases.forEach(alias => addMove(alias, direction, qty));
+                if (direction && sku) addMove(sku, direction, qty);
             });
 
             return movement;
@@ -2591,6 +2614,10 @@
 
         function renderExecReportPreview() {
             const tbody = document.getElementById('execReportTableBody'); if(!tbody) return;
+
+            // Rebuild from source DATA every time the date changes.
+            // Never carry IN/OUT values from the previous selected date.
+            execReportData = [];
             generateExecReportData();
             const grouped = {};
             execReportData.forEach(item => {
