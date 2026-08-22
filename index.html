@@ -4083,20 +4083,21 @@
                 };
                 pptx.defineSlideMaster({
                     title: 'EXEC_MASTER',
-                    background: { color: '08111F' },
+                    background: { color: 'FFFFFF' },
                     objects: [
-                        { rect: { x:0, y:0, w:13.333, h:0.12, fill:{color:'19CFE8'}, line:{color:'19CFE8'} } },
-                        { text: { text:'MORTAR INDONESIA  |  SUPPLY CHAIN INTELLIGENCE', options:{x:0.45,y:7.08,w:7.5,h:0.18,fontFace:'Aptos',fontSize:7,color:'8091A8',margin:0} } },
-                        { text: { text:'CONFIDENTIAL — EXECUTIVE MANAGEMENT REVIEW', options:{x:8.2,y:7.08,w:4.65,h:0.18,fontFace:'Aptos',fontSize:7,color:'8091A8',align:'right',margin:0} } }
+                        { rect: { x:0, y:0, w:13.333, h:0.10, fill:{color:'173B66'}, line:{color:'173B66'} } },
+                        { rect: { x:0.45, y:6.82, w:12.43, h:0.01, fill:{color:'D9E2F0'}, line:{color:'D9E2F0'} } },
+                        { text: { text:'MORTAR INDONESIA  |  SUPPLY CHAIN INTELLIGENCE', options:{x:0.55,y:6.91,w:7.5,h:0.18,fontFace:'Aptos',fontSize:7,color:'6B7280',margin:0} } },
+                        { text: { text:'CONFIDENTIAL — EXECUTIVE MANAGEMENT REVIEW', options:{x:8.2,y:6.91,w:4.3,h:0.18,fontFace:'Aptos',fontSize:7,color:'6B7280',align:'right',margin:0} } }
                     ],
-                    slideNumber: { x:12.95, y:7.02, color:'8091A8', fontFace:'Aptos', fontSize:7 }
+                    slideNumber: { x:12.65, y:6.86, color:'6B7280', fontFace:'Aptos', fontSize:7 }
                 });
 
                 const C = {
-                    navy:'08111F', panel:'102039', panel2:'142A45',
-                    cyan:'19CFE8', purple:'7667F6', green:'17C986',
-                    red:'FF5575', amber:'F5B942', white:'F7FAFC',
-                    muted:'9AA9BE', line:'29405E'
+                    navy:'173B66', panel:'F5F7FA', panel2:'EAF1F8',
+                    cyan:'007F9E', purple:'5B4BC4', green:'168A5B',
+                    red:'C63D52', amber:'B77900', white:'FFFFFF',
+                    muted:'667085', line:'D9E2F0', black:'172033'
                 };
 
                 const safe = (v, fallback='-') => {
@@ -4118,7 +4119,7 @@
 
                 // --- Helpers ---
                 function addTitle(slide, title, subtitle='') {
-                    slide.addText(title, {x:0.55,y:0.38,w:8.9,h:0.42,fontFace:'Aptos Display',fontSize:22,bold:true,color:C.white,margin:0});
+                    slide.addText(title, {x:0.55,y:0.38,w:8.9,h:0.42,fontFace:'Aptos Display',fontSize:22,bold:true,color:C.navy,margin:0});
                     if (subtitle) slide.addText(subtitle, {x:0.57,y:0.86,w:10.5,h:0.25,fontSize:9,color:C.muted,margin:0});
                 }
                 function addPill(slide, text, x, y, w, fill=C.panel2, color=C.cyan) {
@@ -4129,13 +4130,13 @@
                     slide.addShape(pptx.ShapeType.roundRect,{x,y:1.35,w:2.88,h:1.05,rectRadius:0.08,fill:{color:C.panel},line:{color:C.line,width:1}});
                     slide.addShape(pptx.ShapeType.rect,{x,y:1.35,w:0.06,h:1.05,fill:{color:accent},line:{color:accent}});
                     slide.addText(label,{x:x+0.2,y:1.53,w:2.4,h:0.18,fontSize:8,bold:true,color:C.muted,margin:0});
-                    slide.addText(value,{x:x+0.2,y:1.78,w:2.4,h:0.32,fontSize:18,bold:true,color:C.white,margin:0});
+                    slide.addText(value,{x:x+0.2,y:1.78,w:2.4,h:0.32,fontSize:18,bold:true,color:C.navy,margin:0});
                     if(sub) slide.addText(sub,{x:x+0.2,y:2.15,w:2.4,h:0.15,fontSize:7,color:C.muted,margin:0});
                 }
                 function addSectionCard(slide, title, body, x, y, w, h, accent=C.cyan) {
                     slide.addShape(pptx.ShapeType.roundRect,{x,y,w,h,rectRadius:0.06,fill:{color:C.panel},line:{color:C.line,width:1}});
                     slide.addText(title,{x:x+0.2,y:y+0.16,w:w-0.4,h:0.25,fontSize:11,bold:true,color:accent,margin:0});
-                    slide.addText(body,{x:x+0.2,y:y+0.55,w:w-0.4,h:h-0.68,fontSize:9.2,color:C.white,breakLine:false,fit:'shrink',valign:'top',margin:0.02});
+                    slide.addText(body,{x:x+0.2,y:y+0.55,w:w-0.4,h:h-0.68,fontSize:9.2,color:C.black,breakLine:false,fit:'shrink',valign:'top',margin:0.02});
                 }
                 function addChartImage(slide, id, x, y, w, h) {
                     const canvas = document.getElementById(id);
@@ -4155,25 +4156,24 @@
                 }
                 function addBulletList(slide, items, x, y, w, h, fontSize=10) {
                     const lines = items.length ? items.map(t=>({text:t,options:{bullet:{indent:11},breakLine:true}})) : [{text:'Belum tersedia.',options:{breakLine:true}}];
-                    slide.addText(lines,{x,y,w,h,fontSize,color:C.white,breakLine:false,fit:'shrink',valign:'top',margin:0.02,paraSpaceAfterPt:7});
+                    slide.addText(lines,{x,y,w,h,fontSize,color:C.black,breakLine:false,fit:'shrink',valign:'top',margin:0.02,paraSpaceAfterPt:7});
                 }
 
                 // Slide 1 — Executive Cover
                 {
                     const s = pptx.addSlide('EXEC_MASTER');
-                    s.background = {color:C.navy};
-                    s.addShape(pptx.ShapeType.rect,{x:0,y:0.12,w:13.333,h:7.0,fill:{color:C.navy},line:{color:C.navy}});
-                    s.addShape(pptx.ShapeType.rect,{x:0,y:0.12,w:0.18,h:6.88,fill:{color:C.cyan},line:{color:C.cyan}});
-                    s.addText('AI STOCK INTELLIGENCE',{x:0.75,y:1.45,w:7.5,h:0.6,fontFace:'Aptos Display',fontSize:29,bold:true,color:C.white,margin:0});
-                    s.addText('EXECUTIVE MANAGEMENT REVIEW',{x:0.78,y:2.12,w:7.3,h:0.35,fontSize:15,bold:true,color:C.cyan,margin:0});
-                    s.addText('Finished Goods • Supply Chain • Warehouse',{x:0.8,y:2.62,w:6.8,h:0.3,fontSize:11,color:C.muted,margin:0});
+                    s.background = {color:'FFFFFF'};
+                    s.addShape(pptx.ShapeType.rect,{x:0.65,y:1.15,w:0.10,h:4.85,fill:{color:C.cyan},line:{color:C.cyan}});
+                    s.addText('AI STOCK INTELLIGENCE',{x:1.05,y:1.45,w:7.5,h:0.6,fontFace:'Aptos Display',fontSize:29,bold:true,color:C.navy,margin:0});
+                    s.addText('EXECUTIVE MANAGEMENT REVIEW',{x:1.08,y:2.12,w:7.3,h:0.35,fontSize:15,bold:true,color:C.cyan,margin:0});
+                    s.addText('Finished Goods • Supply Chain • Warehouse',{x:1.1,y:2.62,w:6.8,h:0.3,fontSize:11,color:C.muted,margin:0});
                     s.addShape(pptx.ShapeType.roundRect,{x:0.78,y:3.35,w:4.5,h:1.15,rectRadius:0.08,fill:{color:C.panel},line:{color:C.line}});
                     s.addText('CURRENT FG STOCK',{x:1.02,y:3.62,w:2.8,h:0.18,fontSize:8,bold:true,color:C.muted,margin:0});
-                    s.addText(snapTon,{x:1.02,y:3.88,w:3.7,h:0.38,fontSize:22,bold:true,color:C.white,margin:0});
+                    s.addText(snapTon,{x:1.02,y:3.88,w:3.7,h:0.38,fontSize:22,bold:true,color:C.navy,margin:0});
                     s.addText(`Generated ${new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}`,{x:0.8,y:5.65,w:5.8,h:0.25,fontSize:9,color:C.muted,margin:0});
                     s.addText('Decision support deck — prepared from dashboard data and AI management analysis.',{x:0.8,y:6.1,w:7.6,h:0.35,fontSize:10,color:C.white,margin:0});
-                    addPill(s,'EXECUTIVE READY',9.55,1.5,2.35,C.panel2,C.green);
-                    addPill(s,'AI-ASSISTED ANALYSIS',9.55,1.98,2.35,C.panel2,C.purple);
+                    addPill(s,'EXECUTIVE READY',9.55,1.5,2.35,'EAF5F1',C.green);
+                    addPill(s,'AI-ASSISTED ANALYSIS',9.55,1.98,2.35,'F0EEFB',C.purple);
                 }
 
                 // Slide 2 — Executive Snapshot
