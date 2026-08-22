@@ -21,6 +21,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- XLSX Library Bundle (xlsx-js-style) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+    <!-- PowerPoint Export -->
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 
     <script>
         tailwind.config = {
@@ -726,6 +728,7 @@
                             <div class="flex gap-2 w-full xl:w-auto">
                                 <button onclick="openGeminiSettings()" class="flex-1 xl:flex-none justify-center px-3 py-2 bg-bgPrimary border border-borderMain rounded-xl text-textSecondary hover:text-white text-[10px] font-semibold flex items-center gap-2"><i class="ph-bold ph-gear"></i> Worker Settings</button>
                                 <button type="button" onclick="runAIStockAnalysis(event)" id="aiAnalyzeBtn" class="flex-1 xl:flex-none justify-center px-5 py-2 bg-gradient-to-r from-accentPurple to-pink-500 text-white font-bold rounded-xl shadow-glow-purple text-[10px] flex items-center gap-2"><i class="ph-bold ph-sparkle"></i> Analyze</button>
+                                <button type="button" onclick="exportAIExecutivePPT(event)" id="aiPptBtn" class="flex-1 xl:flex-none justify-center px-4 py-2 bg-gradient-to-r from-[#173B66] to-[#0E7490] text-white font-bold rounded-xl shadow-lg text-[10px] flex items-center gap-2 border border-accentCyan/30"><i class="ph-bold ph-presentation-chart"></i> Download PPT</button>
                             </div>
                         </div>
 
@@ -1822,14 +1825,41 @@
             const targetKey = reportDateKey(selectedDate);
             if (!targetKey) return opening;
 
+            /*
+             * LOGIC OPENING BALANCE:
+             * Jika user memilih tanggal 22, maka Opening Balance = stok H-1,
+             * yaitu posisi stok pada tanggal 21.
+             *
+             * Karena summaryData merupakan snapshot stok terakhir (closing/current stock),
+             * maka untuk mendapatkan stok H-1:
+             *
+             * Opening H-1 = Closing Stock terakhir
+             *               - seluruh net movement mulai tanggal terpilih
+             *                 sampai tanggal snapshot terakhir.
+             *
+             * Contoh:
+             * Stock akhir 22 = 10,000
+             * IN tanggal 22 = 500
+             * OUT tanggal 22 = 300
+             * Opening tanggal 22 = 10,000 - (500 - 300) = 9,800
+             */
+
             const netAfter = {};
 
             (Array.isArray(transactionRecords) ? transactionRecords : []).forEach(r => {
                 const key = reportDateKey(r.dateObj || r.rawDate);
-                if (!key || key <= targetKey) return;
+
+                // Termasuk tanggal terpilih karena opening tanggal 22
+                // harus merupakan saldo sebelum transaksi tanggal 22.
+                if (!key || key < targetKey) return;
 
                 const aliases = [r.produk, r.projectDelivery]
-                    .filter(v => v !== undefined && v !== null && String(v).trim() && String(v).trim() !== '-');
+                    .filter(v =>
+                        v !== undefined &&
+                        v !== null &&
+                        String(v).trim() !== '' &&
+                        String(v).trim() !== '-'
+                    );
 
                 const qty = Number(r.zak) || 0;
                 const type = String(r.type || '').trim().toUpperCase();
@@ -1844,9 +1874,20 @@
                     type.includes('DELIVERY');
 
                 let signedMovement = 0;
-                if (isOutputProduction) signedMovement = Math.abs(qty);
-                else if (isDelivery) signedMovement = -Math.abs(qty);
-                else signedMovement = qty;
+
+                if (isOutputProduction) {
+                    // Production = penambahan stok.
+                    signedMovement = Math.abs(qty);
+                } else if (isDelivery) {
+                    // Delivery = pengurangan stok.
+                    signedMovement = -Math.abs(qty);
+                } else if (qty > 0) {
+                    // Transaksi positif lain = IN.
+                    signedMovement = qty;
+                } else if (qty < 0) {
+                    // Transaksi negatif lain = OUT.
+                    signedMovement = qty;
+                }
 
                 aliases.forEach(alias => {
                     const sku = String(alias).trim().toUpperCase();
@@ -1858,8 +1899,13 @@
             (Array.isArray(summaryData) ? summaryData : []).forEach(item => {
                 const sku = String(item.sku || '').trim().toUpperCase();
                 if (!sku) return;
-                const current = Number(item.qtyZak) || 0;
-                opening[sku] = current - (Number(netAfter[sku]) || 0);
+
+                const closingStock = Number(item.qtyZak) || 0;
+                const netMovementFromSelectedDate =
+                    Number(netAfter[sku]) || 0;
+
+                // Opening tanggal terpilih = stok H-1.
+                opening[sku] = closingStock - netMovementFromSelectedDate;
             });
 
             return opening;
@@ -2218,7 +2264,7 @@
             setCell(
                 currentRow,
                 0,
-                "3. Opening Balance Stock merupakan posisi stok awal pada tanggal laporan berdasarkan stok akhir dan pergerakan transaksi setelah tanggal yang dipilih.",
+                "3. Opening Balance Stock merupakan posisi stok H-1. Jika tanggal laporan dipilih tanggal 22, maka Opening Balance adalah posisi stok tanggal 21, dihitung dari stok akhir dikurangi net movement mulai tanggal 22.",
                 noteStyle
             );
             ws['!merges'].push({
@@ -2375,13 +2421,29 @@
             let totalTonRetail = 0, totalTonProject = 0;
             const uniqueSKUs = new Set();
             
-            summaryData.forEach(item => { 
-                totalWeight += item.weight; 
-                totalZakSummary += item.qtyZak; 
-                totalTon += item.qtyTon; 
-                if(item.sku && item.sku !== '-') uniqueSKUs.add(item.sku); 
-                if(item.segment.toUpperCase() === 'RETAIL') totalTonRetail += item.qtyTon;
-                if(item.segment.toUpperCase() === 'PROJECT') totalTonProject += item.qtyTon;
+            // KN1 dan K2 disimpan pada rack/storage terpisah,
+            // sehingga tidak termasuk kapasitas storage pallet.
+            const isRackSeparatedSku = (skuRaw) => {
+                const sku = String(skuRaw || '').trim().toUpperCase();
+                // Hanya KN1 yang berada di rack terpisah.
+                // K2 tetap masuk ke storage pallet.
+                return sku === 'KN1' || sku.startsWith('KN1-');
+            };
+
+            summaryData.forEach(item => {
+                totalWeight += item.weight;
+                totalZakSummary += item.qtyZak;
+                if(item.sku && item.sku !== '-') uniqueSKUs.add(item.sku);
+
+                const itemTon = Number(item.qtyTon) || 0;
+
+                // Kapasitas pallet hanya menghitung SKU yang berada di
+                // storage pallet. KN1 dan K2 dikeluarkan.
+                if (!isRackSeparatedSku(item.sku)) {
+                    totalTon += itemTon;
+                    if(item.segment.toUpperCase() === 'RETAIL') totalTonRetail += itemTon;
+                    if(item.segment.toUpperCase() === 'PROJECT') totalTonProject += itemTon;
+                }
             });
             
             const todayObj = new Date();
@@ -2440,10 +2502,22 @@
                 else avgEl.className = 'font-mono font-bold text-textSecondary text-[10px] md:text-xs';
             }
 
-            let masterZakSum = totalZakSummary + todayZakDelta;
-            let adjustedTotalTon = totalTon + (todayZakDelta * 40 / 1000);
+            /*
+             * KAPASITAS GUDANG HARUS MENGIKUTI TOTAL FINISHED GOODS STOCK SUMMARY REPORT.
+             * summaryData adalah sumber angka yang sama dengan tabel Summary:
+             * totalTon = SUM Qty (TON) Finished Goods Stock Summary Report, dikurangi SKU KN1 karena storage-nya terpisah dari storage pallet. K2 tetap dihitung dalam storage pallet.
+             *
+             * Sebelumnya KPI menambahkan todayZakDelta lagi sehingga stok dihitung
+             * dua kali dan hasilnya berbeda dengan tabel.
+             */
+            const masterZakSum = totalZakSummary;
+            const adjustedTotalTon = totalTon;
 
-            const WAREHOUSE_CAPACITY_TON = 2737, spacePct = WAREHOUSE_CAPACITY_TON > 0 ? (adjustedTotalTon / WAREHOUSE_CAPACITY_TON) * 100 : 0, remainingTon = Math.max(0, WAREHOUSE_CAPACITY_TON - adjustedTotalTon);
+            const WAREHOUSE_CAPACITY_TON = 2737;
+            const spacePct = WAREHOUSE_CAPACITY_TON > 0
+                ? (adjustedTotalTon / WAREHOUSE_CAPACITY_TON) * 100
+                : 0;
+            const remainingTon = Math.max(0, WAREHOUSE_CAPACITY_TON - adjustedTotalTon);
             if(document.getElementById('kpiSpacePercent')) document.getElementById('kpiSpacePercent').innerText = `${fmtDec(spacePct)}%`;
             if(document.getElementById('kpiSpaceCurrent')) document.getElementById('kpiSpaceCurrent').innerText = `${fmtDec(adjustedTotalTon)} Ton`;
             if(document.getElementById('kpiSpaceRemaining')) document.getElementById('kpiSpaceRemaining').innerText = `${fmtDec(remainingTon)} Ton`;
@@ -2481,7 +2555,7 @@
             // Update Hover Insight Texts for KPIs
             let insight1 = '';
             if (spacePct > 90) insight1 = `Kritis! Gudang melebihi 90% kapasitas maksimal (${fmtNum(WAREHOUSE_CAPACITY_TON)} Ton). Segera aktifkan Staging Area tambahan dan percepat proses Delivery (Sisa: ${fmtDec(remainingTon)} Ton).`;
-            else if (spacePct > 75) insight1 = `Waspada! Utilisasi gudang mencapai ${fmtDec(spacePct)}%. Manajemen ruang pallet perlu dioptimalkan untuk menampung antrean produksi.`;
+            else if (spacePct > 75) insight1 = `Waspada! Utilisasi gudang mencapai ${fmtDec(spacePct)}%. Perhitungan mengikuti Finished Goods Stock Summary Report setelah dikurangi SKU KN1 (rack terpisah). K2 tetap masuk storage pallet.`;
             else insight1 = `Kondisi Optimal. Utilisasi ruang ${fmtDec(spacePct)}%. Masih tersedia kapasitas ${fmtDec(remainingTon)} Ton.`;
             
             const kpi1El = document.getElementById('kpi1InsightText');
@@ -3935,6 +4009,219 @@
             updateAISnapshot();
             renderAICharts();
             renderLocalRisk();
+        }
+
+
+        function exportAIExecutivePPT(event) {
+            if (event) { event.preventDefault(); event.stopPropagation(); }
+
+            if (typeof pptxgen === 'undefined') {
+                showToast('PowerPoint', 'Library PowerPoint belum termuat. Periksa koneksi internet lalu coba lagi.', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('aiPptBtn');
+            const original = btn ? btn.innerHTML : '';
+            try {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="ph-bold ph-spinner-gap animate-spin"></i> Preparing...';
+                }
+
+                // Pastikan visual dashboard dan KPI terbaru sudah tersedia.
+                try { updateAIVisuals(); } catch (e) { console.warn('PPT visual refresh:', e); }
+
+                const pptx = new pptxgen();
+                pptx.layout = 'LAYOUT_WIDE'; // 13.333 x 7.5
+                pptx.author = 'Mortar Indonesia';
+                pptx.company = 'Mortar Indonesia';
+                pptx.subject = 'AI Stock Intelligence Dashboard';
+                pptx.title = 'AI Stock Intelligence — Executive Management Review';
+                pptx.lang = 'id-ID';
+                pptx.theme = {
+                    headFontFace: 'Aptos Display',
+                    bodyFontFace: 'Aptos',
+                    lang: 'id-ID'
+                };
+                pptx.defineSlideMaster({
+                    title: 'EXEC_MASTER',
+                    background: { color: '08111F' },
+                    objects: [
+                        { rect: { x:0, y:0, w:13.333, h:0.12, fill:{color:'19CFE8'}, line:{color:'19CFE8'} } },
+                        { text: { text:'MORTAR INDONESIA  |  SUPPLY CHAIN INTELLIGENCE', options:{x:0.45,y:7.08,w:7.5,h:0.18,fontFace:'Aptos',fontSize:7,color:'8091A8',margin:0} } },
+                        { text: { text:'CONFIDENTIAL — EXECUTIVE MANAGEMENT REVIEW', options:{x:8.2,y:7.08,w:4.65,h:0.18,fontFace:'Aptos',fontSize:7,color:'8091A8',align:'right',margin:0} } }
+                    ],
+                    slideNumber: { x:12.95, y:7.02, color:'8091A8', fontFace:'Aptos', fontSize:7 }
+                });
+
+                const C = {
+                    navy:'08111F', panel:'102039', panel2:'142A45',
+                    cyan:'19CFE8', purple:'7667F6', green:'17C986',
+                    red:'FF5575', amber:'F5B942', white:'F7FAFC',
+                    muted:'9AA9BE', line:'29405E'
+                };
+
+                const safe = (v, fallback='-') => {
+                    const s = String(v ?? '').trim();
+                    return s || fallback;
+                };
+                const n = v => Number(v) || 0;
+                const fmt = v => {
+                    try { return new Intl.NumberFormat('id-ID',{maximumFractionDigits:1}).format(n(v)); }
+                    catch(e) { return String(v); }
+                };
+                const aiTextEl = document.getElementById('aiResult');
+                const aiText = aiTextEl ? aiTextEl.innerText.trim() : '';
+
+                const snapTon = document.getElementById('aiSnapTon')?.innerText || '0 Ton';
+                const snapSku = document.getElementById('aiSnapSku')?.innerText || '0';
+                const snapIn = document.getElementById('aiSnapIn')?.innerText || '0';
+                const snapOut = document.getElementById('aiSnapOut')?.innerText || '0';
+
+                // --- Helpers ---
+                function addTitle(slide, title, subtitle='') {
+                    slide.addText(title, {x:0.55,y:0.38,w:8.9,h:0.42,fontFace:'Aptos Display',fontSize:22,bold:true,color:C.white,margin:0});
+                    if (subtitle) slide.addText(subtitle, {x:0.57,y:0.86,w:10.5,h:0.25,fontSize:9,color:C.muted,margin:0});
+                }
+                function addPill(slide, text, x, y, w, fill=C.panel2, color=C.cyan) {
+                    slide.addShape(pptx.ShapeType.roundRect,{x,y,w,h:0.34,rectRadius:0.06,fill:{color:fill},line:{color:fill}});
+                    slide.addText(text,{x:x+0.08,y:y+0.07,w:w-0.16,h:0.18,fontSize:7.5,bold:true,color,align:'center',margin:0});
+                }
+                function addKPI(slide, x, label, value, accent, sub='') {
+                    slide.addShape(pptx.ShapeType.roundRect,{x,y:1.35,w:2.88,h:1.05,rectRadius:0.08,fill:{color:C.panel},line:{color:C.line,width:1}});
+                    slide.addShape(pptx.ShapeType.rect,{x,y:1.35,w:0.06,h:1.05,fill:{color:accent},line:{color:accent}});
+                    slide.addText(label,{x:x+0.2,y:1.53,w:2.4,h:0.18,fontSize:8,bold:true,color:C.muted,margin:0});
+                    slide.addText(value,{x:x+0.2,y:1.78,w:2.4,h:0.32,fontSize:18,bold:true,color:C.white,margin:0});
+                    if(sub) slide.addText(sub,{x:x+0.2,y:2.15,w:2.4,h:0.15,fontSize:7,color:C.muted,margin:0});
+                }
+                function addSectionCard(slide, title, body, x, y, w, h, accent=C.cyan) {
+                    slide.addShape(pptx.ShapeType.roundRect,{x,y,w,h,rectRadius:0.06,fill:{color:C.panel},line:{color:C.line,width:1}});
+                    slide.addText(title,{x:x+0.2,y:y+0.16,w:w-0.4,h:0.25,fontSize:11,bold:true,color:accent,margin:0});
+                    slide.addText(body,{x:x+0.2,y:y+0.55,w:w-0.4,h:h-0.68,fontSize:9.2,color:C.white,breakLine:false,fit:'shrink',valign:'top',margin:0.02});
+                }
+                function addChartImage(slide, id, x, y, w, h) {
+                    const canvas = document.getElementById(id);
+                    if (!canvas || !canvas.toDataURL) return false;
+                    try {
+                        slide.addImage({data:canvas.toDataURL('image/png',1.0),x,y,w,h});
+                        return true;
+                    } catch(e) { return false; }
+                }
+                function sectionText(letter) {
+                    const re = new RegExp('(?:^|\\n)'+letter+'[.)]?[ \\t]+([\\s\\S]*?)(?=\\n[A-I][.)]?[ \\t]+|$)','i');
+                    const m = aiText.match(re);
+                    return m ? m[1].trim() : '';
+                }
+                function bulletsFrom(text, max=7) {
+                    return text.split(/\n+/).map(s=>s.replace(/^[\\s•*-]+/,'').trim()).filter(Boolean).slice(0,max);
+                }
+                function addBulletList(slide, items, x, y, w, h, fontSize=10) {
+                    const lines = items.length ? items.map(t=>({text:t,options:{bullet:{indent:11},breakLine:true}})) : [{text:'Belum tersedia.',options:{breakLine:true}}];
+                    slide.addText(lines,{x,y,w,h,fontSize,color:C.white,breakLine:false,fit:'shrink',valign:'top',margin:0.02,paraSpaceAfterPt:7});
+                }
+
+                // Slide 1 — Executive Cover
+                {
+                    const s = pptx.addSlide('EXEC_MASTER');
+                    s.background = {color:C.navy};
+                    s.addShape(pptx.ShapeType.rect,{x:0,y:0.12,w:13.333,h:7.0,fill:{color:C.navy},line:{color:C.navy}});
+                    s.addShape(pptx.ShapeType.rect,{x:0,y:0.12,w:0.18,h:6.88,fill:{color:C.cyan},line:{color:C.cyan}});
+                    s.addText('AI STOCK INTELLIGENCE',{x:0.75,y:1.45,w:7.5,h:0.6,fontFace:'Aptos Display',fontSize:29,bold:true,color:C.white,margin:0});
+                    s.addText('EXECUTIVE MANAGEMENT REVIEW',{x:0.78,y:2.12,w:7.3,h:0.35,fontSize:15,bold:true,color:C.cyan,margin:0});
+                    s.addText('Finished Goods • Supply Chain • Warehouse',{x:0.8,y:2.62,w:6.8,h:0.3,fontSize:11,color:C.muted,margin:0});
+                    s.addShape(pptx.ShapeType.roundRect,{x:0.78,y:3.35,w:4.5,h:1.15,rectRadius:0.08,fill:{color:C.panel},line:{color:C.line}});
+                    s.addText('CURRENT FG STOCK',{x:1.02,y:3.62,w:2.8,h:0.18,fontSize:8,bold:true,color:C.muted,margin:0});
+                    s.addText(snapTon,{x:1.02,y:3.88,w:3.7,h:0.38,fontSize:22,bold:true,color:C.white,margin:0});
+                    s.addText(`Generated ${new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}`,{x:0.8,y:5.65,w:5.8,h:0.25,fontSize:9,color:C.muted,margin:0});
+                    s.addText('Decision support deck — prepared from dashboard data and AI management analysis.',{x:0.8,y:6.1,w:7.6,h:0.35,fontSize:10,color:C.white,margin:0});
+                    addPill(s,'EXECUTIVE READY',9.55,1.5,2.35,C.panel2,C.green);
+                    addPill(s,'AI-ASSISTED ANALYSIS',9.55,1.98,2.35,C.panel2,C.purple);
+                }
+
+                // Slide 2 — Executive Snapshot
+                {
+                    const s = pptx.addSlide('EXEC_MASTER');
+                    addTitle(s,'Executive Snapshot','KPI utama yang perlu dibawa ke Management Review');
+                    addKPI(s,0.55,'FG STOCK',snapTon,C.cyan,'Current balance');
+                    addKPI(s,3.72,'ACTIVE SKU',snapSku,C.purple,'Active SKU');
+                    addKPI(s,6.89,'IN — MTD',snapIn,C.green,'Inbound');
+                    addKPI(s,10.06,'OUT — MTD',snapOut,C.red,'Outbound');
+
+                    const exec = sectionText('A');
+                    addSectionCard(s,'Executive Summary',exec || 'Analisis AI belum tersedia. Jalankan Analyze terlebih dahulu.',0.55,2.72,12.23,2.15,C.cyan);
+
+                    const mgmt = sectionText('I');
+                    addSectionCard(s,'Management Takeaway',mgmt || 'Management takeaway belum tersedia.',0.55,5.05,12.23,1.55,C.purple);
+                }
+
+                // Slide 3 — Flow & Trend
+                {
+                    const s = pptx.addSlide('EXEC_MASTER');
+                    addTitle(s,'Stock Flow & Trend','Pergerakan IN vs OUT dan daily net movement');
+                    addChartImage(s,'aiTrendChart',0.55,1.25,6.0,3.25);
+                    addChartImage(s,'aiNetMovementChart',6.78,1.25,6.0,3.25);
+                    addSectionCard(s,'Performance Analysis',sectionText('B') || 'Belum tersedia.',0.55,4.72,12.23,1.75,C.green);
+                }
+
+                // Slide 4 — Stock Concentration & Outflow
+                {
+                    const s = pptx.addSlide('EXEC_MASTER');
+                    addTitle(s,'SKU Concentration & Outflow','Fokus pada inventory concentration dan SKU dengan tekanan outbound terbesar');
+                    addChartImage(s,'aiTopSkuChart',0.55,1.25,6.0,3.25);
+                    addChartImage(s,'aiOutflowChart',6.78,1.25,6.0,3.25);
+                    addSectionCard(s,'SKU Analysis',sectionText('D') || 'Belum tersedia.',0.55,4.72,12.23,1.75,C.amber);
+                }
+
+                // Slide 5 — Segment & Capacity
+                {
+                    const s = pptx.addSlide('EXEC_MASTER');
+                    addTitle(s,'Segment Mix & Capacity','Komposisi stok dan implikasi terhadap kapasitas warehouse');
+                    addChartImage(s,'aiSegmentChart',0.55,1.3,5.25,3.55);
+                    addSectionCard(s,'Segment Analysis',sectionText('E') || 'Belum tersedia.',6.05,1.3,6.73,1.72,C.cyan);
+                    addSectionCard(s,'Stock Position & Capacity',sectionText('C') || 'Belum tersedia.',6.05,3.18,6.73,1.67,C.purple);
+                    addSectionCard(s,'Risk & Capacity Check',sectionText('F') || 'Belum tersedia.',0.55,5.08,12.23,1.32,C.red);
+                }
+
+                // Slide 6 — Risks & Root Cause
+                {
+                    const s = pptx.addSlide('EXEC_MASTER');
+                    addTitle(s,'Risk & Root Cause','Prioritas risiko dan interpretasi pola inventory');
+                    addSectionCard(s,'Risk Alert',sectionText('F') || 'Belum tersedia.',0.55,1.25,6.0,4.95,C.red);
+                    addSectionCard(s,'Root Cause / Interpretation',sectionText('G') || 'Belum tersedia.',6.78,1.25,6.0,4.95,C.amber);
+                }
+
+                // Slide 7 — Action Plan & Management Decisions
+                {
+                    const s = pptx.addSlide('EXEC_MASTER');
+                    addTitle(s,'Recommended Actions & Decisions','Rencana tindakan yang siap dibawa ke forum eksekutif');
+                    addSectionCard(s,'Recommended Action',sectionText('H') || 'Belum tersedia.',0.55,1.25,7.25,5.15,C.green);
+                    addSectionCard(s,'Management Takeaway',sectionText('I') || 'Belum tersedia.',8.05,1.25,4.73,5.15,C.purple);
+                }
+
+                // Slide 8 — Appendix: Dashboard Visuals
+                {
+                    const s = pptx.addSlide('EXEC_MASTER');
+                    addTitle(s,'Appendix — Dashboard Visuals','Reference charts generated directly from the AI Stock Intelligence Dashboard');
+                    addChartImage(s,'aiTrendChart',0.55,1.2,4.0,2.35);
+                    addChartImage(s,'aiTopSkuChart',4.68,1.2,4.0,2.35);
+                    addChartImage(s,'aiOutflowChart',8.81,1.2,3.97,2.35);
+                    addChartImage(s,'aiNetMovementChart',0.55,3.82,6.0,2.55);
+                    addChartImage(s,'aiSegmentChart',6.78,3.82,6.0,2.55);
+                }
+
+                const fileDate = new Date().toISOString().slice(0,10).replace(/-/g,'');
+                pptx.writeFile({ fileName:`AI_Stock_Intelligence_Executive_Review_${fileDate}.pptx` });
+
+                setTimeout(() => showToast('PowerPoint Ready','Executive PowerPoint berhasil dibuat dan siap dipresentasikan.','success'), 500);
+            } catch (err) {
+                console.error('PPT Export Error:', err);
+                showToast('PowerPoint Error', String(err.message || err).slice(0,160), 'warning');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = original || '<i class="ph-bold ph-presentation-chart"></i> Download PPT';
+                }
+            }
         }
 
         async function runAIStockAnalysis(event) {
